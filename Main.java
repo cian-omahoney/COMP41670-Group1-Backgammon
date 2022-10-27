@@ -3,7 +3,6 @@ public class Main {
 		Backgammon backgammon = new Backgammon();
 		CommandType command = CommandType.QUIT;
 		System.out.print(command.toString());
-		System.out.println("Merge Test");
-		System.out.println("THis is a tst for ciaran. Written by cian");
+		System.out.println("Conflicting merge test... FIXME!");
 	}
 }
