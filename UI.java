@@ -2,26 +2,26 @@ import java.util.Arrays;
 
 public class UI{
     public UI(){
-        String[][] topCheckers=setupCheckers("X", "O");
-        String[][] bottomCheckers=setupCheckers("O", "X");
+        String[][] topCheckers=setupCheckers("X", "O",true);
+        String[][] bottomCheckers=setupCheckers("O", "X",false);
         Board board=new Board(topCheckers,bottomCheckers);
         printBoard(board);
     }
 
-    private String[][] setupCheckers(String homeChecker, String awayChecker)
+    private String[][] setupCheckers(String homeChecker, String awayChecker,boolean rotateUp)
     {
         String [][] checkers=new String[5][Constants.LANES_PER_TABLE*2];
         for (int j=0;j<5;j++){
             for (int i=0;i<Constants.LANES_PER_TABLE*2;i++){
                 String checker=" ";
                 switch (i){
-                    case 0 -> checker="O";
+                    case 0 -> checker=awayChecker;
                     case 4-> {
-                        if(j<3){checker="X";}
+                        if(j<3){checker=homeChecker;}
                     }
-                    case 6-> checker="X";
+                    case 6-> checker=homeChecker;
                     case 11-> {
-                        if (j<2){checker="O";}
+                        if (j<2){checker=awayChecker;}
                     }
                 }
                 checkers[j][i]=checker;
@@ -47,7 +47,7 @@ public class UI{
         System.out.println("The Help");
     }
 
-    private void printBoard(Board board){
+    public void printBoard(Board board){
         System.out.println("=".repeat(5*((Constants.LANES_PER_TABLE*2)-1)));
         for (int i=0; i<5;i++){
             String[] checkersOnTableRow=Arrays.copyOfRange(board.topCheckers()[i], 0, Constants.LANES_PER_TABLE);
@@ -74,7 +74,7 @@ public class UI{
             printArrow(i,0,false);
             System.out.println("");
         }
-        for (int i=0; i<5;i++){
+        for (int i=4; i>=0;i--){
             String[] checkersOnTableRow=Arrays.copyOfRange(board.bottomCheckers()[i], 0, Constants.LANES_PER_TABLE);
             printTableRow(checkersOnTableRow);
             System.out.print("|"+" ".repeat(5));
