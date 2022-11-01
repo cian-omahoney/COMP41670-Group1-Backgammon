@@ -11,15 +11,14 @@ public class Player {
         this._playerNumber = playerNumber;
     }
 
-    public int[] rollDice(){
+    public void rollDice(){
         Random rand = new Random();
         _diceRoll[0]=rand.nextInt(1,7);
         _diceRoll[1]=rand.nextInt(1,7);
-        return _diceRoll;
     }
-
-    public int[] getDiceRoll(){
-        return _diceRoll;
+    
+    public int[] getDiceRoll() {
+    	return _diceRoll;
     }
 
     public String getName(){

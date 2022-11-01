@@ -92,9 +92,8 @@ public class UI{
     	System.out.print(CLEAR_COLOURS);
     }
 
-    private void printTaskbar(){
-
-    }
+    //private void printTaskbar(){
+    //}
 
     private void printIntro(){
 		System.out.print(CLEAR_SCREEN);
