@@ -1,5 +1,4 @@
 public class Command {
-	
 	private CommandType _commandType;
 
 	public Command(String userInput) {

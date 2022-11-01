@@ -16,6 +16,7 @@ public class Backgammon {
         
         UserInterface.printBoard(board);
         
+        // Randomly choose player to get first turn:
         activePlayer = new Random().nextBoolean() ? playerOne : playerTwo;
 		
         do{
