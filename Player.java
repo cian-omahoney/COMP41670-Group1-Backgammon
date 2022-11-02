@@ -2,13 +2,13 @@ import java.util.Random;
 
 public class Player {
     private String _name;
-    private int _playerNumber;
+    private Checker _playerColour;
     private int _diceRoll[];
 
-    public Player(String name, int playerNumber){
+    public Player(String name, Checker playerColour){
         this._name=name;
         this._diceRoll = new int[]{1,1};
-        this._playerNumber = playerNumber;
+        this._playerColour = playerColour;
     }
 
     public void rollDice(){
@@ -25,7 +25,7 @@ public class Player {
         return _name;
     }
     
-    public int getNumber() {
-    	return _playerNumber;
+    public Checker getColour() {
+    	return _playerColour;
     }
 }

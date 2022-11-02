@@ -6,7 +6,7 @@ class PlayerTest {
 	
 	@BeforeEach
 	void setUp() {
-		player = new Player("Testname", 2);
+		player = new Player("Testname", Checker.WHITE);
 	} 
 
 	@Test
@@ -32,6 +32,6 @@ class PlayerTest {
 
 	@Test
 	void testGetNumber() {
-		assertEquals(2, player.getNumber());
+		assertEquals(Checker.WHITE, player.getColour());
 	}
 }

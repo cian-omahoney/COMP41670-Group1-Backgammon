@@ -4,11 +4,14 @@ import java.util.*;
 public class UI{
 	private static final String CLEAR_SCREEN 		= "\033[H\033[2J";
 	
-	private static final String CLEAR_COLOURS 		= "\033[0m";
+	public static final String CLEAR_COLOURS 		= "\033[0m";
 	private static final String YELLOW_TEXT_COLOUR 	= "\033[1;33m";
 	private static final String CYAN_TEXT_COLOUR 	= "\033[1;36m";
 	
-	private static final String DASH_LINE = YELLOW_TEXT_COLOUR + repeatChar('=', 82) + CLEAR_COLOURS;
+	public static final String WHITE_CHECKER_COLOUR = "\033[0;39m";
+	public static final String RED_CHECKER_COLOUR   = "\033[1;31m";
+	
+	private static final String DASH_LINE = YELLOW_TEXT_COLOUR + "=".repeat(82) + CLEAR_COLOURS;
 	
 	private Scanner _userInput;
 	Command _command;
@@ -24,15 +27,16 @@ public class UI{
     	System.out.print("Enter Player " + playerNumber + " Name: ");
 		String userInput = getLine();
 		
+		// Should make sure players have different names here.
 		switch(playerNumber) {
 		case "One":
-			_playerOne = new Player(userInput, 1);
+			_playerOne = new Player(userInput, Checker.WHITE);
 			return _playerOne;
 		case "Two":
-			_playerTwo = new Player(userInput, 2);
+			_playerTwo = new Player(userInput, Checker.RED);
 			return _playerTwo;
 		default:
-			_playerOne = new Player(userInput, 1);
+			_playerOne = new Player(userInput, Checker.WHITE);
 			return _playerOne;
 		}
     }
@@ -46,7 +50,9 @@ public class UI{
 				_command = new Command(input);
 				validCommandEntered = true;
 			} else {
+		    	System.out.print(CYAN_TEXT_COLOUR);
 				System.out.println("\tThis command is invalid! Try again.");
+		    	System.out.print(CLEAR_COLOURS);
 			}
 		}
 		while (!validCommandEntered);
@@ -57,43 +63,25 @@ public class UI{
     	return _userInput.nextLine().trim();
     }
     
+    public void printFirstPlayerChosen(Player player) {
+    	System.out.println(CYAN_TEXT_COLOUR);
+    	System.out.println("\tThe player to go first is selected randomly...");
+    	System.out.println("\t" + player.getName() + " is selected to go first.");
+    	System.out.println(CLEAR_COLOURS);
+    }
+    
     public void printQuit() {
     	System.out.println(DASH_LINE);
     	System.out.println("\t\tYou quit. Game Over.");
     	System.out.println(DASH_LINE);
     }
 
-    public String[][] setupCheckers(String homeChecker, String awayChecker,boolean rotateUp)
-    {
-        String [][] checkers=new String[5][Constants.LANES_PER_TABLE*2];
-        for (int j=0;j<5;j++){
-            for (int i=0;i<Constants.LANES_PER_TABLE*2;i++){
-                String checker=" ";
-                switch (i){
-                    case 0 -> checker=awayChecker;
-                    case 4-> {
-                        if(j<3){checker=homeChecker;}
-                    }
-                    case 6-> checker=homeChecker;
-                    case 11-> {
-                        if (j<2){checker=awayChecker;}
-                    }
-                }
-                checkers[j][i]=checker;
-            }
-        }
-        return checkers;
-    }
-
-    public void displayDice(Player player){
+    public void printDice(Player player){
     	System.out.print(CYAN_TEXT_COLOUR);
     	System.out.printf("\tResults: [%d] [%d]\n", player.getDiceRoll()[0], 
     												player.getDiceRoll()[1]);
     	System.out.print(CLEAR_COLOURS);
     }
-
-    //private void printTaskbar(){
-    //}
 
     private void printIntro(){
 		System.out.print(CLEAR_SCREEN);
@@ -120,10 +108,10 @@ public class UI{
         
         System.out.println("=".repeat(5*((Constants.LANES_PER_TABLE*2)-1)));
         for (int i=0; i<5;i++){
-            String[] checkersOnTableRow=Arrays.copyOfRange(board.topCheckers()[i], 0, Constants.LANES_PER_TABLE);
+            String[] checkersOnTableRow=Arrays.copyOfRange(board.toStringTopCheckers()[i], 0, Constants.LANES_PER_TABLE);
             printTableRow(checkersOnTableRow);
             System.out.print("|"+" ".repeat(5));
-            checkersOnTableRow=Arrays.copyOfRange(board.topCheckers()[i], Constants.LANES_PER_TABLE, 2*Constants.LANES_PER_TABLE);
+            checkersOnTableRow=Arrays.copyOfRange(board.toStringTopCheckers()[i], Constants.LANES_PER_TABLE, 2*Constants.LANES_PER_TABLE);
             printTableRow(checkersOnTableRow);
             System.out.println("|");
         }
@@ -145,10 +133,10 @@ public class UI{
             System.out.println("");
         }
         for (int i=4; i>=0;i--){
-            String[] checkersOnTableRow=Arrays.copyOfRange(board.bottomCheckers()[i], 0, Constants.LANES_PER_TABLE);
+            String[] checkersOnTableRow=Arrays.copyOfRange(board.toStringBottomCheckers()[i], 0, Constants.LANES_PER_TABLE);
             printTableRow(checkersOnTableRow);
             System.out.print("|"+" ".repeat(5));
-            checkersOnTableRow=Arrays.copyOfRange(board.bottomCheckers()[i], Constants.LANES_PER_TABLE, 2*Constants.LANES_PER_TABLE);
+            checkersOnTableRow=Arrays.copyOfRange(board.toStringBottomCheckers()[i], Constants.LANES_PER_TABLE, 2*Constants.LANES_PER_TABLE);
             printTableRow(checkersOnTableRow);
             System.out.println("|");
         }
@@ -174,10 +162,4 @@ public class UI{
         arrow=" ".repeat(layer)+left+" ".repeat((layers)-(layer*2))+right+" ".repeat(layer);
         System.out.print("|".repeat(1-leftSide)+arrow.repeat(Constants.LANES_PER_TABLE)+"|".repeat(leftSide));
     }
-    
-	private static final String repeatChar(char repeatedChar, int length) {
-	    char[] data = new char[length];
-	    Arrays.fill(data, repeatedChar);
-	    return new String(data);
-	}
 }
