@@ -68,4 +68,8 @@ public class Point {
 		}
 		return checkerCount;
 	}
+
+	public Stack<Checker> getCheckers(){
+		return _checkers;
+	}
 }

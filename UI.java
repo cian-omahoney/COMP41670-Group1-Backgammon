@@ -1,4 +1,3 @@
-import java.util.Arrays;
 import java.util.*;
 
 public class UI{
@@ -105,72 +104,8 @@ public class UI{
         System.out.println(DASH_LINE);
         System.out.printf("Player 1: %s\t\t\tPlayer 2: %s\n", _playerOne.getName(), _playerTwo.getName());
         System.out.println(DASH_LINE);
-        
-        printBorder();
 
-        //Print Top Table
-        for (int i=0; i<5;i++){
-            printPoints(board, i);
-        }
-
-        for (int i=0; i<2;i++){
-            printArrows(i,true);
-        }
-
-        for (int i=0;i<3;i++){
-            System.out.println(" ".repeat(4*Constants.LANES_PER_TABLE)+"|     |");
-        }
-
-        //Print Bottom Table 
-        for(int i=1;i>=0;i--){
-            printArrows(i,false);
-        }
-
-        for (int i=4; i>=0;i--){
-            printPoints(board, i);
-        }
-        printBorder();
-    }
-
-    private void printPoints(Board board,int i){
-        String[] checkersOnTableRow=Arrays.copyOfRange(board.toStringBottomCheckers()[i], 0, Constants.LANES_PER_TABLE);
-            printTableRow(checkersOnTableRow);
-            System.out.print("|"+" ".repeat(5));
-            checkersOnTableRow=Arrays.copyOfRange(board.toStringBottomCheckers()[i], Constants.LANES_PER_TABLE, 2*Constants.LANES_PER_TABLE);
-            printTableRow(checkersOnTableRow);
-            System.out.println("|");
-    }
-
-    private void printArrows(int i,boolean pointDown){
-            printArrow(i,1,pointDown);
-            System.out.print(" ".repeat(5));
-            printArrow(i,0,pointDown);
-            System.out.println("");
-    }
-
-    private void printBorder(){
-        System.out.println("=".repeat(5*((Constants.LANES_PER_TABLE*2)-1)));
-    }
-
-    private void printTableRow(String[] checkers){
-        for(int i=0;i<Constants.LANES_PER_TABLE;i++){
-            System.out.print("| "+checkers[i]+" ");
-        }
-    }
-
-    private void printArrow(int layer,int leftSide,boolean pointDown){
-        String left="\\";
-        String right="/";
-        String arrow="";
-        int layers=2;
-
-        if (!pointDown)
-        {
-            left="/";
-            right="\\";
-        }
-
-        arrow=" ".repeat(layer)+left+" ".repeat((layers)-(layer*2))+right+" ".repeat(layer);
-        System.out.print("|".repeat(1-leftSide)+arrow.repeat(Constants.LANES_PER_TABLE)+"|".repeat(leftSide));
+        String boardString=board.toString();
+        System.out.println(boardString);
     }
 }
