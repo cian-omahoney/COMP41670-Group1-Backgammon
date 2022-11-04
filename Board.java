@@ -7,6 +7,7 @@ public class Board {
     		_points[i] = new Point(i); 
     	}
     	setupCheckersInitial();
+        return;
     }
     
     private void setupCheckersInitial() {
@@ -19,6 +20,11 @@ public class Board {
     	_points[18].addCheckers(Checker.RED, 3);
     	_points[12].addCheckers(Checker.RED, 5);
     	_points[1].addCheckers(Checker.RED, 2);
+    }
+
+    public String toString(){
+
+        return "test";
     }
     
     public String[][] toStringTopCheckers() {
