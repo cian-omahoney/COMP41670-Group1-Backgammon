@@ -11,6 +11,7 @@ public class Player {
         this._playerColour = playerColour;
     }
 
+    //TODO pip count - https://www.bkgm.com/gloss/lookup.cgi?pip+count
     public void rollDice(){
         Random rand = new Random();
         _diceRoll[0]=rand.nextInt(1,7);
