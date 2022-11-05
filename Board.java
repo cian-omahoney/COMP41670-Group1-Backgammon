@@ -1,5 +1,5 @@
 public class Board {
-    private Point[] _points; 
+    private Point[] _points;
     
     public Board() {
     	this._points = new Point[Point.MAXIMUM_PIP_NUMBER+1];

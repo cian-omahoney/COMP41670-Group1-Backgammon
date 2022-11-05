@@ -4,7 +4,7 @@ import java.util.*;
 public class UI{
 	private static final String CLEAR_SCREEN 		= "\033[H\033[2J";
 	
-	public static final String CLEAR_COLOURS 		= "\033[0m";
+	public static final String  CLEAR_COLOURS 		= "\033[0m";
 	private static final String YELLOW_TEXT_COLOUR 	= "\033[1;33m";
 	private static final String CYAN_TEXT_COLOUR 	= "\033[1;36m";
 	

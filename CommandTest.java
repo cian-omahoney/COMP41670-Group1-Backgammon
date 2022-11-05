@@ -1,5 +1,4 @@
 import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,7 +12,7 @@ class CommandTest {
 	@Test
 	void testIsValid_CheckValidAndInvalidCommandStrings() {
 		assertFalse(Command.isValid("NotValid"), 			"Fail message: Command.isValid() not false for 'NotValid' string.");
-		assertFalse(Command.isValid("234hfe  wet0 0q3r"), 	"Fail message: Command.isValid() not false for '234hfe  wet0 0q3r' string.");
+		assertFalse(Command.isValid("234hfe  wte0 0q3r"), 	"Fail message: Command.isValid() not false for '234hfe  wet0 0q3r' string.");
 		assertTrue(Command.isValid("Quit"), 				"Fail message: Command.isValid() not false for 'Quit' string.");
 		assertTrue(Command.isValid("help"), 				"Fail message: Command.isValid() not false for 'help' string.");
 		assertTrue(Command.isValid("roll"), 				"Fail message: Command.isValid() not false for 'roll' string.");
