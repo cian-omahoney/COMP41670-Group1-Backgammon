@@ -24,7 +24,7 @@ public class Table {
     }
 
     public void addCheckers(int point,Checker checkerColour, int quantity){ //Point here refers to local point numbers eg 1-6
-        _points[point-1].addCheckers(checkerColour, quantity);
+        _points[point].addCheckers(checkerColour, quantity);
     }
 
     public int getPointMaxLength(){

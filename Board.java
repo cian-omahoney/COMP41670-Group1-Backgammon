@@ -11,19 +11,19 @@ public class Board {
     }
     
     private void setupCheckersInitial() {
-    	_tables[0].addCheckers(6, Checker.WHITE, 5);
-        _tables[1].addCheckers(2, Checker.WHITE, 3);
-        _tables[2].addCheckers(6, Checker.WHITE, 5);
-        _tables[3].addCheckers(1, Checker.WHITE, 2);
+    	_tables[0].addCheckers(5, Checker.WHITE, 5);
+        _tables[1].addCheckers(1, Checker.WHITE, 3);
+        _tables[2].addCheckers(5, Checker.WHITE, 5);
+        _tables[3].addCheckers(0, Checker.WHITE, 2);
         /*_points[6].addCheckers(Checker.WHITE, 6);
     	_points[8].addCheckers(Checker.WHITE, 3);
     	_points[13].addCheckers(Checker.WHITE, 2);
     	_points[24].addCheckers(Checker.WHITE, 5);*/
     	
-        _tables[3].addCheckers(6, Checker.RED, 5);
-        _tables[2].addCheckers(2, Checker.RED, 3);
-        _tables[1].addCheckers(6, Checker.RED, 5);
-        _tables[0].addCheckers(1, Checker.RED, 2);
+        _tables[3].addCheckers(5, Checker.RED, 5);
+        _tables[2].addCheckers(1, Checker.RED, 3);
+        _tables[1].addCheckers(5, Checker.RED, 5);
+        _tables[0].addCheckers(0, Checker.RED, 2);
     	
         /*_points[20].addCheckers(Checker.RED, 6);
     	_points[18].addCheckers(Checker.RED, 3);
