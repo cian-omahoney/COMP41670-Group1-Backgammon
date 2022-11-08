@@ -41,7 +41,7 @@ public class Board {
 
     public String toString(){
         String board="";
-        
+        board+=getPointNumbers(true,1);
         board+=getBorder();
 
         //Get Top Table
@@ -81,7 +81,6 @@ public class Board {
 
     private String getPoints(int row,int leftTable,int rightTable){
         String points=""; 
-
         String[]checkersOnTableRow=_tables[leftTable].getPointsRow(row);
         points+=getTableRow(checkersOnTableRow,Constants.LANES_PER_TABLE);
         
@@ -119,8 +118,15 @@ public class Board {
     }
 
     private String getPointNumbers(boolean top, int player){
-        _tables[2].getPointNumber();
-        return "";  //TODO Unfinished
+        String numbers="  ";
+        for (int point=5;point>=0;point--){
+            numbers+=Integer.toString(_tables[2].getPointNumber(point,player))+"  ";
+        }
+        numbers+="Bar   ";
+        for (int point=5;point>=0;point--){
+            numbers+=Integer.toString(_tables[3].getPointNumber(point,player))+"  ";
+        }
+        return numbers+"\n";  //TODO Unfinished
     }
 
     private String getTableRow(String[] checkers, int size){

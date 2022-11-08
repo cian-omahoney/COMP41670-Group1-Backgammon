@@ -53,6 +53,18 @@ public class Point {
 	public int getRedPointNumber() {
 		return _redPointNumber;
 	}
+
+	public int getPointNumber(int player){	//TODO This makes getWhitePointNumber redundant? 
+		if (player==1){	//FIXME Player Number Constants
+			return _whitePointNumber;
+		}
+		else if(player==2){
+			return _redPointNumber;
+		}
+		else{
+			return 0;
+		}
+	}
 	
 	public Checker getResidentColour() {
 		return _residentColour;
