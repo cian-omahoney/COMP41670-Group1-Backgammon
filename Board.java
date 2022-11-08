@@ -1,11 +1,19 @@
 public class Board {
     private Table[] _tables;
+    private Bar[] _bar;
     
     public Board() {
         _tables=new Table[4];
+        _bar=new Bar[2];
+
     	for(int i=0; i<4; i++) {
     		_tables[i] = new Table(i); 
     	}
+
+        for(int i=0;i<2;i++)
+        {
+            _bar[i]=new Bar(i+1);
+        }
     	setupCheckersInitial();
         return;
     }
@@ -38,7 +46,7 @@ public class Board {
 
         //Get Top Table
         int length=getPointMaxLength(2);
-        for (int i=0; i<length;i++){ //FIXME
+        for (int i=0; i<length;i++){ 
             board+=getPoints(i,2,3);
         }
 
@@ -46,8 +54,8 @@ public class Board {
             board+=getArrows(i,true);
         }
 
-        for (int i=0;i<3;i++){
-            board+=" ".repeat(4*Constants.LANES_PER_TABLE)+"|     |\n";
+        for (int i=0;i<3;i++){  //FIXME - Bar can be of variable length depending on # checkers in it
+            board+=" ".repeat(4*Constants.LANES_PER_TABLE)+"|"+getBarRow(i,3,0)+"|\n"; //FIXME Correct Paramaters need to be given to this function 
         }
 
         //Print Bottom Table 
@@ -77,7 +85,7 @@ public class Board {
         String[]checkersOnTableRow=_tables[leftTable].getPointsRow(row);
         points+=getTableRow(checkersOnTableRow,Constants.LANES_PER_TABLE);
         
-        points+="|"+" ".repeat(5);
+        points+="|"+getBarRow(row,5,0);//FIXME Correct Paramaters need to be given to this function 
 
         checkersOnTableRow=_tables[rightTable].getPointsRow(row);
         points+=getTableRow(checkersOnTableRow,Constants.LANES_PER_TABLE);
@@ -88,7 +96,7 @@ public class Board {
     private String getArrows(int i,boolean pointDown){
         String arrows="";
         arrows+=getArrow(i,1,pointDown);
-        arrows+=" ".repeat(5);
+        arrows+=getBarRow(i,2,0);   //FIXME Correct Paramaters need to be given to this function 
         arrows+=getArrow(i,0,pointDown);
         arrows+="\n";
         return arrows;
@@ -96,6 +104,22 @@ public class Board {
 
     private String getBorder(){
         return"=".repeat(5*((Constants.LANES_PER_TABLE*2)-1))+"\n";
+    }
+
+    private String getBarRow(int row,int numRows,int player){
+        String bar=" ".repeat(2);
+        if(numRows-row<=_bar[player].getCheckerCount()){
+            bar+=_bar[player].getResidentColour();
+        }
+        else{
+            bar+=" ";
+        }
+        bar+=" ".repeat(2);
+        return bar;
+    }
+
+    private String getPointNumbers(boolean top, int player){
+        return "";  //TODO Unfinished
     }
 
     private String getTableRow(String[] checkers, int size){
