@@ -119,6 +119,7 @@ public class Board {
     }
 
     private String getPointNumbers(boolean top, int player){
+        _tables[2].getPointNumber();
         return "";  //TODO Unfinished
     }
 
