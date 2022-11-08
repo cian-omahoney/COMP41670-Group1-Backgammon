@@ -1,14 +1,34 @@
-import java.util.*;
-
 public class Board {
     private Point[] _points;
+    private Table[] _tables;
+    private Bar[] _bar;
     
     public Board() {
-    	this._points = new Point[Point.MAXIMUM_PIP_NUMBER];
-    	for(int i=0; i<Point.MAXIMUM_PIP_NUMBER; i++) {
-    		_points[i] = new Point(i); 
+        _tables=new Table[4];
+        _bar=new Bar[2];
+
+    	for(int i=0; i<4; i++) {
+    		_tables[i] = new Table(i);
     	}
+
+        for(int i=0;i<2;i++)
+        {
+            _bar[i]=new Bar(i+1);
+        }
     	setupCheckersInitial();
+        return;
+    }
+    
+    private void setupCheckersInitial() {
+    	_tables[0].addCheckers(5, Checker.WHITE, 5);
+        _tables[1].addCheckers(1, Checker.WHITE, 3);
+        _tables[2].addCheckers(5, Checker.WHITE, 5);
+        _tables[3].addCheckers(0, Checker.WHITE, 2);
+    	
+        _tables[3].addCheckers(5, Checker.RED, 5);
+        _tables[2].addCheckers(1, Checker.RED, 3);
+        _tables[1].addCheckers(5, Checker.RED, 5);
+        _tables[0].addCheckers(0, Checker.RED, 2);
     }
 
     private void setupCheckersInitial() {
@@ -68,61 +88,55 @@ public class Board {
     //       some problems.
     @Override
     public String toString(){
-        Stack<Checker>[] boardStack= new Stack[Point.MAXIMUM_PIP_NUMBER+1];    //FIXME - List of stacks?
-        for (int points=1;points<=Point.MAXIMUM_PIP_NUMBER;points++){
-            boardStack[points]=_points[points].getCheckers();
-        }
-        int topMaxRows=getPointMaxLength(boardStack, 1, Point.MAXIMUM_PIP_NUMBER/2);
-        int bottomMaxRows=getPointMaxLength(boardStack, (Point.MAXIMUM_PIP_NUMBER/2)+1, Point.MAXIMUM_PIP_NUMBER);
-
         String board="";
         
         board+=getBorder();
 
         //Get Top Table
-        for (int i=0; i<5;i++){
-            board+=getPoints(this, i,true);
+        int length=getPointMaxLength(2);
+        for (int i=0; i<length;i++){ 
+            board+=getPoints(i,2,3);
         }
 
         for (int i=0; i<2;i++){
             board+=getArrows(i,true);
         }
 
-        for (int i=0;i<3;i++){
-            board+=" ".repeat(4*Constants.LANES_PER_TABLE)+"|     |\n";
+        for (int i=0;i<3;i++){  //FIXME - Bar can be of variable length depending on # checkers in it
+            board+=" ".repeat(4*Constants.LANES_PER_TABLE)+"|"+getBarRow(i,3,0)+"|\n"; //FIXME Correct Paramaters need to be given to this function 
         }
 
         //Print Bottom Table 
+        length=getPointMaxLength(0);
         for(int i=1;i>=0;i--){
             board+=getArrows(i,false);
         }
 
-        for (int i=4; i>=0;i--){
-            board+=getPoints(this, i,false);
+        for (int i=length-1; i>=0;i--){
+            board+=getPoints(i,1,0);
         }
         board+=getBorder();
 
         return board;
     }
 
-    private int getPointMaxLength(Stack<Checker>[] boardStack,int start,int end){
-        int max=-1;
-        for(int i=start;i<=end;i++){
-            int size=boardStack[i].size();
-            max=size>max? size: max;
-        }
+    private int getPointMaxLength(int table1){
+        int table1Length=_tables[table1].getPointMaxLength();
+        int table2Length=_tables[table1+1].getPointMaxLength();
+        int max=Math.max(table1Length,table2Length);
         return max;
     }
 
-    private String getPoints(Board board,int row,boolean topTable){
+    private String getPoints(int row,int leftTable,int rightTable){
         String points=""; 
 
-        //String[] checkersOnTableRow=
-        String[] checkersOnTableRow=Arrays.copyOfRange(board.toStringBottomCheckers()[row], 0, Constants.LANES_PER_TABLE);
-        points+=getTableRow(checkersOnTableRow);
-        points+="|"+" ".repeat(5);
-        checkersOnTableRow=Arrays.copyOfRange(board.toStringBottomCheckers()[row], Constants.LANES_PER_TABLE, 2*Constants.LANES_PER_TABLE);
-        points+=getTableRow(checkersOnTableRow);
+        String[]checkersOnTableRow=_tables[leftTable].getPointsRow(row);
+        points+=getTableRow(checkersOnTableRow,Constants.LANES_PER_TABLE);
+        
+        points+="|"+getBarRow(row,5,0);//FIXME Correct Paramaters need to be given to this function 
+
+        checkersOnTableRow=_tables[rightTable].getPointsRow(row);
+        points+=getTableRow(checkersOnTableRow,Constants.LANES_PER_TABLE);
         points+="|\n";
         return points;
     }
@@ -130,7 +144,7 @@ public class Board {
     private String getArrows(int i,boolean pointDown){
         String arrows="";
         arrows+=getArrow(i,1,pointDown);
-        arrows+=" ".repeat(5);
+        arrows+=getBarRow(i,2,0);   //FIXME Correct Paramaters need to be given to this function 
         arrows+=getArrow(i,0,pointDown);
         arrows+="\n";
         return arrows;
@@ -140,12 +154,29 @@ public class Board {
         return"=".repeat(5*((Constants.LANES_PER_TABLE*2)-1))+"\n";
     }
 
-    private String getTableRow(String[] checkers){
-        String row="";
-        for(int i=0;i<Constants.LANES_PER_TABLE;i++){
-            row+="| "+checkers[i]+" ";
+    private String getBarRow(int row,int numRows,int player){
+        String bar=" ".repeat(2);
+        if(numRows-row<=_bar[player].getCheckerCount()){
+            bar+=_bar[player].getResidentColour();
         }
-        return row;
+        else{
+            bar+=" ";
+        }
+        bar+=" ".repeat(2);
+        return bar;
+    }
+
+    private String getPointNumbers(boolean top, int player){
+        _tables[2].getPointNumber();
+        return "";  //TODO Unfinished
+    }
+
+    private String getTableRow(String[] checkers, int size){
+        String rowString="";
+        for(int i=size-1;i>=0;i--){
+            rowString+="| "+checkers[i]+" ";
+        }
+        return rowString;
     }
 
     private String getArrow(int layer,int leftSide,boolean pointDown){
@@ -162,36 +193,5 @@ public class Board {
 
         arrow=" ".repeat(layer)+left+" ".repeat((layers)-(layer*2))+right+" ".repeat(layer);
         return "|".repeat(1-leftSide)+arrow.repeat(Constants.LANES_PER_TABLE)+"|".repeat(leftSide);
-    }
-
-
-    public String[][] toStringTopCheckers() {
-    	return Board.setupInitialCheckers(Checker.RED.getSymbol(), Checker.WHITE.getSymbol(),true);
-    }
-
-    public String[][] toStringBottomCheckers() {
-    	return Board.setupInitialCheckers(Checker.WHITE.getSymbol(), Checker.RED.getSymbol(),false);
-    }
-
-    public static String[][] setupInitialCheckers(String homeChecker, String awayChecker, boolean rotateUp)
-    {
-        String [][] checkers=new String[5][Constants.LANES_PER_TABLE*2];
-        for (int j=0;j<5;j++){
-            for (int i=0;i<Constants.LANES_PER_TABLE*2;i++){
-                String checker=" ";
-                switch (i){
-                    case 0 -> checker=awayChecker;
-                    case 4-> {
-                        if(j<3){checker=homeChecker;}
-                    }
-                    case 6-> checker=homeChecker;
-                    case 11-> {
-                        if (j<2){checker=awayChecker;}
-                    }
-                }
-                checkers[j][i]=checker;
-            }
-        }
-        return checkers;
     }
 }
