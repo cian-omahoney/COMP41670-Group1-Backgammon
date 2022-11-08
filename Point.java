@@ -7,25 +7,15 @@ public class Point {
 	private Checker _residentColour;
 	private Stack<Checker> _checkers;
 	
-	public Point(int whitePointNumber) {
-		this._whitePointNumber = whitePointNumber;
-		this._redPointNumber = (MAXIMUM_PIP_NUMBER - whitePointNumber + 1);
+	public Point(int whitePointIndex) {
+		this._whitePointNumber = whitePointIndex + 1;
+		this._redPointNumber = (MAXIMUM_PIP_NUMBER - whitePointIndex);
 		_residentColour = Checker.EMPTY;
 		_checkers = new Stack<Checker>();
 	}
 	
 	public void addCheckers(Checker checkerColour) {
-		if(_checkers.isEmpty() && _residentColour == Checker.EMPTY) {
-			_checkers.add(checkerColour);
-			_residentColour = checkerColour;
-		}
-		else if (_residentColour == checkerColour) {
-			_checkers.add(checkerColour);
-		}
-		else {
-			// UNFINISHED
-			System.out.println("Unable to place checker here!");
-		}
+		addCheckers(checkerColour, 1);
 	}
 	
 	public void addCheckers(Checker checkerColour, int quantity) {
@@ -46,12 +36,12 @@ public class Point {
 		}
 	}
 	
-	public int getWhitePointNumber() {
-		return _whitePointNumber;
-	}
-	
-	public int getRedPointNumber() {
-		return _redPointNumber;
+	public int getPointNumber(Checker activeColour) {
+		return switch(activeColour) {
+			case RED -> _redPointNumber;
+			case WHITE -> _whitePointNumber;
+			case EMPTY -> 0;
+		};
 	}
 	
 	public Checker getResidentColour() {
@@ -69,6 +59,9 @@ public class Point {
 		return checkerCount;
 	}
 
+	// TODO: Note sure about this method.
+	//       Shoulint the board object using this
+	//		 only need the number of checkers in the point to print it?
 	public Stack<Checker> getCheckers(){
 		return _checkers;
 	}

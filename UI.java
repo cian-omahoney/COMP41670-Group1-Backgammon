@@ -13,31 +13,25 @@ public class UI{
 	private static final String DASH_LINE = YELLOW_TEXT_COLOUR + "=".repeat(82) + CLEAR_COLOURS;
 	
 	private Scanner _userInput;
-	Command _command;
-	Player _playerOne;
-	Player _playerTwo;
-	
+	private Command _command;
+
     public UI(){
     	_userInput = new Scanner(System.in);
     	printIntro();
     }
     
-    public Player getPlayerName(String playerNumber) {
-    	System.out.print("Enter Player " + playerNumber + " Name: ");
-		String userInput = getLine();
-		
-		// Should make sure players have different names here.
-		switch(playerNumber) {
-		case "One":
-			_playerOne = new Player(userInput, Checker.WHITE);
-			return _playerOne;
-		case "Two":
-			_playerTwo = new Player(userInput, Checker.RED);
-			return _playerTwo;
-		default:
-			_playerOne = new Player(userInput, Checker.WHITE);
-			return _playerOne;
-		}
+    public void getPlayerNames(Player redPlayer, Player whitePlayer) {
+		do {
+			System.out.print("Enter Red Checker Player Name:\t\t");
+			redPlayer.setName(getLine());
+			System.out.print("Enter White Checker Player Name:\t");
+			whitePlayer.setName(getLine());
+			if(redPlayer.getName().toLowerCase().equals(whitePlayer.getName().toLowerCase())) {
+				System.out.print(CYAN_TEXT_COLOUR);
+				System.out.println("\tPlayer names must be different!");
+				System.out.print(CLEAR_COLOURS);
+			}
+		}while(redPlayer.getName().toLowerCase().equals(whitePlayer.getName().toLowerCase()));
     }
     
     public Command getCommand(Player player) {
@@ -77,8 +71,9 @@ public class UI{
 
     public void printDice(Player player){
     	System.out.print(CYAN_TEXT_COLOUR);
-    	System.out.printf("\tResults: [%d] [%d]\n", player.getDiceRoll()[0], 
-    												player.getDiceRoll()[1]);
+		System.out.print("\tResults: ");
+		System.out.print(player.getAvailableMoves());
+		System.out.println();
     	System.out.print(CLEAR_COLOURS);
     }
 
@@ -98,14 +93,18 @@ public class UI{
     	System.out.print(CLEAR_COLOURS);
     }
 
-    public void printBoard(Board board){
+    public void printBoard(Board board, Player redPlayer, Player whitePlayer){
 		System.out.print(CLEAR_SCREEN);
         System.out.flush();
         System.out.println(DASH_LINE);
-        System.out.printf("Player 1: %s\t\t\tPlayer 2: %s\n", _playerOne.getName(), _playerTwo.getName());
+        System.out.printf("Player Red: %s\t\t\tPlayer White: %s\n", redPlayer.getName(), whitePlayer.getName());
         System.out.println(DASH_LINE);
 
         String boardString=board.toString();
         System.out.println(boardString);
     }
+
+	public void closeUserInput() {
+		_userInput.close();
+	}
 }

@@ -6,14 +6,14 @@ public class Backgammon {
 		Command currentCommand;
 		Player activePlayer;
         Board board=new Board();
-		
-		Player playerOne = UserInterface.getPlayerName("One");
-		Player playerTwo = UserInterface.getPlayerName("Two");
+		Player playerRed = new Player(Checker.RED);
+		Player playerWhite = new Player(Checker.WHITE);
 
-        UserInterface.printBoard(board);
+		UserInterface.getPlayerNames(playerRed, playerWhite);
+        //UserInterface.printBoard(board, playerRed, playerWhite);
         
         // Randomly choose player to get first turn:
-        activePlayer = new Random().nextBoolean() ? playerOne : playerTwo;
+        activePlayer = new Random().nextBoolean() ? playerRed : playerWhite;
 		UserInterface.printFirstPlayerChosen(activePlayer);
         
 		do{
@@ -24,18 +24,21 @@ public class Backgammon {
 			else if(currentCommand.isRoll()) {
 				activePlayer.rollDice();
 				UserInterface.printDice(activePlayer);
+				board.getValidMoves(activePlayer);
 			}
 			
 			// After the active player finishes their turn, switch to the next player:
 			activePlayer = switch(activePlayer.getColour()) {
-			case WHITE -> playerTwo;
-			case RED -> playerOne;
-			default -> playerOne;
+			case WHITE -> playerRed;
+			case RED -> playerWhite;
+			default -> activePlayer;
 			};
 		}while(!currentCommand.isQuit());
 
 		if(currentCommand.isQuit()){
 			UserInterface.printQuit();
 		}
+
+		UserInterface.closeUserInput();
 	}
 }

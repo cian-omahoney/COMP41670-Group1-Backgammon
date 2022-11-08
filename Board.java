@@ -4,28 +4,71 @@ public class Board {
     private Point[] _points;
     
     public Board() {
-    	this._points = new Point[Point.MAXIMUM_PIP_NUMBER+1];
-    	for(int i=1; i<=Point.MAXIMUM_PIP_NUMBER; i++) {
+    	this._points = new Point[Point.MAXIMUM_PIP_NUMBER];
+    	for(int i=0; i<Point.MAXIMUM_PIP_NUMBER; i++) {
     		_points[i] = new Point(i); 
     	}
     	setupCheckersInitial();
-        return;
-    }
-    
-    private void setupCheckersInitial() {
-    	_points[6].addCheckers(Checker.WHITE, 6);
-    	_points[8].addCheckers(Checker.WHITE, 3);
-    	_points[13].addCheckers(Checker.WHITE, 2);
-    	_points[24].addCheckers(Checker.WHITE, 5);
-    	
-    	_points[20].addCheckers(Checker.RED, 6);
-    	_points[18].addCheckers(Checker.RED, 3);
-    	_points[12].addCheckers(Checker.RED, 5);
-    	_points[1].addCheckers(Checker.RED, 2);
     }
 
+    private void setupCheckersInitial() {
+    	_points[5].addCheckers(Checker.WHITE, 5);
+    	_points[7].addCheckers(Checker.WHITE, 3);
+    	_points[12].addCheckers(Checker.WHITE, 5);
+    	_points[23].addCheckers(Checker.WHITE, 2);
+
+        _points[0].addCheckers(Checker.RED, 2);
+        _points[11].addCheckers(Checker.RED, 5);
+        _points[16].addCheckers(Checker.RED, 3);
+    	_points[18].addCheckers(Checker.RED, 5);
+    }
+
+    public void getValidMoves(Player activePlayer) {
+        int sourcePoint;
+        int destinationPoint;
+        int availableMoveIndex = 0;
+        int nextDiceValue;
+        for(Point currentPoint : _points) {
+            if(currentPoint.getResidentColour() == activePlayer.getColour()) {
+                sourcePoint = currentPoint.getPointNumber(activePlayer.getColour());
+                for(int i=0; i<4; i++) {
+                    nextDiceValue = activePlayer.getAvailableMoves()[availableMoveIndex];
+                    destinationPoint = isMoveValid(sourcePoint, nextDiceValue, (), activePlayer.getColour());
+                }
+            }
+        }
+    }
+
+
+    // TODO: change so only one return statement
+    private int isMoveValid(int sourcePoint, int rollValue, Checker playerColour) {
+        int destinationPoint = sourcePoint - rollValue;
+
+        int destinationIndex = destinationPoint - 1;
+        if(playerColour == Checker.RED) {
+            destinationIndex = Point.MAXIMUM_PIP_NUMBER - destinationPoint;
+        }
+
+        if(destinationPoint > 0) {
+            if (_points[destinationIndex].getResidentColour() == playerColour || _points[destinationIndex].getResidentColour() == Checker.EMPTY) {
+                System.out.printf("Valid move from point %d to point %d\n", sourcePoint, destinationPoint);
+                return destinationPoint;
+            } else {
+                if (_points[destinationIndex].getCheckerCount() == 1) {
+                    System.out.printf("Valid move from point %d to point %d\n", sourcePoint, destinationPoint);
+                    return destinationPoint;
+                }
+            }
+        }
+        return -1;
+    }
+
+
+    // TODO: I changed the _point indexing from [1:24] to [0:23].  It was leading to
+    //       some problems.
+    @Override
     public String toString(){
-        Stack<Checker>[] boardStack= new Stack[Point.MAXIMUM_PIP_NUMBER];    //FIXME - List of stacks?
+        Stack<Checker>[] boardStack= new Stack[Point.MAXIMUM_PIP_NUMBER+1];    //FIXME - List of stacks?
         for (int points=1;points<=Point.MAXIMUM_PIP_NUMBER;points++){
             boardStack[points]=_points[points].getCheckers();
         }
@@ -120,8 +163,6 @@ public class Board {
         arrow=" ".repeat(layer)+left+" ".repeat((layers)-(layer*2))+right+" ".repeat(layer);
         return "|".repeat(1-leftSide)+arrow.repeat(Constants.LANES_PER_TABLE)+"|".repeat(leftSide);
     }
-
-
 
 
     public String[][] toStringTopCheckers() {

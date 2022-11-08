@@ -1,26 +1,35 @@
-import java.util.Random;
+import java.util.*;
 
 public class Player {
     private String _name;
-    private Checker _playerColour;
-    private int _diceRoll[];
+    private final Checker _playerColour;
+    private Dice _firstDie;
+    private Dice _secondDie;
+    private List<Integer> _availableMoves;
+    private int _pipCount;
 
-    public Player(String name, Checker playerColour){
-        this._name=name;
-        this._diceRoll = new int[]{1,1};
+    public Player(Checker playerColour){
+        this._name="";
+        this._firstDie = new Dice();
+        this._secondDie = new Dice();
         this._playerColour = playerColour;
+        this._availableMoves = new ArrayList<Integer>();
     }
 
     //TODO pip count - https://www.bkgm.com/gloss/lookup.cgi?pip+count
     public void rollDice(){
-        Random rand = new Random();
-        _diceRoll[0]=rand.nextInt(1,7);
-        _diceRoll[1]=rand.nextInt(1,7);
+        _availableMoves.add(_firstDie.roll());
+        _availableMoves.add(_secondDie.roll());
+        if(_secondDie.getRollValue() == _firstDie.getRollValue()) {
+            _availableMoves.add(_firstDie.getRollValue());
+            _availableMoves.add(_firstDie.getRollValue());
+        }
     }
-    
-    public int[] getDiceRoll() {
-    	return _diceRoll;
+
+    public int[] getAvailableMoves() {
+        return _availableMoves;
     }
+
 
     public String getName(){
         return _name;
@@ -28,5 +37,9 @@ public class Player {
     
     public Checker getColour() {
     	return _playerColour;
+    }
+
+    public void setName(String name) {
+        _name = name;
     }
 }

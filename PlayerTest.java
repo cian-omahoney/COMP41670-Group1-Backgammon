@@ -6,7 +6,8 @@ class PlayerTest {
 	
 	@BeforeEach
 	void setUp() {
-		player = new Player("Testname", Checker.WHITE);
+		player = new Player(Checker.WHITE);
+		player.setName("Testname");
 	} 
 
 	@Test
