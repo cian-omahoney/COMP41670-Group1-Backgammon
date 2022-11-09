@@ -2,14 +2,12 @@ public class Table {
     private Point[] _points;
     private int tableNumber;
 
-    public Table(int number){
+    public Table(int number, Point[] points){
         this._points = new Point[Constants.LANES_PER_TABLE];
-        tableNumber=number;
+        tableNumber = number;
     	for(int i=0; i<Constants.LANES_PER_TABLE; i++) {
-    		_points[i] = new Point(i+(tableNumber*Constants.LANES_PER_TABLE)); //FIXME does this order them correctly?
+    		this._points[i] = points[i+(tableNumber*Constants.LANES_PER_TABLE)]; //FIXME does this order them correctly?
     	}
-    	//setupCheckersInitial();
-        return;
     }
 
     public String[] getPointsRow(int row){
@@ -21,10 +19,6 @@ public class Table {
             }
         }
         return checkers;
-    }
-
-    public void addCheckers(int point,Checker checkerColour, int quantity){ //Point here refers to local point numbers eg 1-6
-        _points[point].addCheckers(checkerColour, quantity);
     }
 
     public int getPointMaxLength(){

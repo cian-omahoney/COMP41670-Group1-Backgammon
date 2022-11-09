@@ -1,21 +1,23 @@
 import java.util.*;
 
 public class Board {
+    // TODO: We may need to split this class into smaller classes, its getting quit big :)
+
     private Point[] _points;
     private Table[] _tables;
     private Bar[] _bar;
 
     public Board() {
         this._points = new Point[Point.MAXIMUM_PIP_NUMBER];
+        this._tables = new Table[4];
+        this._bar = new Bar[2];
+
         for(int i=0; i<Point.MAXIMUM_PIP_NUMBER; i++) {
             _points[i] = new Point(i);
         }
 
-        _tables=new Table[4];
-        _bar=new Bar[2];
-
         for(int i=0; i<4; i++) {
-            _tables[i] = new Table(i);
+            _tables[i] = new Table(i, this._points);
         }
 
         for(int i=0;i<2;i++)
@@ -100,6 +102,7 @@ public class Board {
         }
         return destinationPoint;
     }
+
 
     public String toString(){
         String board="";

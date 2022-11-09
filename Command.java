@@ -2,7 +2,12 @@ public class Command {
 	private CommandType _commandType;
 
 	public Command(String userInput) {
-		_commandType = CommandType.valueOf(userInput.toUpperCase());
+		if(isValid(userInput)) {
+			_commandType = CommandType.valueOf(userInput.toUpperCase());
+		}
+		else {
+			_commandType = CommandType.INVALID;
+		}
 	}
 	
 	public static boolean isValid(String userInput) {
@@ -22,5 +27,9 @@ public class Command {
 	
 	public boolean isHelp() {
 		return _commandType == CommandType.HELP;
+	}
+
+	public boolean isInvalid() {
+		return _commandType == CommandType.INVALID;
 	}
 }

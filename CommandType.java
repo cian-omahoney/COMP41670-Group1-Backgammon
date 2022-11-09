@@ -1,7 +1,8 @@
 public enum CommandType {
 	QUIT ("QUIT"),
 	ROLL ("ROLL"),
-	HELP ("HELP");
+	HELP ("HELP"),
+    INVALID ("");
 	
 	private String _regex;
 	
