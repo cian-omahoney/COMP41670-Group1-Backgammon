@@ -5,6 +5,8 @@ public class UI{
 	public static final String  CLEAR_COLOURS 		= "\033[0m";
 	private static final String YELLOW_TEXT_COLOUR 	= "\033[1;33m";
 	private static final String CYAN_TEXT_COLOUR 	= "\033[1;36m";
+	private static final String MAGENTA_TEXT_COLOUR = "\033[1;35m";
+	private static final String UNDERLINE_TEXT      = "\033[4m";
 	public static final String WHITE_CHECKER_COLOUR = "\033[0;39m";
 	public static final String RED_CHECKER_COLOUR   = "\033[1;31m";
 	private static final String DASH_LINE = YELLOW_TEXT_COLOUR + "=".repeat(82) + CLEAR_COLOURS;
@@ -43,13 +45,12 @@ public class UI{
     }
     
     public Command getCommand(Player player) {
-		System.out.println(DASH_LINE);
 		System.out.printf("Enter command %s:  ", player.getName());
 		String input = getLine();
 		_command = new Command(input);
 		if (_command.isInvalid()) {
 			System.out.print(CYAN_TEXT_COLOUR);
-			System.out.println("\tThis command is invalid! Try \"HELP\".");
+			System.out.println("\tThis command is invalid! Try \"HINT\".");
 			System.out.print("\tPress enter to try another command...");
 			getLine();
 			System.out.print(CLEAR_COLOURS);
@@ -66,6 +67,7 @@ public class UI{
     	System.out.println("\tThe player to go first is selected randomly...");
     	System.out.println("\t" + player.getName() + " is selected to go first.");
     	System.out.println(CLEAR_COLOURS);
+		System.out.println(DASH_LINE);
     }
     
     public void printQuit() {
@@ -75,8 +77,8 @@ public class UI{
     }
 
     public void printDice(Player player){
-    	System.out.print(CYAN_TEXT_COLOUR);
-		System.out.print("\tResults: ");
+    	System.out.println(CYAN_TEXT_COLOUR);
+		System.out.print("\tAvailable Dice: ");
 		for(int diceRoll : player.getAvailableMoves()) {
 			System.out.printf("[%d] ", diceRoll);
 		}
@@ -98,7 +100,11 @@ public class UI{
 		String input;
 
 		System.out.println(CYAN_TEXT_COLOUR);
+		System.out.print(UNDERLINE_TEXT);
 		System.out.printf("\t%d Valid Moves Possible:\n", validMoveList.size());
+
+		System.out.print(CLEAR_COLOURS);
+		System.out.print(CYAN_TEXT_COLOUR);
 		for(List<Integer> moveSequence : validMoveList) {
 			System.out.printf("\t[%s] >> Move checker from point %2d ", convertIndexToLabel(validMoveList.indexOf(moveSequence)), moveSequence.get(0));
 			for(int destinationPoint : moveSequence.subList(1, moveSequence.size())) {
@@ -152,13 +158,24 @@ public class UI{
 		return index;
 	}
 
-
+	public void printMoves(List<Integer> moveSequence) {
+		System.out.println(CYAN_TEXT_COLOUR);
+		System.out.printf("\tOne checker moved from point %2d", moveSequence.get(0));
+		for(int destinationPoint : moveSequence.subList(1, moveSequence.size())) {
+			System.out.printf(" --> point %2d", destinationPoint);
+		}
+		System.out.println(".");
+		System.out.print("\tPress enter to continue your turn...");
+		getLine();
+		System.out.print(CLEAR_COLOURS);
+	}
 
     public void printHelp(){   //TODO write help
     	System.out.print(CYAN_TEXT_COLOUR);
         System.out.println("\t>> Enter 'QUIT' to quit game.");
         System.out.println("\t>> Enter 'ROLL' to roll dice.");
-        System.out.println("\t>> Enter 'HELP' for help.");
+        System.out.println("\t>> Enter 'HINT' for help.");
+		System.out.println("\t>> Enter 'PIP' to view players pip count.");
 		System.out.println();
 		System.out.print("\tPress enter to continue your turn...");
 		getLine();
@@ -180,12 +197,30 @@ public class UI{
         System.out.println(DASH_LINE);
         System.out.printf("Player Red: %s\t\t\tPlayer White: %s\n", redPlayer.getName(), whitePlayer.getName());
         System.out.println(DASH_LINE);
-
+		System.out.println();
         String boardString=board.toString();
         System.out.println(boardString);
+		System.out.println(DASH_LINE);
     }
+
+	public void printDashboard(Player activePlayer) {
+		System.out.print(MAGENTA_TEXT_COLOUR);
+		System.out.printf("Current Player:\t%s\n", activePlayer.getName());
+		System.out.print(CLEAR_COLOURS);
+		System.out.println(DASH_LINE);
+	}
 
 	public void closeUserInput() {
 		_userInput.close();
+	}
+
+	public void printPipCount(Player playerOne, Player playerTwo, Board board) {
+		System.out.print(CYAN_TEXT_COLOUR);
+		System.out.printf("\t>> %s's Pip Count is:  %-3d.\n", playerOne.getName(), board.getPipCount(playerOne));
+		System.out.printf("\t>> %s's Pip Count is:  %-3d.\n", playerTwo.getName(), board.getPipCount(playerTwo));
+		System.out.println();
+		System.out.print("\tPress enter to continue your turn...");
+		getLine();
+		System.out.print(CLEAR_COLOURS);
 	}
 }

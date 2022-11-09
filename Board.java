@@ -39,6 +39,7 @@ public class Board {
     	_points[0].addCheckers(Checker.RED, 2);
     }
 
+    // TODO: WHAT If no valid moves possible??
     public List<ArrayList<Integer>> getValidMoves(Player activePlayer) {
         int sourcePoint;
         int destinationPoint;
@@ -103,6 +104,28 @@ public class Board {
         return destinationPoint;
     }
 
+    // TODO: SHould make source index a constant.
+    //       Handel bearing off here.
+    public void moveChecker(List<Integer> moveSequence, Player activePlayer) {
+        if(activePlayer.getColour() == Checker.RED) {
+            _points[Point.MAXIMUM_PIP_NUMBER - moveSequence.get(0)].removeChecker();
+            _points[Point.MAXIMUM_PIP_NUMBER - moveSequence.get(moveSequence.size()-1)].addCheckers(activePlayer.getColour());
+        }
+        else if(activePlayer.getColour() == Checker.WHITE) {
+            _points[moveSequence.get(0)-1].removeChecker();
+            _points[moveSequence.get(moveSequence.size()-1)-1].addCheckers(activePlayer.getColour());
+        }
+    }
+
+    public int getPipCount(Player player) {
+        int pipCount = 0;
+        for(Point currentPoint : _points) {
+            if(currentPoint.getResidentColour() == player.getColour()) {
+                pipCount += currentPoint.getPointNumber(player.getColour()) * currentPoint.getCheckerCount();
+            }
+        }
+        return pipCount;
+    }
 
     public String toString(){
         String board="";

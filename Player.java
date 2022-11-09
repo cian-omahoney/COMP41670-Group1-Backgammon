@@ -6,7 +6,6 @@ public class Player {
     private Dice _firstDie;
     private Dice _secondDie;
     private List<Integer> _availableMoves;
-    private int _pipCount;
 
     public Player(Checker playerColour){
         this._name="";
@@ -30,6 +29,23 @@ public class Player {
         return _availableMoves;
     }
 
+    public boolean availableMovesRemaining() {
+        return !_availableMoves.isEmpty();
+    }
+
+    public void updateAvailableMoves(List<Integer> moveSequence) {
+        int diceValueUsed = 0;
+        int sourcePoint = moveSequence.get(0);
+        for(int destinationPoint : moveSequence) {
+            diceValueUsed = sourcePoint - destinationPoint;
+            sourcePoint = destinationPoint;
+            if(diceValueUsed > 0) {
+                if(availableMovesRemaining()) {
+                    _availableMoves.remove(Integer.valueOf(diceValueUsed));
+                }
+            }
+        }
+    }
 
     public String getName(){
         return _name;

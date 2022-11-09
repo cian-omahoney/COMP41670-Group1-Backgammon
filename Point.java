@@ -13,7 +13,7 @@ public class Point {
 		_residentColour = Checker.EMPTY;
 		_checkers = new Stack<Checker>();
 	}
-	
+
 	public void addCheckers(Checker checkerColour) {
 		addCheckers(checkerColour, 1);
 	}
@@ -21,18 +21,27 @@ public class Point {
 	public void addCheckers(Checker checkerColour, int quantity) {
 		if(_checkers.isEmpty() && _residentColour == Checker.EMPTY) {
 			for(int i=0; i<quantity; i++) {
-				_checkers.add(checkerColour);
+				_checkers.push(checkerColour);
 			}
 			_residentColour = checkerColour;
 		}
 		else if (_residentColour == checkerColour) {
 			for(int i=0; i<quantity; i++) {
-				_checkers.add(checkerColour);
+				_checkers.push(checkerColour);
 			}
 		}
 		else {
 			// UNFINISHED
 			System.out.println("Unable to place checker here!");
+		}
+	}
+
+	public void removeChecker() {
+		if(!_checkers.isEmpty()) {
+			_checkers.pop();
+		}
+		if(_checkers.isEmpty()){
+			_residentColour = Checker.EMPTY;
 		}
 	}
 	

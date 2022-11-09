@@ -13,8 +13,9 @@ public class Command {
 	public static boolean isValid(String userInput) {
 		String inputFormatted = userInput.toUpperCase();
 		return  inputFormatted.matches(CommandType.QUIT.getRegex()) || 
-				inputFormatted.matches(CommandType.HELP.getRegex()) ||
-				inputFormatted.matches(CommandType.ROLL.getRegex());
+				inputFormatted.matches(CommandType.HINT.getRegex()) ||
+				inputFormatted.matches(CommandType.ROLL.getRegex()) ||
+				inputFormatted.matches(CommandType.PIP.getRegex());
 	}
 	
 	public boolean isQuit() {
@@ -25,10 +26,13 @@ public class Command {
 		return _commandType == CommandType.ROLL;
 	}
 	
-	public boolean isHelp() {
-		return _commandType == CommandType.HELP;
+	public boolean isHint() {
+		return _commandType == CommandType.HINT;
 	}
 
+	public boolean isPip() {
+		return _commandType == CommandType.PIP;
+	}
 	public boolean isInvalid() {
 		return _commandType == CommandType.INVALID;
 	}
