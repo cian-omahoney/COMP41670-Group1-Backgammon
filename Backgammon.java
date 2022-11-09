@@ -24,7 +24,7 @@ public class Backgammon {
 			else if(currentCommand.isRoll()) {
 				activePlayer.rollDice();
 				UserInterface.printDice(activePlayer);
-				board.getValidMoves(activePlayer);
+				UserInterface.printValidMoves(board.getValidMoves(activePlayer));
 			}
 			
 			// After the active player finishes their turn, switch to the next player:

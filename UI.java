@@ -2,16 +2,14 @@ import java.util.*;
 
 public class UI{
 	private static final String CLEAR_SCREEN 		= "\033[H\033[2J";
-	
 	public static final String  CLEAR_COLOURS 		= "\033[0m";
 	private static final String YELLOW_TEXT_COLOUR 	= "\033[1;33m";
 	private static final String CYAN_TEXT_COLOUR 	= "\033[1;36m";
-	
 	public static final String WHITE_CHECKER_COLOUR = "\033[0;39m";
 	public static final String RED_CHECKER_COLOUR   = "\033[1;31m";
-	
 	private static final String DASH_LINE = YELLOW_TEXT_COLOUR + "=".repeat(82) + CLEAR_COLOURS;
-	
+
+
 	private Scanner _userInput;
 	private Command _command;
 
@@ -72,7 +70,9 @@ public class UI{
     public void printDice(Player player){
     	System.out.print(CYAN_TEXT_COLOUR);
 		System.out.print("\tResults: ");
-		System.out.print(player.getAvailableMoves());
+		for(int diceRoll : player.getAvailableMoves()) {
+			System.out.printf("[%d] ", diceRoll);
+		}
 		System.out.println();
     	System.out.print(CLEAR_COLOURS);
     }
@@ -84,6 +84,20 @@ public class UI{
         System.out.println("\tWelcome to Backgammon");
     	System.out.println(DASH_LINE);
     }
+
+	public void printValidMoves(List<ArrayList<Integer>> validMoveList){
+		System.out.print(CYAN_TEXT_COLOUR);
+		System.out.printf("\t%d Valid Moves Possible:\n", validMoveList.size());
+		for(List<Integer> moveSequence : validMoveList) {
+			System.out.printf("\t>> Move checker from point %2d ", moveSequence.get(0));
+			for(int destinationPoint : moveSequence.subList(1, moveSequence.size())) {
+				System.out.printf("--> point %2d ", destinationPoint);
+			}
+			System.out.println();
+		}
+		System.out.print(CLEAR_COLOURS);
+	}
+
 
     public void printHelp(){   //TODO write help
     	System.out.print(CYAN_TEXT_COLOUR);

@@ -36,6 +36,6 @@ public class Table {
     }
 
     public int getPointNumber(){    //FIXME - Return the requested point number
-        return _points[1].getRedPointNumber();
+        return _points[1].getPointNumber(Checker.RED);
     }
 }

@@ -26,7 +26,7 @@ public class Player {
         }
     }
 
-    public int[] getAvailableMoves() {
+    public List<Integer> getAvailableMoves() {
         return _availableMoves;
     }
 
