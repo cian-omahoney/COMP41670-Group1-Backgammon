@@ -43,6 +43,18 @@ public class Point {
 			case EMPTY -> 0;
 		};
 	}
+
+	public int getPointNumber(int player){	//TODO This makes getWhitePointNumber redundant? 
+		if (player==1){	//FIXME Player Number Constants
+			return _whitePointNumber;
+		}
+		else if(player==2){
+			return _redPointNumber;
+		}
+		else{
+			return 0;
+		}
+	}
 	
 	public Checker getResidentColour() {
 		return _residentColour;
@@ -58,12 +70,4 @@ public class Point {
 		}
 		return checkerCount;
 	}
-
-	// TODO: Note sure about this method.
-	//       Shoulint the board object using this
-	//		 only need the number of checkers in the point to print it?
-	public Stack<Checker> getCheckers(){
-		return _checkers;
-	}
-
 }

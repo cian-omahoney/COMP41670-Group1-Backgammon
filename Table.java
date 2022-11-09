@@ -6,7 +6,7 @@ public class Table {
         this._points = new Point[Constants.LANES_PER_TABLE];
         tableNumber=number;
     	for(int i=0; i<Constants.LANES_PER_TABLE; i++) {
-    		_points[i] = new Point(i+(tableNumber*Constants.LANES_PER_TABLE)); 
+    		_points[i] = new Point(i+(tableNumber*Constants.LANES_PER_TABLE)); //FIXME does this order them correctly?
     	}
     	//setupCheckersInitial();
         return;
@@ -35,7 +35,7 @@ public class Table {
         return currMax;
     }
 
-    public int getPointNumber(){    //FIXME - Return the requested point number
-        return _points[1].getPointNumber(Checker.RED);
+    public int getPointNumber(int point,int player){    //FIXME - Return the requested point number
+        return _points[point].getPointNumber(player);
     }
 }
