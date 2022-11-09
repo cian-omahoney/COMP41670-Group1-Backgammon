@@ -107,14 +107,25 @@ public class Board {
     // TODO: SHould make source index a constant.
     //       Handel bearing off here.
     public void moveChecker(List<Integer> moveSequence, Player activePlayer) {
-        if(activePlayer.getColour() == Checker.RED) {
-            _points[Point.MAXIMUM_PIP_NUMBER - moveSequence.get(0)].removeChecker();
-            _points[Point.MAXIMUM_PIP_NUMBER - moveSequence.get(moveSequence.size()-1)].addCheckers(activePlayer.getColour());
+        List <Integer> moveIndex = new ArrayList<>();
+
+        for(Integer movePosition : moveSequence) {
+            if(activePlayer.getColour() == Checker.RED) {
+                moveIndex.add(Point.MAXIMUM_PIP_NUMBER - movePosition);
+            }
+            else {
+                moveIndex.add(movePosition - 1);
+            }
         }
-        else if(activePlayer.getColour() == Checker.WHITE) {
-            _points[moveSequence.get(0)-1].removeChecker();
-            _points[moveSequence.get(moveSequence.size()-1)-1].addCheckers(activePlayer.getColour());
+        _points[moveIndex.get(0)].removeChecker();
+
+        for(int i=1; i<moveIndex.size(); i++) {
+            if(_points[moveIndex.get(i)].getCheckerCount() == 1 && !_points[moveIndex.get(i)].getResidentColour().equals(activePlayer.getColour())) {
+                _points[moveIndex.get(i)].removeChecker();
+                System.out.println("Removed PIP!! TEMP MESSAGE");
+            }
         }
+        _points[moveIndex.get(moveIndex.size()-1)].addCheckers(activePlayer.getColour());
     }
 
     public int getPipCount(Player player) {
