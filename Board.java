@@ -138,9 +138,9 @@ public class Board {
         return pipCount;
     }
 
-    public String toString(){
+    public String toString(int player){
         String board="";
-        board+=getPointNumbers(true,1);
+        board+=getPointNumbers(true,player);
         board+=getBorder();
 
         //Get Top Table
@@ -167,6 +167,7 @@ public class Board {
             board+=getPoints(i,1,0);
         }
         board+=getBorder();
+        board+=getPointNumbers(false,player);
 
         return board;
     }
@@ -218,14 +219,20 @@ public class Board {
 
     private String getPointNumbers(boolean top, int player){
         String numbers="  ";
-        for (int point=5;point>=0;point--){
-            numbers+=Integer.toString(_tables[2].getPointNumber(point,player))+"  ";
+        int tableLeft=1;
+        int tableRight=0;
+        if (top){
+            tableLeft=2;
+            tableRight=3;
+        }
+        for (int point=0;point<Constants.LANES_PER_TABLE;point++){
+            numbers+=Integer.toString(_tables[tableLeft].getPointNumber(point,player))+"  ";    //FIXME pad single digits
         }
         numbers+="Bar   ";
-        for (int point=5;point>=0;point--){
-            numbers+=Integer.toString(_tables[3].getPointNumber(point,player))+"  ";
+        for (int point=0;point<Constants.LANES_PER_TABLE;point++){
+            numbers+=Integer.toString(_tables[tableRight].getPointNumber(point,player))+"  ";
         }
-        return numbers+"\n";  //TODO Unfinished
+        return numbers+"\n";
     }
 
     private String getTableRow(String[] checkers, int size){
