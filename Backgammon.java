@@ -11,28 +11,28 @@ public class Backgammon {
 		List<Integer> moveSequence = new ArrayList<>();
 
 		UserInterface.getPlayerNames(playerRed, playerWhite);
-        UserInterface.printBoard(board, playerRed, playerWhite,playerWhite.getNumber());	//TODO Does this display the correct player at the start?
-        
-        // Randomly choose player to get first turn:
-		// TODO: CHange this to have first dice roll!!
-        activePlayer = new Random().nextBoolean() ? playerRed : playerWhite;
-		UserInterface.printFirstPlayerChosen(activePlayer);
+        UserInterface.printBoard(board, playerRed, playerWhite,1);
+
+		activePlayer = UserInterface.getFirstRoll(playerRed, playerWhite);
 		UserInterface.printDashboard(activePlayer);
-        
+        currentCommand = new Command("FIRST");
 		do{
-			currentCommand = UserInterface.getCommand(activePlayer);
 			if(currentCommand.isHint()) {
 				UserInterface.printHelp();
 			}
 			else if(currentCommand.isPip()) {
 				UserInterface.printPipCount(playerWhite, playerRed, board);
 			}
-			else if(currentCommand.isRoll()) {
-				activePlayer.rollDice();
+			else if(currentCommand.isRoll() || currentCommand.isFirst()) {
+				if(currentCommand.isRoll()) {
+					activePlayer.rollBothDice();
+				}
 
+				board.barEmpty(activePlayer);
 				while(activePlayer.availableMovesRemaining()) {
 					UserInterface.printDice(activePlayer);
-					moveSequence = UserInterface.selectValidMove(board.getValidMoves(activePlayer));
+					moveSequence = board.barEmpty(activePlayer) ? UserInterface.selectValidMove(board.getValidPointMoves(activePlayer)) :
+					 											  UserInterface.selectValidMove(board.getValidBarMoves(activePlayer));
 					board.moveChecker(moveSequence, activePlayer);
 					activePlayer.updateAvailableMoves(moveSequence);
 					UserInterface.printMoves(moveSequence);
@@ -51,6 +51,8 @@ public class Backgammon {
 
 			UserInterface.printBoard(board, playerRed, playerWhite,activePlayer.getNumber());
 			UserInterface.printDashboard(activePlayer);
+
+			currentCommand = UserInterface.getCommand(activePlayer);
 		}while(!currentCommand.isQuit());
 
 		if(currentCommand.isQuit()){

@@ -31,8 +31,7 @@ public class Point {
 			}
 		}
 		else {
-			// UNFINISHED
-			System.out.println("Unable to place checker here!");
+			System.out.println("ERROR: Unable to place checker here!");
 		}
 	}
 
@@ -79,4 +78,9 @@ public class Point {
 		}
 		return checkerCount;
 	}
+
+	public boolean isEmpty() {
+		return _checkers.isEmpty();
+	}
+
 }

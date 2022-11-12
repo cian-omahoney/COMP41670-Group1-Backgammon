@@ -1,10 +1,12 @@
 public class Bar extends Point {
-    public Bar(int player){ //One 'bar per player', one of the bars will be shown on the top, the other on the bottom
-        super(player-2);
-        //TODO Resident colour needs to be added - fixed for each bar 'section'
+    private Checker _barColour;
+    public static final int BAR_POINT_NUMBER = 25;
+    public Bar(Checker barColour){ //One 'bar per player', one of the bars will be shown on the top, the other on the bottom
+        super(BAR_POINT_NUMBER);
+        this._barColour = barColour;
     }
 
-    public void addCheckers(){
-        //TODO Unfinished
+    public void addCheckers() {
+        super.addCheckers(_barColour);
     }
 }

@@ -12,7 +12,7 @@ class PlayerTest {
 
 	@Test
 	void testRollDice_AreValidNumbersReturned() {
-		player.rollDice();
+		player.rollBothDice();
 		int[] retVal = player.getDiceRoll();
 		assertTrue((retVal[0] <= 6 && retVal[0] >= 1), "Fail message: Player.getDiceRoll() isn't working");
 		assertTrue((retVal[1] <= 6 && retVal[1] >= 1), "Fail message: Player.getDiceRoll() isn't working");
@@ -20,7 +20,7 @@ class PlayerTest {
 
 	@Test
 	void testGetDiceRoll() {
-		player.rollDice();
+		player.rollBothDice();
 		int[] retVal = player.getDiceRoll();
 		assertTrue((retVal[0] <= 6 && retVal[0] >= 1), "Fail message: Player.getDiceRoll() isn't working");
 		assertTrue((retVal[1] <= 6 && retVal[1] >= 1), "Fail message: Player.getDiceRoll() isn't working");

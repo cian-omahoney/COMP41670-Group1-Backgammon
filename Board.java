@@ -5,12 +5,12 @@ public class Board {
 
     private Point[] _points;
     private Table[] _tables;
-    private Bar[] _bar;
+    private HashMap<Checker, Bar> _barMap;
 
     public Board() {
         this._points = new Point[Point.MAXIMUM_PIP_NUMBER];
         this._tables = new Table[4];
-        this._bar = new Bar[2];
+        this._barMap = new HashMap<>();
 
         for(int i=0; i<Point.MAXIMUM_PIP_NUMBER; i++) {
             _points[i] = new Point(i);
@@ -20,10 +20,8 @@ public class Board {
             _tables[i] = new Table(i, this._points);
         }
 
-        for(int i=0;i<2;i++)
-        {
-            _bar[i]=new Bar(i+1);
-        }
+        _barMap.put(Checker.RED, new Bar(Checker.RED));
+        _barMap.put(Checker.WHITE, new Bar(Checker.WHITE));
         setupCheckersInitial();
     }
 
@@ -39,8 +37,54 @@ public class Board {
     	_points[0].addCheckers(Checker.RED, 2);
     }
 
+    private int isMoveValid(int sourcePoint, int rollValue, Checker playerColour) {
+        int destinationPoint = sourcePoint - rollValue;
+
+        int destinationIndex = destinationPoint - 1;
+        if(playerColour == Checker.RED) {
+            destinationIndex = Point.MAXIMUM_PIP_NUMBER - destinationPoint;
+        }
+
+        if(destinationPoint > 0) {
+            if (   _points[destinationIndex].getResidentColour() != playerColour
+                    && _points[destinationIndex].getResidentColour() != Checker.EMPTY
+                    && _points[destinationIndex].getCheckerCount()   != 1) {
+                destinationPoint = -1;
+            }
+        }
+        else {
+            destinationPoint = -1;
+        }
+        return destinationPoint;
+    }
+
+    public List<ArrayList<Integer>> getValidBarMoves(Player activePlayer) {
+        int sourcePoint;
+        int destinationPoint;
+        int previousDiceValue = 0;
+        List<ArrayList<Integer>> validMoveList = new ArrayList<ArrayList<Integer>>();
+        List<Integer> validMovePoints;
+
+        sourcePoint = Bar.BAR_POINT_NUMBER;
+
+        for (int nextDiceValue : activePlayer.getAvailableMoves()) {
+            validMovePoints = new ArrayList<>();
+            validMovePoints.add(sourcePoint);
+            if(nextDiceValue != previousDiceValue) {
+                destinationPoint = isMoveValid(sourcePoint, nextDiceValue, activePlayer.getColour());
+
+                if (destinationPoint > 0) {
+                    validMovePoints.add(destinationPoint);
+                    validMoveList.add(new ArrayList<>(validMovePoints));
+                }
+                previousDiceValue = nextDiceValue;
+            }
+        }
+        return validMoveList;
+    }
+
     // TODO: WHAT If no valid moves possible??
-    public List<ArrayList<Integer>> getValidMoves(Player activePlayer) {
+    public List<ArrayList<Integer>> getValidPointMoves(Player activePlayer) {
         int sourcePoint;
         int destinationPoint;
 
@@ -55,6 +99,7 @@ public class Board {
                 validMovePoints = new ArrayList<>();
                 validMovePoints.add(sourcePoint);
                 destinationPoint = sourcePoint;
+
                 for(int nextDiceValue : activePlayer.getAvailableMoves()) {
                     destinationPoint = isMoveValid(destinationPoint, nextDiceValue, activePlayer.getColour());
 
@@ -83,29 +128,9 @@ public class Board {
         return validMoveList;
     }
 
-    private int isMoveValid(int sourcePoint, int rollValue, Checker playerColour) {
-        int destinationPoint = sourcePoint - rollValue;
 
-        int destinationIndex = destinationPoint - 1;
-        if(playerColour == Checker.RED) {
-            destinationIndex = Point.MAXIMUM_PIP_NUMBER - destinationPoint;
-        }
-
-        if(destinationPoint > 0) {
-            if (   _points[destinationIndex].getResidentColour() != playerColour
-                && _points[destinationIndex].getResidentColour() != Checker.EMPTY
-                && _points[destinationIndex].getCheckerCount()   != 1) {
-                destinationPoint = -1;
-            }
-        }
-        else {
-            destinationPoint = -1;
-        }
-        return destinationPoint;
-    }
 
     // TODO: SHould make source index a constant.
-    //       Handel bearing off here.
     public void moveChecker(List<Integer> moveSequence, Player activePlayer) {
         List <Integer> moveIndex = new ArrayList<>();
 
@@ -117,12 +142,17 @@ public class Board {
                 moveIndex.add(movePosition - 1);
             }
         }
-        _points[moveIndex.get(0)].removeChecker();
+        if(moveIndex.get(0) < 0 || moveIndex.get(0) > Point.MAXIMUM_PIP_NUMBER-1) {
+            _barMap.get(activePlayer.getColour()).removeChecker();
+        }
+        else {
+            _points[moveIndex.get(0)].removeChecker();
+        }
 
         for(int i=1; i<moveIndex.size(); i++) {
             if(_points[moveIndex.get(i)].getCheckerCount() == 1 && !_points[moveIndex.get(i)].getResidentColour().equals(activePlayer.getColour())) {
+                _barMap.get(_points[moveIndex.get(i)].getResidentColour()).addCheckers();
                 _points[moveIndex.get(i)].removeChecker();
-                System.out.println("Removed PIP!! TEMP MESSAGE");
             }
         }
         _points[moveIndex.get(moveIndex.size()-1)].addCheckers(activePlayer.getColour());
@@ -154,7 +184,7 @@ public class Board {
         }
 
         for (int i=0;i<3;i++){  //FIXME - Bar can be of variable length depending on # checkers in it
-            board+=" ".repeat(4*Constants.LANES_PER_TABLE)+"|"+getBarRow(i,3,0)+"|\n"; //FIXME Correct Paramaters need to be given to this function
+            board+=" ".repeat(4*Constants.LANES_PER_TABLE)+"|"+getBarRow(i,3,Checker.RED)+"|\n"; //FIXME Correct Paramaters need to be given to this function
         }
 
         //Print Bottom Table
@@ -184,7 +214,7 @@ public class Board {
         String[]checkersOnTableRow=_tables[leftTable].getPointsRow(row);
         points+=getTableRow(checkersOnTableRow,Constants.LANES_PER_TABLE);
 
-        points+="|"+getBarRow(row,5,0);//FIXME Correct Paramaters need to be given to this function
+        points+="|"+getBarRow(row,5,Checker.RED);//FIXME Correct Paramaters need to be given to this function
 
         checkersOnTableRow=_tables[rightTable].getPointsRow(row);
         points+=getTableRow(checkersOnTableRow,Constants.LANES_PER_TABLE);
@@ -195,7 +225,7 @@ public class Board {
     private String getArrows(int i,boolean pointDown){
         String arrows="";
         arrows+=getArrow(i,1,pointDown);
-        arrows+=getBarRow(i,2,0);   //FIXME Correct Paramaters need to be given to this function
+        arrows+=getBarRow(i,2,Checker.RED);   //FIXME Correct Paramaters need to be given to this function
         arrows+=getArrow(i,0,pointDown);
         arrows+="\n";
         return arrows;
@@ -205,10 +235,10 @@ public class Board {
         return"=".repeat(5*((Constants.LANES_PER_TABLE*2)-1))+"\n";
     }
 
-    private String getBarRow(int row,int numRows,int player){
+    private String getBarRow(int row,int numRows,Checker playerColour){
         String bar=" ".repeat(2);
-        if(numRows-row<=_bar[player].getCheckerCount()){
-            bar+=_bar[player].getResidentColour();
+        if(numRows-row<=_barMap.get(playerColour).getCheckerCount()){
+            bar+=_barMap.get(playerColour).getResidentColour();
         }
         else{
             bar+=" ";
@@ -257,5 +287,9 @@ public class Board {
 
         arrow=" ".repeat(layer)+left+" ".repeat((layers)-(layer*2))+right+" ".repeat(layer);
         return "|".repeat(1-leftSide)+arrow.repeat(Constants.LANES_PER_TABLE)+"|".repeat(leftSide);
+    }
+
+    public boolean barEmpty(Player activePlayer) {
+        return _barMap.get(activePlayer.getColour()).isEmpty();
     }
 }
