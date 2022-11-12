@@ -251,18 +251,44 @@ public class Board {
         String numbers="  ";
         int tableLeft=1;
         int tableRight=0;
+        boolean printReverse=false;
         if (top){
             tableLeft=2;
             tableRight=3;
+            printReverse=true;
         }
-        for (int point=0;point<Constants.LANES_PER_TABLE;point++){
-            numbers+=Integer.toString(_tables[tableLeft].getPointNumber(point,player))+"  ";    //FIXME pad single digits
-        }
+
+        numbers+=getTableNums(tableLeft, player,printReverse);
         numbers+="Bar   ";
-        for (int point=0;point<Constants.LANES_PER_TABLE;point++){
-            numbers+=Integer.toString(_tables[tableRight].getPointNumber(point,player))+"  ";
-        }
+        numbers+=getTableNums(tableRight, player,printReverse);
         return numbers+"\n";
+    }
+
+    private String getTableNums(int table,int player,boolean printReverse){
+        String tableNums="";
+        if (printReverse){
+            for (int point=0;point<Constants.LANES_PER_TABLE;point++){
+                int num=_tables[table].getPointNumber(point,player);
+                String numString=Integer.toString(num)+"  ";
+                if (num<10)
+                {
+                    numString="0"+numString;
+                }
+                tableNums+= numString; 
+            }
+        }
+        else{
+            for (int point=Constants.LANES_PER_TABLE-1;point>=0;point--){ //TODO Make function
+                int num=_tables[table].getPointNumber(point,player);
+                String numString=Integer.toString(num)+"  ";
+                if (num<10)
+                {
+                    numString="0"+numString;
+                }
+                tableNums+= numString; 
+            }
+        }
+        return tableNums;
     }
 
     private String getTableRow(String[] checkers, int size){
