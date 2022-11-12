@@ -2,6 +2,7 @@ import java.util.*;
 
 public class Point {
 	public static final int MAXIMUM_PIP_NUMBER = 24;
+	public static final int MAXIMUM_BEAROFF_PIP_NUMBER = 6;
 	private int _whitePointNumber;
 	private int _redPointNumber;
 	private Checker _residentColour;
@@ -13,6 +14,7 @@ public class Point {
 		_residentColour = Checker.EMPTY;
 		_checkers = new Stack<Checker>();
 	}
+
 
 	public void addCheckers(Checker checkerColour) {
 		addCheckers(checkerColour, 1);
@@ -44,8 +46,8 @@ public class Point {
 		}
 	}
 	
-	public int getPointNumber(Checker activeColour) {
-		return switch(activeColour) {
+	public int getPointNumber(Player activePlayer) {
+		return switch(activePlayer.getColour()) {
 			case RED -> _redPointNumber;
 			case WHITE -> _whitePointNumber;
 			case EMPTY -> 0;

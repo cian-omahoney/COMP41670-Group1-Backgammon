@@ -52,7 +52,7 @@ public class UI{
 		if (_command.isInvalid()) {
 			System.out.print(CYAN_TEXT_COLOUR);
 			System.out.println("\tThis command is invalid! Try \"HINT\".");
-			System.out.print("\t>> Press enter to try another command...");
+			System.out.print("\t>> Press ENTER to try another command...");
 			getLine();
 			System.out.print(CLEAR_COLOURS);
 		}
@@ -91,48 +91,68 @@ public class UI{
 	public List<Integer> selectValidMove(List<ArrayList<Integer>> validMoveList){
 		boolean validMove = false;
 		int moveIndex = 0;
+		List<Integer> chosenValidMove;
 		String input;
 
-		System.out.println(CYAN_TEXT_COLOUR);
-		System.out.printf("\t%s%d Valid Moves Possible:\n", UNDERLINE_TEXT, validMoveList.size());
-		System.out.print(CLEAR_COLOURS);
+		if(validMoveList.size() > 1) {
+			System.out.println(CYAN_TEXT_COLOUR);
+			System.out.printf("\t%s%d Valid Moves Possible:\n", UNDERLINE_TEXT, validMoveList.size());
+			System.out.print(CLEAR_COLOURS);
 
-		System.out.print(CYAN_TEXT_COLOUR);
-		for(List<Integer> moveSequence : validMoveList) {
-			if(moveSequence.get(0) == Bar.BAR_POINT_NUMBER) {
-				System.out.printf("\t[%s] : Move checker from Bar ", convertIndexToLabel(validMoveList.indexOf(moveSequence)));
-			}
-			else {
-				System.out.printf("\t[%s] : Move checker from point %2d ", convertIndexToLabel(validMoveList.indexOf(moveSequence)), moveSequence.get(0));
-			}
-
-			for(int destinationPoint : moveSequence.subList(1, moveSequence.size())) {
-				System.out.printf("--> point %2d ", destinationPoint);
-			}
-			System.out.println();
-		}
-
-		System.out.println(CLEAR_COLOURS);
-		do {
-			System.out.printf(">> Enter letter code for desired move:  ");
-			input = getLine();
-			if(input.toUpperCase().matches(MOVE_REGEX)) {
-				moveIndex = convertLabelToIndex(input.toUpperCase());
-				if(moveIndex >= 0 && moveIndex < validMoveList.size()) {
-					validMove = true;
+			System.out.print(CYAN_TEXT_COLOUR);
+			for(List<Integer> moveSequence : validMoveList) {
+				if(moveSequence.get(0) == Board.BAR_PIP_NUMBER) {
+					System.out.printf("\t[%s] : Move checker from Bar ", convertIndexToLabel(validMoveList.indexOf(moveSequence)));
 				}
+				else {
+					System.out.printf("\t[%s] : Move checker from Point %2d ", convertIndexToLabel(validMoveList.indexOf(moveSequence)), moveSequence.get(0));
+				}
+
+				for(int destinationPoint : moveSequence.subList(1, moveSequence.size())) {
+					if(destinationPoint == Board.BEAR_OFF_PIP_NUMBER) {
+						System.out.printf("--> OFF ");
+					}
+					else {
+						System.out.printf("--> Point %2d ", destinationPoint);
+					}
+				}
+				System.out.println();
 			}
 
-			if(validMove == false) {
-				System.out.print(CYAN_TEXT_COLOUR);
-				System.out.println("\tThis is not a valid letter code!.");
-				System.out.print("\t>> Press enter to try another letter code...");
-				getLine();
-				System.out.print(CLEAR_COLOURS);
-			}
-		}while(validMove == false);
+			System.out.println(CLEAR_COLOURS);
+			do {
+				System.out.printf(">> Enter letter code for desired move: ");
+				input = getLine();
+				if(input.toUpperCase().matches(MOVE_REGEX)) {
+					moveIndex = convertLabelToIndex(input.toUpperCase());
+					if(moveIndex >= 0 && moveIndex < validMoveList.size()) {
+						validMove = true;
+					}
+				}
 
-		return validMoveList.get(moveIndex);
+				if(validMove == false) {
+					System.out.print(CYAN_TEXT_COLOUR);
+					System.out.println("\tThis is not a valid letter code!.");
+					System.out.print("\t>> Press ENTER to try another letter code...");
+					getLine();
+					System.out.print(CLEAR_COLOURS);
+				}
+			}while(validMove == false);
+			chosenValidMove = validMoveList.get(moveIndex);
+		}
+		else if(validMoveList.size() == 1) {
+			System.out.println(CYAN_TEXT_COLOUR);
+			System.out.printf("\tThere was only 1 valid move possible:\n", UNDERLINE_TEXT, validMoveList.size());
+			System.out.print(CLEAR_COLOURS);
+			chosenValidMove = validMoveList.get(0);
+		}
+		else {
+			System.out.println(CYAN_TEXT_COLOUR);
+			System.out.printf("\tThere was no valid move possible!\n", UNDERLINE_TEXT);
+			System.out.print(CLEAR_COLOURS);
+			chosenValidMove = new ArrayList<>();
+		}
+		return chosenValidMove;
 	}
 
 	private String convertIndexToLabel(int index) {
@@ -158,20 +178,33 @@ public class UI{
 	}
 
 	public void printMoves(List<Integer> moveSequence) {
-		System.out.println(CYAN_TEXT_COLOUR);
-		if(moveSequence.get(0) == Bar.BAR_POINT_NUMBER) {
-			System.out.printf("\tOne checker moved from Bar", moveSequence.get(0));
+		if(moveSequence.size() > 0) {
+			System.out.println(CYAN_TEXT_COLOUR);
+			if(moveSequence.get(0) == Board.BAR_PIP_NUMBER) {
+				System.out.printf("\tOne checker moved from Bar", moveSequence.get(0));
+			}
+			else {
+				System.out.printf("\tOne checker moved from Point %2d", moveSequence.get(0));
+			}
+			for(int destinationPoint : moveSequence.subList(1, moveSequence.size())) {
+				if(destinationPoint == Board.BEAR_OFF_PIP_NUMBER) {
+					System.out.printf(" --> OFF");
+				}
+				else {
+					System.out.printf(" --> Point %2d", destinationPoint);
+				}
+			}
+			System.out.println(".");
+			System.out.print("\t>> Press ENTER to continue your turn...");
+			getLine();
+			System.out.print(CLEAR_COLOURS);
 		}
 		else {
-			System.out.printf("\tOne checker moved from point %2d", moveSequence.get(0));
+			System.out.println(CYAN_TEXT_COLOUR);
+			System.out.print("\t>> Press ENTER to finish your turn...");
+			getLine();
+			System.out.print(CLEAR_COLOURS);
 		}
-		for(int destinationPoint : moveSequence.subList(1, moveSequence.size())) {
-			System.out.printf(" --> point %2d", destinationPoint);
-		}
-		System.out.println(".");
-		System.out.print("\t>> Press enter to continue your turn...");
-		getLine();
-		System.out.print(CLEAR_COLOURS);
 	}
 
     public void printHelp(){   //TODO write help
@@ -181,7 +214,7 @@ public class UI{
         System.out.println("\t* Enter 'HINT' for help.");
 		System.out.println("\t* Enter 'PIP' to view players pip count.");
 		System.out.println();
-		System.out.print("\t>> Press enter to continue your turn...");
+		System.out.print("\t>> Press ENTER to continue your turn...");
 		getLine();
     	System.out.print(CLEAR_COLOURS);
     }
@@ -189,7 +222,7 @@ public class UI{
 	public void finishTurn() {
 		System.out.println(CYAN_TEXT_COLOUR);
 		System.out.println("\tYour turn is over.");
-		System.out.print("\t>> Press enter to continue...");
+		System.out.print("\t>> Press ENTER to continue...");
 		getLine();
 		System.out.print(CLEAR_COLOURS);
 	}
@@ -223,7 +256,7 @@ public class UI{
 		System.out.printf("\t%s's Pip Count is:  %-3d.\n", playerOne.getName(), board.getPipCount(playerOne));
 		System.out.printf("\t%s's Pip Count is:  %-3d.\n", playerTwo.getName(), board.getPipCount(playerTwo));
 		System.out.println();
-		System.out.print("\t>> Press enter to continue your turn...");
+		System.out.print("\t>> Press ENTER to continue your turn...");
 		getLine();
 		System.out.print(CLEAR_COLOURS);
 	}
@@ -235,14 +268,14 @@ public class UI{
 		int whiteDiceRoll;
 
 		do {
-			System.out.printf(">> Press Enter to Roll Your First Dice %s:  ", playerRed.getName());
+			System.out.printf(">> Press ENTER to Roll Your First Dice %s...", playerRed.getName());
 			getLine();
 			redDiceRoll = singleDice.roll();
 			System.out.print(CYAN_TEXT_COLOUR);
 			System.out.printf("\tYou Rolled: [%d]\n", redDiceRoll);
 			System.out.print(CLEAR_COLOURS);
 
-			System.out.printf(">> Press Enter to Roll Your First Dice %s:  ", playerWhite.getName());
+			System.out.printf(">> Press ENTER to Roll Your First Dice %s...", playerWhite.getName());
 			getLine();
 			whiteDiceRoll = singleDice.roll();
 			System.out.print(CYAN_TEXT_COLOUR);

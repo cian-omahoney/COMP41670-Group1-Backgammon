@@ -13,6 +13,7 @@ public class Backgammon {
 		UserInterface.getPlayerNames(playerRed, playerWhite);
         UserInterface.printBoard(board, playerRed, playerWhite);
 
+
 		activePlayer = UserInterface.getFirstRoll(playerRed, playerWhite);
 		UserInterface.printDashboard(activePlayer);
         currentCommand = new Command("FIRST");
@@ -28,11 +29,20 @@ public class Backgammon {
 					activePlayer.rollBothDice();
 				}
 
-				board.barEmpty(activePlayer);
 				while(activePlayer.availableMovesRemaining()) {
 					UserInterface.printDice(activePlayer);
-					moveSequence = board.barEmpty(activePlayer) ? UserInterface.selectValidMove(board.getValidPointMoves(activePlayer)) :
-					 											  UserInterface.selectValidMove(board.getValidBarMoves(activePlayer));
+					if(board.isBarEmpty(activePlayer)) {
+						if(board.isBearOff(activePlayer)) {
+							moveSequence = UserInterface.selectValidMove(board.getValidBearOffMoves(activePlayer));
+						}
+						else {
+							moveSequence = UserInterface.selectValidMove(board.getValidPointMoves(activePlayer));
+						}
+					}
+					else {
+						moveSequence = UserInterface.selectValidMove(board.getValidBarMoves(activePlayer));
+					}
+
 					board.moveChecker(moveSequence, activePlayer);
 					activePlayer.updateAvailableMoves(moveSequence);
 					UserInterface.printMoves(moveSequence);
