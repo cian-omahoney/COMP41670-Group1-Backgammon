@@ -3,6 +3,7 @@ public enum CommandType {
 	ROLL ("ROLL"),
 	HINT ("HINT"),
     PIP ("PIP"),
+    FIRST ("FIRST"),
     INVALID ("");
 	
 	private String _regex;

@@ -16,13 +16,17 @@ public class Player {
     }
 
     //TODO pip count - https://www.bkgm.com/gloss/lookup.cgi?pip+count
-    public void rollDice(){
+    public void rollBothDice(){
         _availableMoves.add(_firstDie.roll());
         _availableMoves.add(_secondDie.roll());
         if(_secondDie.getRollValue() == _firstDie.getRollValue()) {
             _availableMoves.add(_firstDie.getRollValue());
             _availableMoves.add(_firstDie.getRollValue());
         }
+    }
+
+    public void addAvailableMove(int diceValue){
+        _availableMoves.add(diceValue);
     }
 
     public List<Integer> getAvailableMoves() {

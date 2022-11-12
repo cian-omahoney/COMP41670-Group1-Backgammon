@@ -15,7 +15,8 @@ public class Command {
 		return  inputFormatted.matches(CommandType.QUIT.getRegex()) || 
 				inputFormatted.matches(CommandType.HINT.getRegex()) ||
 				inputFormatted.matches(CommandType.ROLL.getRegex()) ||
-				inputFormatted.matches(CommandType.PIP.getRegex());
+				inputFormatted.matches(CommandType.PIP.getRegex())  ||
+				inputFormatted.matches(CommandType.FIRST.getRegex());
 	}
 	
 	public boolean isQuit() {
@@ -32,6 +33,10 @@ public class Command {
 
 	public boolean isPip() {
 		return _commandType == CommandType.PIP;
+	}
+
+	public boolean isFirst() {
+		return _commandType == CommandType.FIRST;
 	}
 	public boolean isInvalid() {
 		return _commandType == CommandType.INVALID;
