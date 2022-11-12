@@ -32,12 +32,7 @@ public class Backgammon {
 				while(activePlayer.availableMovesRemaining()) {
 					UserInterface.printDice(activePlayer);
 					if(board.isBarEmpty(activePlayer)) {
-						if(board.isBearOff(activePlayer)) {
-							moveSequence = UserInterface.selectValidMove(board.getValidBearOffMoves(activePlayer));
-						}
-						else {
-							moveSequence = UserInterface.selectValidMove(board.getValidPointMoves(activePlayer));
-						}
+						moveSequence = UserInterface.selectValidMove(board.getValidMoves(activePlayer));
 					}
 					else {
 						moveSequence = UserInterface.selectValidMove(board.getValidBarMoves(activePlayer));
@@ -60,13 +55,19 @@ public class Backgammon {
 			}
 
 			UserInterface.printBoard(board, playerRed, playerWhite,activePlayer.getNumber());
-			UserInterface.printDashboard(activePlayer);
 
-			currentCommand = UserInterface.getCommand(activePlayer);
-		}while(!currentCommand.isQuit());
+			if(!board.isGameOver(playerRed, playerWhite)) {
+				UserInterface.printDashboard(activePlayer);
+				currentCommand = UserInterface.getCommand(activePlayer);
+			}
+		}while(!currentCommand.isQuit() && !board.isGameOver(playerRed, playerWhite));
 
 		if(currentCommand.isQuit()){
 			UserInterface.printQuit();
+		}
+
+		if(board.isGameOver(playerRed, playerWhite)) {
+			UserInterface.printWinner(playerRed, playerWhite, board);
 		}
 
 		UserInterface.closeUserInput();

@@ -296,4 +296,21 @@ public class UI{
 		System.out.println(DASH_LINE);
 		return selectedPlayer;
 	}
+
+	public void printWinner(Player playerA, Player playerB, Board board) {
+
+		String winnerName = "";
+		if(board.getPipCount(playerA) == 0) {
+			winnerName = playerA.getName();
+		}
+		else if(board.getPipCount(playerB) == 0) {
+			winnerName = playerA.getName();
+		}
+
+		if(!winnerName.equals("")) {
+			System.out.println(DASH_LINE);
+			System.out.printf("\t\t%s is the winner!\n", winnerName);
+			System.out.println(DASH_LINE);
+		}
+	}
 }
