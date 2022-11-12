@@ -328,9 +328,9 @@ public class Board {
     }
 
 
-    public String toString(){
+    public String toString(int player){
         String board="";
-        board+=getPointNumbers(true,1);
+        board+=getPointNumbers(true,player);
         board+=getBorder();
 
         //Get Top Table
@@ -357,6 +357,7 @@ public class Board {
             board+=getPoints(i,1,0);
         }
         board+=getBorder();
+        board+=getPointNumbers(false,player);
 
         return board;
     }
@@ -408,14 +409,46 @@ public class Board {
 
     private String getPointNumbers(boolean top, int player){
         String numbers="  ";
-        for (int point=5;point>=0;point--){
-            numbers+=Integer.toString(_tables[2].getPointNumber(point,player))+"  ";
+        int tableLeft=1;
+        int tableRight=0;
+        boolean printReverse=false;
+        if (top){
+            tableLeft=2;
+            tableRight=3;
+            printReverse=true;
         }
+
+        numbers+=getTableNums(tableLeft, player,printReverse);
         numbers+="Bar   ";
-        for (int point=5;point>=0;point--){
-            numbers+=Integer.toString(_tables[3].getPointNumber(point,player))+"  ";
+        numbers+=getTableNums(tableRight, player,printReverse);
+        return numbers+"\n";
+    }
+
+    private String getTableNums(int table,int player,boolean printReverse){
+        String tableNums="";
+        if (printReverse){
+            for (int point=0;point<Constants.LANES_PER_TABLE;point++){
+                int num=_tables[table].getPointNumber(point,player);
+                String numString=Integer.toString(num)+"  ";
+                if (num<10)
+                {
+                    numString="0"+numString;
+                }
+                tableNums+= numString; 
+            }
         }
-        return numbers+"\n";  //TODO Unfinished
+        else{
+            for (int point=Constants.LANES_PER_TABLE-1;point>=0;point--){ //TODO Make function
+                int num=_tables[table].getPointNumber(point,player);
+                String numString=Integer.toString(num)+"  ";
+                if (num<10)
+                {
+                    numString="0"+numString;
+                }
+                tableNums+= numString; 
+            }
+        }
+        return tableNums;
     }
 
     private String getTableRow(String[] checkers, int size){

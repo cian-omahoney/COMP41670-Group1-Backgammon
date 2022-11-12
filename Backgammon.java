@@ -6,12 +6,12 @@ public class Backgammon {
 		Command currentCommand;
 		Player activePlayer;
         Board board=new Board();
-		Player playerRed = new Player(Checker.RED);
-		Player playerWhite = new Player(Checker.WHITE);
+		Player playerWhite = new Player(Checker.WHITE,0);
+		Player playerRed = new Player(Checker.RED,1);
 		List<Integer> moveSequence = new ArrayList<>();
 
 		UserInterface.getPlayerNames(playerRed, playerWhite);
-        UserInterface.printBoard(board, playerRed, playerWhite);
+        UserInterface.printBoard(board, playerRed, playerWhite,1);
 
 
 		activePlayer = UserInterface.getFirstRoll(playerRed, playerWhite);
@@ -46,7 +46,7 @@ public class Backgammon {
 					board.moveChecker(moveSequence, activePlayer);
 					activePlayer.updateAvailableMoves(moveSequence);
 					UserInterface.printMoves(moveSequence);
-					UserInterface.printBoard(board, playerRed, playerWhite);
+					UserInterface.printBoard(board, playerRed, playerWhite,activePlayer.getNumber());
 					UserInterface.printDashboard(activePlayer);
 				}
 
@@ -59,7 +59,7 @@ public class Backgammon {
 				UserInterface.finishTurn();
 			}
 
-			UserInterface.printBoard(board, playerRed, playerWhite);
+			UserInterface.printBoard(board, playerRed, playerWhite,activePlayer.getNumber());
 			UserInterface.printDashboard(activePlayer);
 
 			currentCommand = UserInterface.getCommand(activePlayer);

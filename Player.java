@@ -6,13 +6,15 @@ public class Player{
     private Dice _firstDie;
     private Dice _secondDie;
     private List<Integer> _availableMoves;
+    private int _number;
 
-    public Player(Checker playerColour){
+    public Player(Checker playerColour,int number){
         this._name="";
         this._firstDie = new Dice();
         this._secondDie = new Dice();
         this._playerColour = playerColour;
         this._availableMoves = new ArrayList<Integer>();
+        this._number=number;
     }
 
     //TODO pip count - https://www.bkgm.com/gloss/lookup.cgi?pip+count
@@ -75,5 +77,9 @@ public class Player{
 
     public void setName(String name) {
         _name = name;
+    }
+
+    public int getNumber(){
+        return _number;
     }
 }

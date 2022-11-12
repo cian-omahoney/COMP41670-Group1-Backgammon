@@ -1,4 +1,3 @@
-import java.sql.PseudoColumnUsage;
 import java.util.*;
 
 public class UI{
@@ -228,14 +227,14 @@ public class UI{
 	}
 
 
-    public void printBoard(Board board, Player redPlayer, Player whitePlayer){
+    public void printBoard(Board board, Player redPlayer, Player whitePlayer,int player){
 		System.out.print(CLEAR_SCREEN);
         System.out.flush();
         System.out.println(DASH_LINE);
         System.out.printf("Player Red: %s\t\t\tPlayer White: %s\n", redPlayer.getName(), whitePlayer.getName());
         System.out.println(DASH_LINE);
 		System.out.println();
-        String boardString=board.toString();
+        String boardString=board.toString(player);
         System.out.println(boardString);
 		System.out.println(DASH_LINE);
     }
