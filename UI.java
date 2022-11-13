@@ -9,9 +9,11 @@ public class UI{
 	private static final String CLEAR_SCREEN 		= "\033[H\033[2J";
 	public static final String  CLEAR_COLOURS 		= "\033[0m";
 	private static final String YELLOW_TEXT_COLOUR 	= "\033[1;33m";
+	private static final String GREEN_TEXT_COLOUR 	= "\033[1;32m";
 	private static final String CYAN_TEXT_COLOUR 	= "\033[1;36m";
 	private static final String MAGENTA_TEXT_COLOUR = "\033[1;35m";
-	private static final String UNDERLINE_TEXT      = "\033[4m";
+	private static final String UNDERLINE_TEXT      = "\033[1;4m";
+	private static final String BOLD_TEXT			= "\033[1;1m";
 	public static final String WHITE_CHECKER_COLOUR = "\033[0;39m";
 	public static final String RED_CHECKER_COLOUR   = "\033[1;31m";
 	private static final String DASH_LINE = YELLOW_TEXT_COLOUR + "=".repeat(85) + CLEAR_COLOURS;
@@ -85,7 +87,11 @@ public class UI{
     }
     
     public String getLine() {
-    	return _userInputScan.nextLine().trim();
+		String userInputLine;
+		System.out.printf(GREEN_TEXT_COLOUR);
+		userInputLine = _userInputScan.nextLine().trim();
+		System.out.printf(CLEAR_COLOURS);
+    	return userInputLine;
     }
 
     
@@ -159,7 +165,7 @@ public class UI{
 		}
 		else if(validMoveList.size() == 1) {
 			System.out.println(CYAN_TEXT_COLOUR);
-			System.out.printf("\tThere was only 1 valid move possible:\n", UNDERLINE_TEXT, validMoveList.size());
+			System.out.printf("\tThere was only 1 valid move possible.", UNDERLINE_TEXT, validMoveList.size());
 			System.out.print(CLEAR_COLOURS);
 			chosenValidMove = validMoveList.get(0);
 		}
@@ -211,7 +217,7 @@ public class UI{
 					System.out.printf(" --> Point %2d", destinationPoint);
 				}
 			}
-			System.out.println(".");
+			System.out.println(".\n");
 			System.out.print("\t>> Press ENTER to continue your turn...");
 			getLine();
 			System.out.print(CLEAR_COLOURS);
@@ -249,17 +255,17 @@ public class UI{
 		System.out.print(CLEAR_SCREEN);
         System.out.flush();
         System.out.println(DASH_LINE);
-        System.out.printf("Player Red: %s\t\t\tPlayer White: %s\n", redPlayer.getName(), whitePlayer.getName());
+		System.out.printf("Player Red: %s\t\t* * * %sB A C K G A M M O N%s * * *\t\tPlayer White: %s\n",redPlayer.getName(), UNDERLINE_TEXT, CLEAR_COLOURS,  whitePlayer.getName());
         System.out.println(DASH_LINE);
 		System.out.println();
-        String boardString=board.toString(player);
+        String boardString = board.toString(player);
         System.out.println(boardString);
 		System.out.println(DASH_LINE);
     }
 
 	public void printDashboard(Player activePlayer) {
 		System.out.print(MAGENTA_TEXT_COLOUR);
-		System.out.printf("Current Player:\t%s\n", activePlayer.getName());
+		System.out.printf("\t\t\t\tCurrent Player:\t%s\n", activePlayer.getName());
 		System.out.print(CLEAR_COLOURS);
 		System.out.println(DASH_LINE);
 	}
@@ -315,7 +321,6 @@ public class UI{
 	}
 
 	public void printWinner(Player playerA, Player playerB, Board board) {
-
 		String winnerName = "";
 		if(board.getPipCount(playerA) == 0) {
 			winnerName = playerA.getName();
@@ -325,8 +330,8 @@ public class UI{
 		}
 
 		if(!winnerName.equals("")) {
-			System.out.println(DASH_LINE);
-			System.out.printf("\t\t%s is the winner!\n", winnerName);
+			printTextFile(CONGRATULATIONS_TEXT_FILE);
+			System.out.printf("\n\t\t\t* * * %s%s is the winner!%s * * *\n\n", UNDERLINE_TEXT, winnerName, CLEAR_COLOURS);
 			System.out.println(DASH_LINE);
 		}
 	}
@@ -341,7 +346,9 @@ public class UI{
 			try {
 				_textFileScan = new Scanner(mediaFile);
 				while(_textFileScan.hasNextLine()) {
+					System.out.printf(BOLD_TEXT);
 					System.out.println(_textFileScan.nextLine());
+					System.out.printf(CLEAR_COLOURS);
 				}
 				_textFileScan.close();
 			} catch (FileNotFoundException e) {

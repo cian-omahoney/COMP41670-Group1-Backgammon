@@ -31,15 +31,15 @@ public class Board {
     private void setupCheckersInitial() {
         // THIS IS THE CORRECT INITIAL SET UP
 
-        _points[5].addCheckers(Checker.WHITE, 5);
-    	_points[7].addCheckers(Checker.WHITE, 3);
-    	_points[12].addCheckers(Checker.WHITE, 5);
-    	_points[23].addCheckers(Checker.WHITE, 2);
-
-        _points[18].addCheckers(Checker.RED, 5);
-    	_points[16].addCheckers(Checker.RED, 3);
-    	_points[11].addCheckers(Checker.RED, 5);
-    	_points[0].addCheckers(Checker.RED, 2);
+//        _points[5].addCheckers(Checker.WHITE, 5);
+//    	_points[7].addCheckers(Checker.WHITE, 3);
+//    	_points[12].addCheckers(Checker.WHITE, 5);
+//    	_points[23].addCheckers(Checker.WHITE, 2);
+//
+//        _points[18].addCheckers(Checker.RED, 5);
+//    	_points[16].addCheckers(Checker.RED, 3);
+//    	_points[11].addCheckers(Checker.RED, 5);
+//    	_points[0].addCheckers(Checker.RED, 2);
 
 
         // THIS SET UP IS ONLY FOR TESTING:
@@ -90,6 +90,10 @@ public class Board {
 //        _points[4].addCheckers(Checker.WHITE, 2);
 //        _points[2].addCheckers(Checker.WHITE, 2);
 //        _points[0].addCheckers(Checker.RED, 2);
+
+        // TEST 5: Test winner
+        _points[0].addCheckers(Checker.WHITE, 1);
+        _points[23].addCheckers(Checker.RED, 1);
     }
 
     public boolean isGameOver(Player playerA, Player playerB) {
@@ -545,6 +549,7 @@ public class Board {
         for (int i=length-1; i>=0;i--){
             board+=getPoints(i,1,0);
         }
+
         board+=getBorder();
         board+=getPointNumbers(false,player);
 
