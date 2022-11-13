@@ -592,7 +592,7 @@ public class Board {
     private String getBarRow(int row,int numRows,Checker playerColour){
         String bar=" ".repeat(2);
         if(numRows-row<=_barMap.get(playerColour).getCheckerCount()){
-            bar+=_barMap.get(playerColour).getResidentColour();
+            bar+=_barMap.get(playerColour).getResidentColour().toString();
         }
         else{
             bar+=" ";

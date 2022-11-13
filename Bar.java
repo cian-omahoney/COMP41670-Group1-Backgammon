@@ -9,4 +9,8 @@ public class Bar extends Point {
     public void addCheckers() {
         super.addCheckers(_barColour);
     }
+
+    public Checker getResidentColour(){
+        return _barColour;
+    }
 }
