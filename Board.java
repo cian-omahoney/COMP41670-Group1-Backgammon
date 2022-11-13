@@ -1,7 +1,7 @@
 import java.util.*;
 
 public class Board {
-    // TODO: We may need to split this class into smaller classes, its getting quit big :)
+    // TODO: We may need to split this class into smaller classes, its getting quite big :)  - Agreed
     public static final int BEAR_OFF_PIP_NUMBER = 0;
     public static final int BAR_PIP_NUMBER = 25;
 
@@ -31,27 +31,27 @@ public class Board {
     private void setupCheckersInitial() {
         // THIS IS THE CORRECT INITIAL SET UP
 
-//        _points[5].addCheckers(Checker.WHITE, 5);
-//    	_points[7].addCheckers(Checker.WHITE, 3);
-//    	_points[12].addCheckers(Checker.WHITE, 5);
-//    	_points[23].addCheckers(Checker.WHITE, 2);
-//
-//        _points[18].addCheckers(Checker.RED, 5);
-//    	_points[16].addCheckers(Checker.RED, 3);
-//    	_points[11].addCheckers(Checker.RED, 5);
-//    	_points[0].addCheckers(Checker.RED, 2);
+       _points[5].addCheckers(Checker.WHITE, 5);
+   	_points[7].addCheckers(Checker.WHITE, 3);
+   	_points[12].addCheckers(Checker.WHITE, 5);
+   	_points[23].addCheckers(Checker.WHITE, 2);
+
+       _points[18].addCheckers(Checker.RED, 5);
+   	_points[16].addCheckers(Checker.RED, 3);
+   	_points[11].addCheckers(Checker.RED, 5);
+   	_points[0].addCheckers(Checker.RED, 2);
 
 
         // THIS SET UP IS ONLY FOR TESTING:
         // Endgame test.
-//        _points[11].addCheckers(Checker.WHITE, 1);
-//        _points[10].addCheckers(Checker.WHITE, 1);
-//        _points[6].addCheckers(Checker.RED, 2);
-//
-//        _points[4].addCheckers(Checker.RED, 2);
-//        _points[3].addCheckers(Checker.RED, 2);
-//        _points[2].addCheckers(Checker.RED, 2);
-//        _points[1].addCheckers(Checker.RED, 2);
+    //    _points[11].addCheckers(Checker.WHITE, 1);
+    //    _points[10].addCheckers(Checker.WHITE, 1);
+    //    _points[6].addCheckers(Checker.RED, 2);
+
+    //    _points[4].addCheckers(Checker.RED, 2);
+    //    _points[3].addCheckers(Checker.RED, 2);
+    //    _points[2].addCheckers(Checker.RED, 2);
+    //    _points[1].addCheckers(Checker.RED, 2);
 
         // TEST 1:  FROM SPEC, FINAL EXAMPLE
 //        _points[5].addCheckers(Checker.WHITE, 1);
@@ -92,8 +92,8 @@ public class Board {
 //        _points[0].addCheckers(Checker.RED, 2);
 
         // TEST 5: Test winner
-        _points[0].addCheckers(Checker.WHITE, 1);
-        _points[23].addCheckers(Checker.RED, 1);
+        // _points[0].addCheckers(Checker.WHITE, 1);
+        // _points[23].addCheckers(Checker.RED, 1);
     }
 
     public boolean isGameOver(Player playerA, Player playerB) {
@@ -605,42 +605,27 @@ public class Board {
         String numbers="  ";
         int tableLeft=1;
         int tableRight=0;
-        boolean printReverse=false;
         if (top){
             tableLeft=2;
             tableRight=3;
-            printReverse=true;
         }
 
-        numbers+=getTableNums(tableLeft, player,printReverse);
+        numbers+=getTableNums(tableLeft, player);
         numbers+="Bar   ";
-        numbers+=getTableNums(tableRight, player,printReverse);
+        numbers+=getTableNums(tableRight, player);
         return numbers+"\n";
     }
 
-    private String getTableNums(int table,int player,boolean printReverse){
+    private String getTableNums(int table,int player){
         String tableNums="";
-        if (printReverse){
-            for (int point=0;point<Constants.LANES_PER_TABLE;point++){
-                int num=_tables[table].getPointNumber(point,player);
-                String numString=Integer.toString(num)+"  ";
-                if (num<10)
-                {
-                    numString="0"+numString;
-                }
-                tableNums+= numString; 
+        for (int point=Constants.LANES_PER_TABLE-1;point>=0;point--){ //TODO Make function
+            int num=_tables[table].getPointNumber(point,player);
+            String numString=Integer.toString(num)+"  ";
+            if (num<10)
+            {
+                numString="0"+numString;
             }
-        }
-        else{
-            for (int point=Constants.LANES_PER_TABLE-1;point>=0;point--){ //TODO Make function
-                int num=_tables[table].getPointNumber(point,player);
-                String numString=Integer.toString(num)+"  ";
-                if (num<10)
-                {
-                    numString="0"+numString;
-                }
-                tableNums+= numString; 
-            }
+            tableNums+= numString; 
         }
         return tableNums;
     }
