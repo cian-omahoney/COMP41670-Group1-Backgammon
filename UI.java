@@ -1,6 +1,11 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.*;
 
 public class UI{
+	private static final String MEDIA_ROOT      	= "./media/";
+	private static final String TITLE_TEXT_FILE 	= "backgammonTitle.txt";
+	private static final String CONGRATULATIONS_TEXT_FILE   	= "congratulations.txt";
 	private static final String CLEAR_SCREEN 		= "\033[H\033[2J";
 	public static final String  CLEAR_COLOURS 		= "\033[0m";
 	private static final String YELLOW_TEXT_COLOUR 	= "\033[1;33m";
@@ -9,39 +14,60 @@ public class UI{
 	private static final String UNDERLINE_TEXT      = "\033[4m";
 	public static final String WHITE_CHECKER_COLOUR = "\033[0;39m";
 	public static final String RED_CHECKER_COLOUR   = "\033[1;31m";
-	private static final String DASH_LINE = YELLOW_TEXT_COLOUR + "=".repeat(82) + CLEAR_COLOURS;
+	private static final String DASH_LINE = YELLOW_TEXT_COLOUR + "=".repeat(85) + CLEAR_COLOURS;
 	private static final int ALPHABET_SIZE = 26;
 	private static final String MOVE_REGEX = "[A-Z]*";
 
-	private Scanner _userInput;
+	private static Scanner _userInputScan;
+	private static Scanner _textFileScan;
 	private Command _command;
 
     public UI(){
-    	_userInput = new Scanner(System.in);
+    	_userInputScan = new Scanner(System.in);
     	printIntro();
     }
+
+	private void printIntro(){
+		System.out.print(CLEAR_SCREEN);
+		System.out.flush();
+		System.out.println(DASH_LINE);
+		printTextFile(TITLE_TEXT_FILE);
+		System.out.println();
+		System.out.println(DASH_LINE);
+		System.out.printf("\n\t\t\t* * * %sWelcome to Backgammon!%s * * *\n\n", UNDERLINE_TEXT, CLEAR_COLOURS);
+	}
     
     public void getPlayerNames(Player redPlayer, Player whitePlayer) {
 		Boolean validNames = false;
 		do {
-			System.out.print("Enter Red Checker Player Name:\t\t");
+			System.out.print(">> Enter Red Checker Player Name:\t");
 			redPlayer.setName(getLine());
-			System.out.print("Enter White Checker Player Name:\t");
+			System.out.print(">> Enter White Checker Player Name:\t");
 			whitePlayer.setName(getLine());
 			validNames = true;
 			if(redPlayer.getName().equals("") || whitePlayer.getName().equals("")) {
 				System.out.print(CYAN_TEXT_COLOUR);
-				System.out.println("\tBoth players must have non-empty names!");
+				System.out.println("\tBoth players must have non-empty names!\n");
 				validNames = false;
 				System.out.print(CLEAR_COLOURS);
 			}
 			else if(redPlayer.getName().toLowerCase().equals(whitePlayer.getName().toLowerCase())) {
 				System.out.print(CYAN_TEXT_COLOUR);
-				System.out.println("\tPlayer names must be different!");
+				System.out.println("\tPlayer names must be different!\n");
 				validNames = false;
 				System.out.print(CLEAR_COLOURS);
 			}
 		}while(!validNames);
+		System.out.println();
+		System.out.print(DASH_LINE);
+		System.out.println(CYAN_TEXT_COLOUR);
+		System.out.println("\n\tThe game is ready to begin!");
+		System.out.printf("\n\t* %s controls the red checkers (%s%s).\n", redPlayer.getName(), Checker.RED.getSymbol(), CYAN_TEXT_COLOUR);
+		System.out.printf("\t* %s controls the white checkers (%s%s).\n", whitePlayer.getName(), Checker.WHITE.getSymbol(), CYAN_TEXT_COLOUR);
+		System.out.printf("\t* Type command 'HINT' for help.\n");
+		System.out.println(CLEAR_COLOURS);
+		System.out.print(">> Press ENTER to begin game...");
+		getLine();
     }
     
     public Command getCommand(Player player) {
@@ -59,7 +85,7 @@ public class UI{
     }
     
     public String getLine() {
-    	return _userInput.nextLine().trim();
+    	return _userInputScan.nextLine().trim();
     }
 
     
@@ -77,14 +103,6 @@ public class UI{
 		}
 		System.out.println();
     	System.out.print(CLEAR_COLOURS);
-    }
-
-    private void printIntro(){
-		System.out.print(CLEAR_SCREEN);
-        System.out.flush();
-    	System.out.println(DASH_LINE);
-        System.out.println("\tWelcome to Backgammon");
-    	System.out.println(DASH_LINE);
     }
 
 	public List<Integer> selectValidMove(List<ArrayList<Integer>> validMoveList){
@@ -246,10 +264,6 @@ public class UI{
 		System.out.println(DASH_LINE);
 	}
 
-	public void closeUserInput() {
-		_userInput.close();
-	}
-
 	public void printPipCount(Player playerOne, Player playerTwo, Board board) {
 		System.out.print(CYAN_TEXT_COLOUR);
 		System.out.printf("\t%s's Pip Count is:  %-3d.\n", playerOne.getName(), board.getPipCount(playerOne));
@@ -265,16 +279,17 @@ public class UI{
 		Dice singleDice = new Dice();
 		int redDiceRoll;
 		int whiteDiceRoll;
-
+		System.out.println();
+		System.out.println(DASH_LINE);
 		do {
-			System.out.printf(">> Press ENTER to Roll Your First Dice %s...", playerRed.getName());
+			System.out.printf("\n>> Press ENTER to Roll Your First Dice %s...", playerRed.getName());
 			getLine();
 			redDiceRoll = singleDice.roll();
 			System.out.print(CYAN_TEXT_COLOUR);
 			System.out.printf("\tYou Rolled: [%d]\n", redDiceRoll);
 			System.out.print(CLEAR_COLOURS);
 
-			System.out.printf(">> Press ENTER to Roll Your First Dice %s...", playerWhite.getName());
+			System.out.printf("\n>> Press ENTER to Roll Your First Dice %s...", playerWhite.getName());
 			getLine();
 			whiteDiceRoll = singleDice.roll();
 			System.out.print(CYAN_TEXT_COLOUR);
@@ -292,7 +307,9 @@ public class UI{
 		selectedPlayer.addAvailableMove(whiteDiceRoll);
 		System.out.println(CYAN_TEXT_COLOUR);
 		System.out.printf("\t%s will go first!\n", selectedPlayer.getName());
-		System.out.println(CLEAR_COLOURS);
+		System.out.printf(CLEAR_COLOURS);
+		System.out.print("\n>> Press ENTER to begin your turn...");
+		getLine();
 		System.out.println(DASH_LINE);
 		return selectedPlayer;
 	}
@@ -312,5 +329,31 @@ public class UI{
 			System.out.printf("\t\t%s is the winner!\n", winnerName);
 			System.out.println(DASH_LINE);
 		}
+	}
+
+	/**
+	 * Print text file.
+	 * @param fileName Name of file to print.
+	 */
+	private static void printTextFile(String fileName) {
+		File mediaFile = new File(MEDIA_ROOT + fileName);
+		if(mediaFile.exists() && mediaFile.canRead()) {
+			try {
+				_textFileScan = new Scanner(mediaFile);
+				while(_textFileScan.hasNextLine()) {
+					System.out.println(_textFileScan.nextLine());
+				}
+				_textFileScan.close();
+			} catch (FileNotFoundException e) {
+				System.out.println("UI.printTextFile: File Not Found.");
+			}
+		}
+		else {
+			System.out.println("UI.printTextFile: File Not Found.");
+		}
+	}
+
+	public void closeUserInput() {
+		_userInputScan.close();
 	}
 }

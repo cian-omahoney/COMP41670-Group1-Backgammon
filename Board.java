@@ -86,10 +86,10 @@ public class Board {
 //        _points[1].addCheckers(Checker.RED, 2);
 
         // TEST 4: Can I play one number in such a way as to avoid playing the other? example 2 from website
-        _points[5].addCheckers(Checker.WHITE, 1);
-        _points[4].addCheckers(Checker.WHITE, 2);
-        _points[2].addCheckers(Checker.WHITE, 2);
-        _points[0].addCheckers(Checker.RED, 2);
+//        _points[5].addCheckers(Checker.WHITE, 1);
+//        _points[4].addCheckers(Checker.WHITE, 2);
+//        _points[2].addCheckers(Checker.WHITE, 2);
+//        _points[0].addCheckers(Checker.RED, 2);
     }
 
     public boolean isGameOver(Player playerA, Player playerB) {

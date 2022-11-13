@@ -11,10 +11,9 @@ public class Backgammon {
 		List<Integer> moveSequence = new ArrayList<>();
 
 		UserInterface.getPlayerNames(playerRed, playerWhite);
-        UserInterface.printBoard(board, playerRed, playerWhite,1);
-
-
 		activePlayer = UserInterface.getFirstRoll(playerRed, playerWhite);
+
+        UserInterface.printBoard(board, playerRed, playerWhite, activePlayer.getNumber());
 		UserInterface.printDashboard(activePlayer);
         currentCommand = new Command("FIRST");
 		do{

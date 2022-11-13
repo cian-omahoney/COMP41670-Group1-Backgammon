@@ -14,10 +14,9 @@ public class Player{
         this._secondDie = new Dice();
         this._playerColour = playerColour;
         this._availableMoves = new ArrayList<Integer>();
-        this._number=number;
+        this._number = number;
     }
 
-    //TODO pip count - https://www.bkgm.com/gloss/lookup.cgi?pip+count
     public void rollBothDice(){
         _availableMoves.add(_firstDie.roll());
         _availableMoves.add(_secondDie.roll());
