@@ -8,11 +8,13 @@ public class Board {
     private Point[] _points;
     private Table[] _tables;
     private HashMap<Checker, Bar> _barMap;
+    private static int _doublingCube;
 
     public Board() {
         this._points = new Point[Point.MAXIMUM_PIP_NUMBER];
         this._tables = new Table[4];
         this._barMap = new HashMap<>();
+        this._doublingCube = 1;
 
         for(int i=0; i<Point.MAXIMUM_PIP_NUMBER; i++) {
             _points[i] = new Point(i);
@@ -30,16 +32,15 @@ public class Board {
 
     private void setupCheckersInitial() {
         // THIS IS THE CORRECT INITIAL SET UP
+        _points[5].addCheckers(Checker.WHITE, 5);
+    	_points[7].addCheckers(Checker.WHITE, 3);
+    	_points[12].addCheckers(Checker.WHITE, 5);
+    	_points[23].addCheckers(Checker.WHITE, 2);
 
-//        _points[5].addCheckers(Checker.WHITE, 5);
-//    	_points[7].addCheckers(Checker.WHITE, 3);
-//    	_points[12].addCheckers(Checker.WHITE, 5);
-//    	_points[23].addCheckers(Checker.WHITE, 2);
-//
-//        _points[18].addCheckers(Checker.RED, 5);
-//    	_points[16].addCheckers(Checker.RED, 3);
-//    	_points[11].addCheckers(Checker.RED, 5);
-//    	_points[0].addCheckers(Checker.RED, 2);
+        _points[18].addCheckers(Checker.RED, 5);
+    	_points[16].addCheckers(Checker.RED, 3);
+    	_points[11].addCheckers(Checker.RED, 5);
+    	_points[0].addCheckers(Checker.RED, 2);
 
 
         // THIS SET UP IS ONLY FOR TESTING:
@@ -92,8 +93,12 @@ public class Board {
 //        _points[0].addCheckers(Checker.RED, 2);
 
         // TEST 5: Test winner
-        _points[0].addCheckers(Checker.WHITE, 1);
-        _points[23].addCheckers(Checker.RED, 1);
+//        _points[0].addCheckers(Checker.WHITE, 1);
+//        _points[23].addCheckers(Checker.RED, 1);
+    }
+
+    public int getDoublingCube() {
+        return _doublingCube;
     }
 
     public boolean isGameOver(Player playerA, Player playerB) {
@@ -125,6 +130,7 @@ public class Board {
                 pipCount += currentPoint.getPointNumber(player) * currentPoint.getCheckerCount();
             }
         }
+        pipCount += _barMap.get(player.getColour()).getCheckerCount()*Board.BAR_PIP_NUMBER;
         return pipCount;
     }
 

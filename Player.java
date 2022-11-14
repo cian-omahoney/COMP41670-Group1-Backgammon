@@ -6,10 +6,12 @@ public class Player{
     private Dice _firstDie;
     private Dice _secondDie;
     private List<Integer> _availableMoves;
+    private boolean _isDoubleOwner;
     private int _number;
 
     public Player(Checker playerColour,int number){
         this._name="";
+        this._isDoubleOwner = false;
         this._firstDie = new Dice();
         this._secondDie = new Dice();
         this._playerColour = playerColour;

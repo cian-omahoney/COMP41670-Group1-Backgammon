@@ -4,6 +4,7 @@ public enum CommandType {
 	HINT ("HINT"),
     PIP ("PIP"),
     FIRST ("FIRST"),
+    DOUBLE("DOUBLE"),
     INVALID ("");
 	
 	private String _regex;

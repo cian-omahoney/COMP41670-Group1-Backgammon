@@ -16,6 +16,7 @@ public class Command {
 				inputFormatted.matches(CommandType.HINT.getRegex()) ||
 				inputFormatted.matches(CommandType.ROLL.getRegex()) ||
 				inputFormatted.matches(CommandType.PIP.getRegex())  ||
+				inputFormatted.matches(CommandType.DOUBLE.getRegex())  ||
 				inputFormatted.matches(CommandType.FIRST.getRegex());
 	}
 	
@@ -38,6 +39,11 @@ public class Command {
 	public boolean isFirst() {
 		return _commandType == CommandType.FIRST;
 	}
+
+	public boolean isDouble() {
+		return _commandType == CommandType.DOUBLE;
+	}
+
 	public boolean isInvalid() {
 		return _commandType == CommandType.INVALID;
 	}

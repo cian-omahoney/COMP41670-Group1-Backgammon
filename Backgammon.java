@@ -18,10 +18,13 @@ public class Backgammon {
         currentCommand = new Command("FIRST");
 		do{
 			if(currentCommand.isHint()) {
-				UserInterface.printHelp();
+				UserInterface.printHint();
 			}
 			else if(currentCommand.isPip()) {
 				UserInterface.printPipCount(playerWhite, playerRed, board);
+			}
+			else if(currentCommand.isDouble()) {
+
 			}
 			else if(currentCommand.isRoll() || currentCommand.isFirst()) {
 				if(currentCommand.isRoll()) {

@@ -230,11 +230,12 @@ public class UI{
 		}
 	}
 
-    public void printHelp(){   //TODO write help
+    public void printHint(){   //TODO write help
     	System.out.print(CYAN_TEXT_COLOUR);
         System.out.println("\t* Enter 'QUIT' to quit game.");
         System.out.println("\t* Enter 'ROLL' to roll dice.");
         System.out.println("\t* Enter 'HINT' for help.");
+		System.out.println("\t* Enter 'DOUBLE' to offer double to other player.");
 		System.out.println("\t* Enter 'PIP' to view players pip count.");
 		System.out.println();
 		System.out.print("\t>> Press ENTER to continue your turn...");
@@ -255,11 +256,12 @@ public class UI{
 		System.out.print(CLEAR_SCREEN);
         System.out.flush();
         System.out.println(DASH_LINE);
-		System.out.printf("Player Red: %s\t\t* * * %sB A C K G A M M O N%s * * *\t\tPlayer White: %s\n",redPlayer.getName(), UNDERLINE_TEXT, CLEAR_COLOURS,  whitePlayer.getName());
+		System.out.printf("Player Red: %s      * * * %sB A C K G A M M O N%s * * *      Player White: %s\n",redPlayer.getName(), UNDERLINE_TEXT, CLEAR_COLOURS,  whitePlayer.getName());
         System.out.println(DASH_LINE);
 		System.out.println();
         String boardString = board.toString(player);
         System.out.println(boardString);
+		System.out.println("Double");
 		System.out.println(DASH_LINE);
     }
 
