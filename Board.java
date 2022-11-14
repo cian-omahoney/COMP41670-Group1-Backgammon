@@ -522,135 +522,38 @@ public class Board {
 
 
     public String toString(int player){
+        BoardString boardToString= new BoardString(_tables,_barMap);
         String board="";
-        board+=getPointNumbers(true,player);
-        board+=getBorder();
+        board+=boardToString.getPointNumbers(true,player);
+        board+=boardToString.getBorder();
 
         //Get Top Table
-        int length=getPointMaxLength(2);
+        int length=boardToString.getPointMaxLength(2);
         for (int i=0; i<length;i++){
-            board+=getPoints(i,2,3);
+            board+=boardToString.getPoints(i,2,3);
         }
 
         for (int i=0; i<2;i++){
-            board+=getArrows(i,true);
+            board+=boardToString.getArrows(i,true);
         }
 
         for (int i=0;i<3;i++){  //FIXME - Bar can be of variable length depending on # checkers in it
-            board+=" ".repeat(4*Constants.LANES_PER_TABLE)+"|"+getBarRow(i,3,Checker.RED)+"|\n"; //FIXME Correct Paramaters need to be given to this function
+            board+=" ".repeat(4*Constants.LANES_PER_TABLE)+"|"+boardToString.getBarRow(i,3,Checker.RED)+"|\n"; //FIXME Correct Paramaters need to be given to this function
         }
 
         //Print Bottom Table
-        length=getPointMaxLength(0);
+        length=boardToString.getPointMaxLength(0);
         for(int i=1;i>=0;i--){
-            board+=getArrows(i,false);
+            board+=boardToString.getArrows(i,false);
         }
 
         for (int i=length-1; i>=0;i--){
-            board+=getPoints(i,1,0);
+            board+=boardToString.getPoints(i,1,0);
         }
 
-        board+=getBorder();
-        board+=getPointNumbers(false,player);
+        board+=boardToString.getBorder();
+        board+=boardToString.getPointNumbers(false,player);
 
         return board;
-    }
-
-    private int getPointMaxLength(int table1){
-        int table1Length=_tables[table1].getPointMaxLength();
-        int table2Length=_tables[table1+1].getPointMaxLength();
-        int max=Math.max(table1Length,table2Length);
-        return max;
-    }
-
-    private String getPoints(int row,int leftTable,int rightTable){
-        String points="";
-        String[]checkersOnTableRow=_tables[leftTable].getPointsRow(row);
-        points+=getTableRow(checkersOnTableRow,Constants.LANES_PER_TABLE);
-
-        points+="|"+getBarRow(row,5,Checker.RED);//FIXME Correct Paramaters need to be given to this function
-
-        checkersOnTableRow=_tables[rightTable].getPointsRow(row);
-        points+=getTableRow(checkersOnTableRow,Constants.LANES_PER_TABLE);
-        points+="|\n";
-        return points;
-    }
-
-    private String getArrows(int i,boolean pointDown){
-        String arrows="";
-        arrows+=getArrow(i,1,pointDown);
-        arrows+=getBarRow(i,2,Checker.RED);   //FIXME Correct Paramaters need to be given to this function
-        arrows+=getArrow(i,0,pointDown);
-        arrows+="\n";
-        return arrows;
-    }
-
-    private String getBorder(){
-        return"=".repeat(5*((Constants.LANES_PER_TABLE*2)-1))+"\n";
-    }
-
-    private String getBarRow(int row,int numRows,Checker playerColour){
-        String bar=" ".repeat(2);
-        if(numRows-row<=_barMap.get(playerColour).getCheckerCount()){
-            bar+=_barMap.get(playerColour).getResidentColour().toString();
-        }
-        else{
-            bar+=" ";
-        }
-        bar+=" ".repeat(2);
-        return bar;
-    }
-
-    private String getPointNumbers(boolean top, int player){
-        String numbers="  ";
-        int tableLeft=1;
-        int tableRight=0;
-        if (top){
-            tableLeft=2;
-            tableRight=3;
-        }
-
-        numbers+=getTableNums(tableLeft, player);
-        numbers+="Bar   ";
-        numbers+=getTableNums(tableRight, player);
-        return numbers+"\n";
-    }
-
-    private String getTableNums(int table,int player){
-        String tableNums="";
-        for (int point=Constants.LANES_PER_TABLE-1;point>=0;point--){ //TODO Make function
-            int num=_tables[table].getPointNumber(point,player);
-            String numString=Integer.toString(num)+"  ";
-            if (num<10)
-            {
-                numString="0"+numString;
-            }
-            tableNums+= numString; 
-        }
-        return tableNums;
-    }
-
-    private String getTableRow(String[] checkers, int size){
-        String rowString="";
-        for(int i=size-1;i>=0;i--){
-            rowString+="| "+checkers[i]+" ";
-        }
-        return rowString;
-    }
-
-    private String getArrow(int layer,int leftSide,boolean pointDown){
-        String left="\\";
-        String right="/";
-        String arrow="";
-        int layers=2;
-
-        if (!pointDown)
-        {
-            left="/";
-            right="\\";
-        }
-
-        arrow=" ".repeat(layer)+left+" ".repeat((layers)-(layer*2))+right+" ".repeat(layer);
-        return "|".repeat(1-leftSide)+arrow.repeat(Constants.LANES_PER_TABLE)+"|".repeat(leftSide);
     }
 }
