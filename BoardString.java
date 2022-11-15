@@ -4,15 +4,14 @@ public class BoardString {
     public static final int POINT_WIDTH = 3;
     public static final int ARROW_LAYERS =(POINT_WIDTH+1)/2;
 
-    //private int[] _barLengths=new int[2];
     private Table[] _tables;
     private HashMap<Checker, Bar> _barMap;
+    private int[] _bearOff;
 
-    public BoardString(Table[] tables,HashMap<Checker, Bar> barMap){
+    public BoardString(Table[] tables,HashMap<Checker, Bar> barMap,int[] bearOff){
         _tables=tables;
         _barMap=barMap;
-        /*_barLengths[0]=_barMap.get(Checker.WHITE).getCheckerCount();
-        _barLengths[1]=_barMap.get(Checker.RED).getCheckerCount();*/
+        _bearOff=bearOff;
     }
 
     public int getPointMaxLength(int table1){
@@ -68,7 +67,7 @@ public class BoardString {
             barColour=Checker.RED;
         }
         int totalBarLength=_barMap.get(barColour).getCheckerCount();
-        int standAloneBar=totalBarLength-(ARROW_LAYERS+pointLength);
+        int standAloneBar=totalBarLength-(ARROW_LAYERS+pointLength);    //TODO - pass this in?
         if (standAloneBar<1){
             standAloneBar=1;
         }
@@ -83,6 +82,13 @@ public class BoardString {
             arrows+=getArrow(row,1,pointDown);
             arrows+=getBarRow(barLayer,barColour);
             arrows+=getArrow(row,0,pointDown);
+
+            if (i==0 && pointDown){
+                arrows+="       Bear off Area";
+            }
+            else if (row==1){
+                arrows+="     ===================";
+            }
             arrows+="\n";
         }
         return arrows;
@@ -96,22 +102,32 @@ public class BoardString {
         String bar="";
         int whiteLength=_barMap.get(Checker.WHITE).getCheckerCount();
         int redLength=_barMap.get(Checker.RED).getCheckerCount();
-        String blankSpace=" ".repeat(4*Constants.LANES_PER_TABLE)+"|";
+        String blankSpace=" ".repeat(4*Constants.LANES_PER_TABLE);
 
-        int i=1;    //TODO These loops are the same - simplify
+        int i=1;    //TODO These loops are the same - simplify?
         do{
-            bar+=blankSpace;
-            bar+=getBarRow(i,Checker.WHITE)+"|\n"; //FIXME Correct Paramaters need to be given to this function
+            bar+=blankSpace+"|";
+            bar+=getBarRow(i,Checker.WHITE)+"|";
+
+            if (i==1){
+                bar+=blankSpace+"     | "+Checker.RED.getSymbol().repeat(_bearOff[1])+" ".repeat(15-_bearOff[1])+" |";
+            }
+            bar+="\n";
             i++;
         }while (i+ARROW_LAYERS+topLength<whiteLength);
             
 
-        bar+=blankSpace+" ".repeat(5)+"|\n";
+        bar+=blankSpace+"|"+" ".repeat(5)+"|"+blankSpace+"     |"+" ".repeat(17)+"|\n";
 
         i=1;
         do{
-            bar+=blankSpace;
-            bar+=getBarRow(i,Checker.RED)+"|\n"; //FIXME Correct Paramaters need to be given to this function
+            bar+=blankSpace+"|";
+            bar+=getBarRow(i,Checker.RED)+"|";
+
+            if (i==1){
+                bar+=blankSpace+"     | "+Checker.WHITE.getSymbol().repeat(_bearOff[0])+" ".repeat(15-_bearOff[0])+" |";
+            }
+            bar+="\n";
             i++;
         } while(i<redLength-(bottomLength+ARROW_LAYERS));
        

@@ -1,18 +1,19 @@
 import java.util.*;
 
 public class Board {
-    // TODO: We may need to split this class into smaller classes, its getting quite big :)  - Agreed
     public static final int BEAR_OFF_PIP_NUMBER = 0;
     public static final int BAR_PIP_NUMBER = 25;
 
     private Point[] _points;
     private Table[] _tables;
     private HashMap<Checker, Bar> _barMap;
+    private int[] _bearOff;
 
     public Board() {
         this._points = new Point[Point.MAXIMUM_PIP_NUMBER];
         this._tables = new Table[4];
         this._barMap = new HashMap<>();
+        this._bearOff = new int[2]; 
 
         for(int i=0; i<Point.MAXIMUM_PIP_NUMBER; i++) {
             _points[i] = new Point(i);
@@ -21,6 +22,9 @@ public class Board {
         for(int i=0; i<4; i++) {
             _tables[i] = new Table(i, this._points);
         }
+
+        _bearOff[0]=0;
+        _bearOff[1]=0;
 
         _barMap.put(Checker.RED, new Bar(Checker.RED));
         _barMap.put(Checker.WHITE, new Bar(Checker.WHITE));
@@ -31,15 +35,15 @@ public class Board {
     private void setupCheckersInitial() {
         // THIS IS THE CORRECT INITIAL SET UP
 
-       _points[5].addCheckers(Checker.WHITE, 5);
-   	_points[7].addCheckers(Checker.WHITE, 3);
-   	_points[12].addCheckers(Checker.WHITE, 5);
-   	_points[23].addCheckers(Checker.WHITE, 2);
+        _points[5].addCheckers(Checker.WHITE, 5);
+        _points[7].addCheckers(Checker.WHITE, 3);
+        _points[12].addCheckers(Checker.WHITE, 5);
+        _points[23].addCheckers(Checker.WHITE, 2);
 
-       _points[18].addCheckers(Checker.RED, 5);
-   	_points[16].addCheckers(Checker.RED, 3);
-   	_points[11].addCheckers(Checker.RED, 5);
-   	_points[0].addCheckers(Checker.RED, 2);
+        _points[18].addCheckers(Checker.RED, 5);
+        _points[16].addCheckers(Checker.RED, 3);
+        _points[11].addCheckers(Checker.RED, 5);
+        _points[0].addCheckers(Checker.RED, 2);
 
     //BAR UI TESTING
     //_barMap.get(Checker.WHITE).addCheckers(Checker.WHITE, 1);
@@ -509,7 +513,7 @@ public class Board {
             }
 
             if(moveSequence.get(moveSequence.size()-1) == BEAR_OFF_PIP_NUMBER) {
-                // ADD TO BEAR OFF PILE HERE!!
+                _bearOff[activePlayer.getNumber()]++;
             }
             else {
                 for (int i = 1; i < moveIndex.size(); i++) {
@@ -526,8 +530,9 @@ public class Board {
 
 
     public String toString(int player){
-        BoardString boardToString= new BoardString(_tables,_barMap);
+        BoardString boardToString= new BoardString(_tables,_barMap,_bearOff);
         String board="";
+
         board+=boardToString.getPointNumbers(true,player);
         board+=boardToString.getBorder();
         
@@ -536,14 +541,12 @@ public class Board {
 
         //Get Top Table
         board+=boardToString.getPoints(topLength,true);
-
         board+=boardToString.getArrows(topLength,true);
 
         board+=boardToString.centreBar(topLength,bottomLength);
 
         //Print Bottom Table
-        board+=boardToString.getArrows(bottomLength,false);
-            
+        board+=boardToString.getArrows(bottomLength,false);            
         board+=boardToString.getPoints(bottomLength,false);
 
         board+=boardToString.getBorder();
