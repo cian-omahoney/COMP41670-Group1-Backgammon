@@ -41,6 +41,10 @@ public class Board {
    	_points[11].addCheckers(Checker.RED, 5);
    	_points[0].addCheckers(Checker.RED, 2);
 
+    //BAR UI TESTING
+    //_barMap.get(Checker.WHITE).addCheckers(Checker.WHITE, 1);
+    //_barMap.get(Checker.RED).addCheckers(Checker.RED, 1);
+
 
         // THIS SET UP IS ONLY FOR TESTING:
         // Endgame test.
@@ -533,12 +537,12 @@ public class Board {
         //Get Top Table
         board+=boardToString.getPoints(topLength,true);
 
-        board+=boardToString.getArrows(topLength,2,true);
+        board+=boardToString.getArrows(topLength,true);
 
-        board+=boardToString.centreBar(topLength,bottomLength,2);   //TODO Size
+        board+=boardToString.centreBar(topLength,bottomLength);
 
         //Print Bottom Table
-        board+=boardToString.getArrows(bottomLength,2,false); //TODO Point Width constant
+        board+=boardToString.getArrows(bottomLength,false);
             
         board+=boardToString.getPoints(bottomLength,false);
 

@@ -1,12 +1,18 @@
 import java.util.*;
 
 public class BoardString {
+    public static final int POINT_WIDTH = 3;
+    public static final int ARROW_LAYERS =(POINT_WIDTH+1)/2;
+
+    //private int[] _barLengths=new int[2];
     private Table[] _tables;
     private HashMap<Checker, Bar> _barMap;
 
     public BoardString(Table[] tables,HashMap<Checker, Bar> barMap){
         _tables=tables;
         _barMap=barMap;
+        /*_barLengths[0]=_barMap.get(Checker.WHITE).getCheckerCount();
+        _barLengths[1]=_barMap.get(Checker.RED).getCheckerCount();*/
     }
 
     public int getPointMaxLength(int table1){
@@ -19,22 +25,32 @@ public class BoardString {
     public String getPoints(int length,boolean top){
         int leftTable=2;
         int rightTable=3;
+        Checker barColour=Checker.WHITE;
         if (!top){
             leftTable=1;
             rightTable=0;
+            barColour=Checker.RED;
         }
+        int totalBarLength=_barMap.get(barColour).getCheckerCount();
+
         String points="";
         for (int i=0; i<length;i++){
             int row=i;
-            Checker player=Checker.WHITE;
+
+            int standAloneBar=totalBarLength-(ARROW_LAYERS+length);
+            if (standAloneBar<1){
+                standAloneBar=1;
+            }
+
+            int barLayer=totalBarLength-((length-row)+ARROW_LAYERS+standAloneBar);
             if (!top){
                 row=(length-1)-i;
-                player=Checker.RED;
+                barLayer=standAloneBar+ARROW_LAYERS+i+1;
             }
             String[]checkersOnTableRow=_tables[leftTable].getPointsRow(row);
             points+=getTableRow(checkersOnTableRow,Constants.LANES_PER_TABLE);
 
-            points+="|"+getBarRow(row,length+2,player);
+            points+="|"+getBarRow(barLayer,barColour);
 
             checkersOnTableRow=_tables[rightTable].getPointsRow(row);
             points+=getTableRow(checkersOnTableRow,Constants.LANES_PER_TABLE);
@@ -43,17 +59,29 @@ public class BoardString {
         return points;
     }
 
-    public String getArrows(int pointLength,int size,boolean pointDown){
+    public String getArrows(int pointLength,boolean pointDown){
         String arrows="";
-        for (int i=0; i<2;i++){
+
+        Checker barColour=Checker.WHITE;
+        if(!pointDown){
+
+            barColour=Checker.RED;
+        }
+        int totalBarLength=_barMap.get(barColour).getCheckerCount();
+        int standAloneBar=totalBarLength-(ARROW_LAYERS+pointLength);
+        if (standAloneBar<1){
+            standAloneBar=1;
+        }
+        for (int i=0; i<ARROW_LAYERS;i++){
             int row=i;
-            Checker player=Checker.WHITE;
+            int barLayer=standAloneBar+(ARROW_LAYERS-i);
             if(!pointDown){
-                row=(size-1)-i;
-                player=Checker.RED;
+                row=(ARROW_LAYERS-1)-i;
+                barLayer=standAloneBar+i+1;
             }
+
             arrows+=getArrow(row,1,pointDown);
-            arrows+=getBarRow(row,pointLength+size,player);
+            arrows+=getBarRow(barLayer,barColour);
             arrows+=getArrow(row,0,pointDown);
             arrows+="\n";
         }
@@ -64,35 +92,35 @@ public class BoardString {
         return"=".repeat(5*((Constants.LANES_PER_TABLE*2)-1))+"\n";
     }
 
-    public String centreBar(int topLength,int bottomLength,int arrowSize){
+    public String centreBar(int topLength,int bottomLength){
         String bar="";
         int whiteLength=_barMap.get(Checker.WHITE).getCheckerCount();
         int redLength=_barMap.get(Checker.RED).getCheckerCount();
         String blankSpace=" ".repeat(4*Constants.LANES_PER_TABLE)+"|";
 
-        int i=topLength+arrowSize;
+        int i=1;    //TODO These loops are the same - simplify
         do{
             bar+=blankSpace;
-            bar+=getBarRow(i,topLength+arrowSize,Checker.WHITE)+"|\n"; //FIXME Correct Paramaters need to be given to this function
+            bar+=getBarRow(i,Checker.WHITE)+"|\n"; //FIXME Correct Paramaters need to be given to this function
             i++;
-        }while (i<whiteLength);
+        }while (i+ARROW_LAYERS+topLength<whiteLength);
             
 
         bar+=blankSpace+" ".repeat(5)+"|\n";
 
-        i=0;
+        i=1;
         do{
             bar+=blankSpace;
-            bar+=getBarRow(i,bottomLength+arrowSize,Checker.RED)+"|\n"; //FIXME Correct Paramaters need to be given to this function
+            bar+=getBarRow(i,Checker.RED)+"|\n"; //FIXME Correct Paramaters need to be given to this function
             i++;
-        } while(i<redLength-(bottomLength+arrowSize));
+        } while(i<redLength-(bottomLength+ARROW_LAYERS));
        
         return bar;
     }
 
-    private String getBarRow(int row,int numRows,Checker playerColour){
+    private String getBarRow(int row,Checker playerColour){
         String bar=" ".repeat(2);
-        if(numRows-row<_barMap.get(playerColour).getCheckerCount()){
+        if(row>=0 && row<=_barMap.get(playerColour).getCheckerCount()){
             bar+=_barMap.get(playerColour).getResidentColour().getSymbol();
         }
         else{
@@ -143,7 +171,6 @@ public class BoardString {
         String left="\\";
         String right="/";
         String arrow="";
-        int layers=2;
 
         if (!pointDown)
         {
@@ -151,7 +178,7 @@ public class BoardString {
             right="\\";
         }
 
-        arrow=" ".repeat(layer)+left+" ".repeat((layers)-(layer*2))+right+" ".repeat(layer);
+        arrow=" ".repeat(layer)+left+" ".repeat((ARROW_LAYERS)-(layer*2))+right+" ".repeat(layer);
         return "|".repeat(1-leftSide)+arrow.repeat(Constants.LANES_PER_TABLE)+"|".repeat(leftSide);
     }
 }
