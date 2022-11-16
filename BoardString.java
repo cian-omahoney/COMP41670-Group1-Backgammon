@@ -4,6 +4,7 @@ public class BoardString {
     public static final int POINT_WIDTH = 3;
     public static final int ARROW_LAYERS =(POINT_WIDTH+1)/2;
 
+
     private Table[] _tables;
     private HashMap<Checker, Bar> _barMap;
     private int[] _bearOff;
@@ -47,12 +48,12 @@ public class BoardString {
                 barLayer=standAloneBar+ARROW_LAYERS+i+1;
             }
             String[]checkersOnTableRow=_tables[leftTable].getPointsRow(row);
-            points+=getTableRow(checkersOnTableRow,Constants.LANES_PER_TABLE);
+            points+=getTableRow(checkersOnTableRow,Table.NUMBER_LANES);
 
             points+="|"+getBarRow(barLayer,barColour);
 
             checkersOnTableRow=_tables[rightTable].getPointsRow(row);
-            points+=getTableRow(checkersOnTableRow,Constants.LANES_PER_TABLE);
+            points+=getTableRow(checkersOnTableRow,Table.NUMBER_LANES);
             points+="|\n";
         }
         return points;
@@ -95,14 +96,14 @@ public class BoardString {
     }
 
     public String getBorder(){
-        return"=".repeat(5*((Constants.LANES_PER_TABLE*2)-1))+"\n";
+        return"=".repeat(5*((Table.NUMBER_LANES*2)-1))+"\n";
     }
 
     public String centreBar(int topLength,int bottomLength){
         String bar="";
         int whiteLength=_barMap.get(Checker.WHITE).getCheckerCount();
         int redLength=_barMap.get(Checker.RED).getCheckerCount();
-        String blankSpace=" ".repeat(4*Constants.LANES_PER_TABLE);
+        String blankSpace=" ".repeat(4*Table.NUMBER_LANES);
 
         int i=1;    //TODO These loops are the same - simplify?
         do{
@@ -163,7 +164,7 @@ public class BoardString {
 
     private String getTableNums(int table,int player){
         String tableNums="";
-        for (int point=Constants.LANES_PER_TABLE-1;point>=0;point--){ //TODO Make function
+        for (int point=Table.NUMBER_LANES-1;point>=0;point--){ //TODO Make function
             int num=_tables[table].getPointNumber(point,player);
             String numString=Integer.toString(num)+"  ";
             if (num<10)
@@ -195,6 +196,6 @@ public class BoardString {
         }
 
         arrow=" ".repeat(layer)+left+" ".repeat((ARROW_LAYERS)-(layer*2))+right+" ".repeat(layer);
-        return "|".repeat(1-leftSide)+arrow.repeat(Constants.LANES_PER_TABLE)+"|".repeat(leftSide);
+        return "|".repeat(1-leftSide)+arrow.repeat(Table.NUMBER_LANES)+"|".repeat(leftSide);
     }
 }
