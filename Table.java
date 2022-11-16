@@ -6,7 +6,11 @@ public class Table {
         this._points = new Point[Constants.LANES_PER_TABLE];
         tableNumber = number;
     	for(int i=0; i<Constants.LANES_PER_TABLE; i++) {
-    		this._points[i] = points[i+(tableNumber*Constants.LANES_PER_TABLE)]; //FIXME does this order them correctly?
+            int j=i;
+            if (tableNumber>1){
+                j=(Constants.LANES_PER_TABLE-1)-i;
+            }
+    		this._points[j] = points[i+(tableNumber*Constants.LANES_PER_TABLE)]; //FIXME does this order them correctly?
     	}
     }
 
