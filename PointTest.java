@@ -28,7 +28,7 @@ class PointTest {
 		assertEquals(_point.getResidentColour(), Checker.WHITE);
 	}
 
-	@Test
+	/*@Test
 	void testGetWhitePointNumber() {
 		assertEquals(_point.getWhitePointNumber(), 1);
 	}
@@ -36,7 +36,7 @@ class PointTest {
 	@Test
 	void testGetRedPointNumber() {
 		assertEquals(_point.getRedPointNumber(), 24);
-	}
+	}*/
 
 	@Test
 	void testGetResidentColour() {
