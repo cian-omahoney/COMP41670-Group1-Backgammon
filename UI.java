@@ -1,3 +1,5 @@
+import org.w3c.dom.html.HTMLImageElement;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
@@ -18,7 +20,9 @@ public class UI{
 	public static final String RED_CHECKER_COLOUR   = "\033[1;31m";
 	private static final String DASH_LINE = YELLOW_TEXT_COLOUR + "=".repeat(85) + CLEAR_COLOURS;
 	private static final int ALPHABET_SIZE = 26;
+	private static final int MAX_NAME_LENGTH = 7;
 	private static final String MOVE_REGEX = "[A-Z]*";
+	private static final String GAME_LENGTH_REGEX = "[13579]";
 
 	private static Scanner _userInputScan;
 	private static Scanner _textFileScan;
@@ -26,10 +30,10 @@ public class UI{
 
     public UI(){
     	_userInputScan = new Scanner(System.in);
-    	printIntro();
+    	printBackgammonIntro();
     }
 
-	private void printIntro(){
+	private void printBackgammonIntro(){
 		System.out.print(CLEAR_SCREEN);
 		System.out.flush();
 		System.out.println(DASH_LINE);
@@ -59,8 +63,41 @@ public class UI{
 				validNames = false;
 				System.out.print(CLEAR_COLOURS);
 			}
+			else if(redPlayer.getName().length() > MAX_NAME_LENGTH || whitePlayer.getName().length() > MAX_NAME_LENGTH) {
+				System.out.print(CYAN_TEXT_COLOUR);
+				System.out.printf("\tPlayer names must be less than %d characters long!\n", MAX_NAME_LENGTH);
+				validNames = false;
+				System.out.print(CLEAR_COLOURS);
+			}
 		}while(!validNames);
 		System.out.println();
+    }
+
+	public int getGameLength() {
+		Boolean validGameLength = false;
+		int gameLength = 1;
+		String userInput;
+
+		do {
+			System.out.print(">> Enter Game Length:\t\t\t");
+			userInput = getLine();
+			if(userInput.matches(GAME_LENGTH_REGEX)) {
+				gameLength = Integer.parseInt(userInput);
+				validGameLength = true;
+			}
+			else {
+				System.out.print(CYAN_TEXT_COLOUR);
+				System.out.println("\tGame length must be an odd number between 1 and 9.\n");
+				validGameLength = false;
+				System.out.print(CLEAR_COLOURS);
+			}
+		}while(!validGameLength);
+
+		System.out.println();
+		return gameLength;
+	}
+
+	public void printGameIntro(Player redPlayer, Player whitePlayer) {
 		System.out.print(DASH_LINE);
 		System.out.println(CYAN_TEXT_COLOUR);
 		System.out.println("\n\tThe game is ready to begin!");
@@ -70,7 +107,7 @@ public class UI{
 		System.out.println(CLEAR_COLOURS);
 		System.out.print(">> Press ENTER to begin game...");
 		getLine();
-    }
+	}
     
     public Command getCommand(Player player) {
 		System.out.printf(">> Enter command %s:  ", player.getName());
@@ -252,16 +289,18 @@ public class UI{
 	}
 
 
-    public void printBoard(Board board, Player redPlayer, Player whitePlayer,int player){
+    public void printBoard(Board board, Player redPlayer, Player whitePlayer,int player, int matchNumber, int gameLength){
 		System.out.print(CLEAR_SCREEN);
         System.out.flush();
         System.out.println(DASH_LINE);
-		System.out.printf("Player Red: %s      * * * %sB A C K G A M M O N%s * * *      Player White: %s\n",redPlayer.getName(), UNDERLINE_TEXT, CLEAR_COLOURS,  whitePlayer.getName());
-        System.out.println(DASH_LINE);
+		System.out.printf("Player Red: %s%-7s%s   |                                     |   Player White: %s%-7s%s\n",MAGENTA_TEXT_COLOUR,redPlayer.getName(), CLEAR_COLOURS, MAGENTA_TEXT_COLOUR, whitePlayer.getName(), CLEAR_COLOURS);
+        System.out.printf("Pip Count:  %s%3d%s       |   * * * %sB A C K G A M M O N%s * * *   |   Pip Count:    %s%3d%s\n", MAGENTA_TEXT_COLOUR, board.getPipCount(redPlayer), CLEAR_COLOURS,UNDERLINE_TEXT, CLEAR_COLOURS,  MAGENTA_TEXT_COLOUR, board.getPipCount(whitePlayer), CLEAR_COLOURS);
+		System.out.printf("Score:      %s%3d%s       |              Match: %d/%d             |   Score:        %s%3d%s\n", MAGENTA_TEXT_COLOUR, redPlayer.getScore(), CLEAR_COLOURS, matchNumber, gameLength,MAGENTA_TEXT_COLOUR, whitePlayer.getScore(), CLEAR_COLOURS);
+		System.out.printf("Double:     %s%3s%s       |                 %3s                 |   Double:       %s%3s%s\n", MAGENTA_TEXT_COLOUR, board.doublingCubeToString(redPlayer), CLEAR_COLOURS, board.doublingCubeToString(), MAGENTA_TEXT_COLOUR, board.doublingCubeToString(whitePlayer), CLEAR_COLOURS);
+		System.out.println(DASH_LINE);
 		System.out.println();
         String boardString = board.toString(player);
         System.out.println(boardString);
-		System.out.println("Double");
 		System.out.println(DASH_LINE);
     }
 
@@ -282,12 +321,17 @@ public class UI{
 		System.out.print(CLEAR_COLOURS);
 	}
 
-	public Player getFirstRoll(Player playerRed, Player playerWhite) {
+	public Player getFirstRoll(Player playerRed, Player playerWhite, int matchNumber) {
 		Player selectedPlayer;
 		Dice singleDice = new Dice();
 		int redDiceRoll;
 		int whiteDiceRoll;
-		System.out.println();
+
+		System.out.println(CLEAR_SCREEN);
+		System.out.println(DASH_LINE);
+		System.out.print(MAGENTA_TEXT_COLOUR);
+		System.out.printf("\t\t\t\t* * * MATCH %d * * *\n", matchNumber);
+		System.out.print(CLEAR_COLOURS);
 		System.out.println(DASH_LINE);
 		do {
 			System.out.printf("\n>> Press ENTER to Roll Your First Dice %s...", playerRed.getName());
@@ -322,7 +366,7 @@ public class UI{
 		return selectedPlayer;
 	}
 
-	public void printWinner(Player playerA, Player playerB, Board board) {
+	public void printMatchWinner(Player playerA, Player playerB, Board board, int matchNumber) {
 		String winnerName = "";
 		if(board.getPipCount(playerA) == 0) {
 			winnerName = playerA.getName();
@@ -333,7 +377,9 @@ public class UI{
 
 		if(!winnerName.equals("")) {
 			printTextFile(CONGRATULATIONS_TEXT_FILE);
-			System.out.printf("\n\t\t\t* * * %s%s is the winner!%s * * *\n\n", UNDERLINE_TEXT, winnerName, CLEAR_COLOURS);
+			System.out.printf("\n\t\t\t* * * %s%s Won Match %d!%s * * *\n", UNDERLINE_TEXT, winnerName, matchNumber, CLEAR_COLOURS);
+			System.out.print("\n>> Press ENTER to begin next match...");
+			getLine();
 			System.out.println(DASH_LINE);
 		}
 	}

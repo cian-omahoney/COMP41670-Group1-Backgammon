@@ -6,17 +6,17 @@ public class Player{
     private Dice _firstDie;
     private Dice _secondDie;
     private List<Integer> _availableMoves;
-    private boolean _isDoubleOwner;
     private int _number;
+    private int _score;
 
     public Player(Checker playerColour,int number){
         this._name="";
-        this._isDoubleOwner = false;
         this._firstDie = new Dice();
         this._secondDie = new Dice();
         this._playerColour = playerColour;
         this._availableMoves = new ArrayList<Integer>();
         this._number = number;
+        this._score = 0;
     }
 
     public void rollBothDice(){
@@ -91,5 +91,13 @@ public class Player{
 
     public int getNumber(){
         return _number;
+    }
+
+    public int getScore() {
+        return _score;
+    }
+
+    public void addScore(int gainedPoints) {
+        _score += gainedPoints;
     }
 }

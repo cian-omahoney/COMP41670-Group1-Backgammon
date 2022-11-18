@@ -7,7 +7,8 @@ public class Board {
     private Point[] _points;
     private Table[] _tables;
     private HashMap<Checker, Bar> _barMap;
-    private static int _doublingCube;
+    private int _doublingCube;
+    private Checker _doublingCubeOwner;
     private int[] _bearOff;
 
     public Board() {
@@ -15,6 +16,7 @@ public class Board {
         this._tables = new Table[4];
         this._barMap = new HashMap<>();
         this._doublingCube = 1;
+        this._doublingCubeOwner = Checker.EMPTY;
         this._bearOff = new int[2];
 
         for(int i=0; i<Point.MAXIMUM_PIP_NUMBER; i++) {
@@ -45,13 +47,44 @@ public class Board {
     	_points[16].addCheckers(Checker.RED, 3);
     	_points[11].addCheckers(Checker.RED, 5);
     	_points[0].addCheckers(Checker.RED, 2);
+
+        //_points[0].addCheckers(Checker.WHITE, 1);
+        //_points[23].addCheckers(Checker.RED, 1);
     }
 
     public int getDoublingCube() {
         return _doublingCube;
     }
 
-    public boolean isGameOver(Player playerA, Player playerB) {
+    public boolean isDoublingCubeOwner(Player activePlayer) {
+        boolean isDoublingCubeOwner = false;
+        if(_doublingCubeOwner == activePlayer.getColour()){
+            isDoublingCubeOwner = true;
+        }
+        else if(_doublingCubeOwner == Checker.EMPTY) {
+            isDoublingCubeOwner = true;
+            _doublingCubeOwner = activePlayer.getColour();
+        }
+        return isDoublingCubeOwner;
+    }
+
+    public String doublingCubeToString(Player player) {
+        String doublingCubeString = "[" + _doublingCube + "]";;
+        if(player.getColour() != _doublingCubeOwner) {
+            doublingCubeString = "---";
+        }
+        return doublingCubeString;
+    }
+
+    public String doublingCubeToString() {
+        String doublingCubeString = "[" + _doublingCube + "]";;
+        if(_doublingCubeOwner != Checker.EMPTY) {
+            doublingCubeString = "   ";
+        }
+        return doublingCubeString;
+    }
+
+    public boolean isMatchOver(Player playerA, Player playerB) {
         return (getPipCount(playerA) == 0 || getPipCount(playerB) == 0);
     }
     public boolean isBarEmpty(Player activePlayer) {
@@ -364,4 +397,6 @@ public class Board {
 
         return board;
     }
+
+
 }
