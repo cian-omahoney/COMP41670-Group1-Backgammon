@@ -15,15 +15,25 @@ public class Game {
         this._gameLength = 1;
     }
 
-    public void play() {
+    public boolean play() {
+        boolean isPlayAgain = false;
+
+        _userInterface.printBackgammonIntro();
         _userInterface.getPlayerNames(_playerRed, _playerWhite);
         _gameLength = _userInterface.getGameLength();
         _userInterface.printGameIntro(_playerRed, _playerWhite);
-
+        int maximumScore = 0;
         do{
-            _currentMatch.playMatch(_currentMatchNumber, _gameLength);
+            maximumScore = _currentMatch.playMatch(_currentMatchNumber, _gameLength);
             _currentMatchNumber++;
-        }while(_currentMatchNumber <= _gameLength);
+        }while(_currentMatchNumber <= _gameLength && maximumScore < _gameLength && maximumScore > 0);
 
+        if(maximumScore <= 0) {
+            isPlayAgain = false;
+        }
+        else{
+            isPlayAgain = _userInterface.playAnotherGame();
+        }
+        return  isPlayAgain;
     }
 }

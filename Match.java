@@ -13,14 +13,17 @@ public class Match {
         this._userInterface = userInterface;
     }
 
-    public void playMatch(int matchNumber, int gameLength){
+    public int playMatch(int matchNumber, int gameLength){
         Board board=new Board();
 
         List<Integer> moveSequence = new ArrayList<>();
         Player activePlayer;
+        Player winningPlayer;
         Command currentCommand;
+        int finalScore = 1;
 
         activePlayer = _userInterface.getFirstRoll(_playerRed, _playerWhite, matchNumber);
+        winningPlayer = activePlayer;
         _userInterface.printBoard(board, _playerRed, _playerWhite, activePlayer.getNumber(), matchNumber, gameLength);
         _userInterface.printDashboard(activePlayer);
 
@@ -38,7 +41,7 @@ public class Match {
                         board.doubleStakes();
                     }
                     else {
-
+                        board.doubleRefused();
                     }
                 }
                 else {
@@ -53,7 +56,7 @@ public class Match {
                     activePlayer.addAvailableMovesMultiple(currentCommand.getForcedDiceValues());
                 }
 
-                while(activePlayer.availableMovesRemaining()) {
+                while(activePlayer.availableMovesRemaining() && !board.isMatchOver(_playerRed, _playerWhite)) {
                     _userInterface.printDice(activePlayer);
                     if(board.isBarEmpty(activePlayer)) {
                         moveSequence = _userInterface.selectValidMove(board.getValidMoves(activePlayer));
@@ -69,13 +72,15 @@ public class Match {
                     _userInterface.printDashboard(activePlayer);
                 }
 
-                // After the active player finishes their turn, switch to the next player:
-                activePlayer = switch(activePlayer.getColour()) {
-                    case WHITE -> _playerRed;
-                    case RED -> _playerWhite;
-                    default -> activePlayer;
-                };
-                _userInterface.finishTurn();
+                if(!board.isMatchOver(_playerRed, _playerWhite)) {
+                    // After the active player finishes their turn, switch to the next player:
+                    activePlayer = switch (activePlayer.getColour()) {
+                        case WHITE -> _playerRed;
+                        case RED -> _playerWhite;
+                        default -> activePlayer;
+                    };
+                    _userInterface.finishTurn();
+                }
             }
 
             _userInterface.printBoard(board, _playerRed, _playerWhite,activePlayer.getNumber(), matchNumber, gameLength);
@@ -86,12 +91,20 @@ public class Match {
             }
         }while(!currentCommand.isQuit() && !board.isMatchOver(_playerRed, _playerWhite));
 
+        _playerWhite.clearAvailableMoves();
+        _playerRed.clearAvailableMoves();
+
         if(currentCommand.isQuit()){
-            _userInterface.printQuit();
+            _userInterface.printQuit(activePlayer);
+            finalScore = -1;
+        }
+        else if(board.isMatchOver(_playerRed, _playerWhite)) {
+            winningPlayer = board.getWinner(_playerRed,_playerWhite, activePlayer);
+            winningPlayer.addScore(board.getMatchScore(_playerRed, _playerWhite));
+            _userInterface.printWinner(winningPlayer, _playerRed, _playerWhite, matchNumber, gameLength, board);
+            finalScore = winningPlayer.getScore();
         }
 
-        if(board.isMatchOver(_playerRed, _playerWhite)) {
-            _userInterface.printMatchWinner(_playerRed, _playerWhite, board, matchNumber);
-        }
+        return finalScore;
     }
 }

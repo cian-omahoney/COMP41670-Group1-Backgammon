@@ -1,5 +1,6 @@
 import org.w3c.dom.html.HTMLImageElement;
 
+import javax.swing.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
@@ -23,8 +24,8 @@ public class UI{
 	private static final int MAX_NAME_LENGTH = 7;
 	private static final String MOVE_REGEX = "[A-Z]*";
 	private static final String GAME_LENGTH_REGEX = "[0-9]{1,3}";
-	private static final String YES_REGEX = "YES";
-	private static final String NO_REGEX = "NO";
+	private static final String ACCEPT_REGEX = "ACCEPT";
+	private static final String REFUSE_REGEX = "REFUSE";
 
 	private static Scanner _userInputScan;
 	private static Scanner _textFileScan;
@@ -32,10 +33,9 @@ public class UI{
 
     public UI(){
     	_userInputScan = new Scanner(System.in);
-    	printBackgammonIntro();
     }
 
-	private void printBackgammonIntro(){
+	public void printBackgammonIntro(){
 		System.out.print(CLEAR_SCREEN);
 		System.out.flush();
 		System.out.println(DASH_LINE);
@@ -133,9 +133,9 @@ public class UI{
     	return userInputLine;
     }
 
-    public void printQuit() {
+    public void printQuit(Player activePlayer) {
     	System.out.println(DASH_LINE);
-    	System.out.println("\t\tYou quit. Game Over.");
+    	System.out.printf("\t\t\t\t%s Quit. Game Over.\n", activePlayer.getName());
     	System.out.println(DASH_LINE);
     }
 
@@ -179,9 +179,9 @@ public class UI{
 		System.out.printf("\t%s would like to offer a double.\n", activePlayer.getName());
 		System.out.print(CLEAR_COLOURS);
 		do{
-			System.out.print("\t>> Enter 'YES' to accept or 'NO' to refuse:\t");
+			System.out.print("\t>> Enter 'ACCEPT' to accept or 'REFUSE' to refuse:\t");
 			userInput = getLine().toUpperCase();
-			if(userInput.matches(YES_REGEX)){
+			if(userInput.matches(ACCEPT_REGEX)){
 				validInput = true;
 				isOfferAccepted = true;
 
@@ -195,7 +195,7 @@ public class UI{
 				getLine();
 				System.out.print(CLEAR_COLOURS);
 			}
-			else if(userInput.matches(NO_REGEX)){
+			else if(userInput.matches(REFUSE_REGEX)){
 				validInput = true;
 				isOfferAccepted = false;
 				System.out.print(MAGENTA_TEXT_COLOUR);
@@ -204,14 +204,14 @@ public class UI{
 				System.out.print(CLEAR_COLOURS);
 				System.out.print(CYAN_TEXT_COLOUR);
 				System.out.printf("\t%s refused the offer to double.\n", nonActivePlayerName);
-				System.out.print("\t>> Press ENTER to continue your turn...");
+				System.out.print("\t>> Press ENTER to finish this match...");
 				getLine();
 				System.out.print(CLEAR_COLOURS);
 			}
 			else {
 				validInput = false;
 				System.out.print(CYAN_TEXT_COLOUR);
-				System.out.println("\tThis command is invalid! Try 'YES' or 'NO'...");
+				System.out.println("\tThis command is invalid! Try 'ACCEPT' or 'REFUSE'...");
 				System.out.print(CLEAR_COLOURS);
 			}
 		}while(!validInput);
@@ -367,7 +367,7 @@ public class UI{
 		System.out.printf("Player Red: %s%-7s%s   |                                     |   Player White: %s%-7s%s\n",MAGENTA_TEXT_COLOUR,redPlayer.getName(), CLEAR_COLOURS, MAGENTA_TEXT_COLOUR, whitePlayer.getName(), CLEAR_COLOURS);
         System.out.printf("Pip Count:  %s%3d%s       |   * * * %sB A C K G A M M O N%s * * *   |   Pip Count:    %s%3d%s\n", MAGENTA_TEXT_COLOUR, board.getPipCount(redPlayer), CLEAR_COLOURS,UNDERLINE_TEXT, CLEAR_COLOURS,  MAGENTA_TEXT_COLOUR, board.getPipCount(whitePlayer), CLEAR_COLOURS);
 		System.out.printf("Score:      %s%3d%s       |            Match: %3d/%-3d           |   Score:        %s%3d%s\n", MAGENTA_TEXT_COLOUR, redPlayer.getScore(), CLEAR_COLOURS, matchNumber, gameLength,MAGENTA_TEXT_COLOUR, whitePlayer.getScore(), CLEAR_COLOURS);
-		System.out.printf("Double:     %s%3s%s       |                 %3s                 |   Double:       %s%3s%s\n", MAGENTA_TEXT_COLOUR, board.doublingCubeToString(redPlayer), CLEAR_COLOURS, board.doublingCubeToString(), MAGENTA_TEXT_COLOUR, board.doublingCubeToString(whitePlayer), CLEAR_COLOURS);
+		System.out.printf("Double:     %s%-5s%s     |                 %3s                 |   Double:       %s%-5s%s\n", MAGENTA_TEXT_COLOUR, board.doublingCubeToString(redPlayer), CLEAR_COLOURS, board.doublingCubeToString(), MAGENTA_TEXT_COLOUR, board.doublingCubeToString(whitePlayer), CLEAR_COLOURS);
 		System.out.println(DASH_LINE);
 		System.out.println();
         String boardString = board.toString(player);
@@ -437,19 +437,33 @@ public class UI{
 		return selectedPlayer;
 	}
 
-	public void printMatchWinner(Player playerA, Player playerB, Board board, int matchNumber) {
-		String winnerName = "";
-		if(board.getPipCount(playerA) == 0) {
-			winnerName = playerA.getName();
-		}
-		else if(board.getPipCount(playerB) == 0) {
-			winnerName = playerB.getName();
-		}
+	public void printWinner(Player winner, Player playerA, Player playerB, int matchNumber, int gameLength, Board board) {
+		printTextFile(CONGRATULATIONS_TEXT_FILE);
+		System.out.printf("\n\t\t\t--> %s%s Won Match %d!%s\n", UNDERLINE_TEXT,winner.getName(), matchNumber, CLEAR_COLOURS);
 
-		if(!winnerName.equals("")) {
-			printTextFile(CONGRATULATIONS_TEXT_FILE);
-			System.out.printf("\n\t\t\t* * * %s%s Won Match %d!%s * * *\n", UNDERLINE_TEXT, winnerName, matchNumber, CLEAR_COLOURS);
+		if(board.isBackgammoned(playerA, playerB)) {
+			System.out.printf("\t\t\t--> Game Ended in Backgammon\n", winner.getName(), winner.getScore());
+		}
+		else if (board.isGammoned(playerA, playerB)){
+			System.out.printf("\t\t\t--> Game Ended in Gammon\n", winner.getName(), winner.getScore());
+		}
+		else {
+			System.out.printf("\t\t\t--> Game Ended in Single\n", winner.getName(), winner.getScore());
+		}
+		System.out.printf("\t\t\t--> %s's score:%3d\n", winner.getName(), winner.getScore());
+		if(winner.getScore() < gameLength) {
 			System.out.print("\n>> Press ENTER to begin next match...");
+			getLine();
+			System.out.println(DASH_LINE);
+		}
+		else {
+			System.out.printf("\n\t\t\t--> %s%s is the Overall Game Winner!%s\n", UNDERLINE_TEXT,winner.getName(), CLEAR_COLOURS);
+			System.out.printf("\t\t\tThe final scores were:\n");
+			System.out.printf("\t\t\t--> %s scored %d/%d.\n", playerA.getName(), playerA.getScore(), gameLength);
+			System.out.printf("\t\t\t--> %s scored %d/%d.\n\n", playerB.getName(), playerB.getScore(), gameLength);
+
+			System.out.print(DASH_LINE);
+			System.out.print("\n>> Press ENTER to finish game...");
 			getLine();
 			System.out.println(DASH_LINE);
 		}
@@ -477,6 +491,32 @@ public class UI{
 		else {
 			System.out.println("UI.printTextFile: File Not Found.");
 		}
+	}
+
+	public boolean playAnotherGame() {
+		boolean playAnotherGame = false;
+		boolean validInput = false;
+		String userInput;
+		do{
+			System.out.println(">> Would you like to play again?\n>> Type 'NEW' to play again or 'QUIT' to exit...");
+			userInput = getLine().toUpperCase();
+			if(userInput.matches("NEW")) {
+				validInput = true;
+				playAnotherGame = true;
+			}
+			else if (userInput.matches("QUIT")){
+				validInput = true;
+				playAnotherGame = false;
+			}
+			else {
+				validInput = false;
+				System.out.print(CYAN_TEXT_COLOUR);
+				System.out.println("\tThis command is invalid! Try 'NEW' or 'QUIT'...");
+				System.out.print(CLEAR_COLOURS);
+			}
+		}while(!validInput);
+
+		return playAnotherGame;
 	}
 
 	public void closeUserInput() {

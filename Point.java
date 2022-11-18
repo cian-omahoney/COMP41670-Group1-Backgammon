@@ -3,6 +3,7 @@ import java.util.*;
 public class Point {
 	public static final int MAXIMUM_PIP_NUMBER = 24;
 	public static final int MAXIMUM_BEAROFF_PIP_NUMBER = 6;
+	public static final int BACKGAMMONED_POINT_CUTOFF = 19;
 	private int _whitePointNumber;
 	private int _redPointNumber;
 	private Checker _residentColour;

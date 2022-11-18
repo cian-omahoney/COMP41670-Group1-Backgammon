@@ -3,9 +3,12 @@ import java.util.*;
 public class Board {
     public static final int BEAR_OFF_PIP_NUMBER = 0;
     public static final int BAR_PIP_NUMBER = 25;
+    public static final int BACKGAMMONED_MULTIPLIER = 3;
+    public static final int GAMMONED_MULTIPLIER = 2;
 
     private Point[] _points;
     private Table[] _tables;
+    private boolean _isDoubleRefused;
     private HashMap<Checker, Bar> _barMap;
     private int _doublingCube;
     private Checker _doublingCubeOwner;
@@ -16,6 +19,7 @@ public class Board {
         this._tables = new Table[4];
         this._barMap = new HashMap<>();
         this._doublingCube = 1;
+        this._isDoubleRefused = false;
         this._doublingCubeOwner = Checker.EMPTY;
         this._bearOff = new int[2];
 
@@ -38,22 +42,20 @@ public class Board {
 
     private void setupCheckersInitial() {
         // THIS IS THE CORRECT INITIAL SET UP
-        _points[5].addCheckers(Checker.WHITE, 5);
-    	_points[7].addCheckers(Checker.WHITE, 3);
-    	_points[12].addCheckers(Checker.WHITE, 5);
-    	_points[23].addCheckers(Checker.WHITE, 2);
+//        _points[5].addCheckers(Checker.WHITE, 5);
+//    	_points[7].addCheckers(Checker.WHITE, 3);
+//    	_points[12].addCheckers(Checker.WHITE, 5);
+//    	_points[23].addCheckers(Checker.WHITE, 2);
+//
+//        _points[18].addCheckers(Checker.RED, 5);
+//    	_points[16].addCheckers(Checker.RED, 3);
+//    	_points[11].addCheckers(Checker.RED, 5);
+//    	_points[0].addCheckers(Checker.RED, 2);
 
-        _points[18].addCheckers(Checker.RED, 5);
-    	_points[16].addCheckers(Checker.RED, 3);
-    	_points[11].addCheckers(Checker.RED, 5);
-    	_points[0].addCheckers(Checker.RED, 2);
-
-        //_points[0].addCheckers(Checker.WHITE, 1);
-        //_points[23].addCheckers(Checker.RED, 1);
-    }
-
-    public int getDoublingCube() {
-        return _doublingCube;
+        _points[0].addCheckers(Checker.WHITE, 1);
+        _points[23].addCheckers(Checker.RED, 2);
+        _points[3].addCheckers(Checker.WHITE, 1);
+        _points[20].addCheckers(Checker.RED, 2);
     }
 
     public boolean isDoublingCubeOwner(Player activePlayer) {
@@ -77,6 +79,10 @@ public class Board {
         _doublingCube = _doublingCube*2;
     }
 
+    public void doubleRefused() {
+        _isDoubleRefused = true;
+    }
+
     public String doublingCubeToString(Player player) {
         String doublingCubeString = "[" + _doublingCube + "]";;
         if(player.getColour() != _doublingCubeOwner) {
@@ -93,9 +99,54 @@ public class Board {
         return doublingCubeString;
     }
 
-    public boolean isMatchOver(Player playerA, Player playerB) {
-        return (getPipCount(playerA) == 0 || getPipCount(playerB) == 0);
+    public int getMatchScore(Player playerA, Player playerB) {
+        int matchScore = _doublingCube;
+        if(isBackgammoned(playerA, playerB)) {
+            matchScore *= BACKGAMMONED_MULTIPLIER;
+        }
+        else if(isGammoned(playerA, playerB)) {
+            matchScore *= GAMMONED_MULTIPLIER;
+        }
+        return matchScore;
     }
+
+    public boolean isGammoned(Player playerA, Player playerB) {
+        boolean isGammoned = true;
+        if(_bearOff[0] != 0 && _bearOff[1] != 0) {
+            isGammoned = false;
+        }
+        return isGammoned;
+    }
+
+    public boolean isBackgammoned(Player playerA, Player playerB) {
+        boolean isBackgammoned = false;
+        Player losingPlayer = getPipCount(playerA) == 0 ? playerB: playerA;
+        if(isGammoned(playerA, playerB)) {
+            if(!isBarEmpty(losingPlayer)) {
+                isBackgammoned = true;
+            }
+            if(maximumCheckerPoint(losingPlayer) >= Point.BACKGAMMONED_POINT_CUTOFF) {
+                isBackgammoned = true;
+            }
+        }
+        return isBackgammoned;
+    }
+
+    public boolean isMatchOver(Player playerA, Player playerB) {
+        return (getPipCount(playerA) == 0 || getPipCount(playerB) == 0 || _isDoubleRefused);
+    }
+
+    public Player getWinner(Player playerA, Player playerB, Player activePlayer) {
+        Player winner = activePlayer;
+        if(getPipCount(playerA) == 0) {
+            winner = playerA;
+        }
+        else if(getPipCount(playerB) == 0) {
+            winner = playerB;
+        }
+        return winner;
+    }
+
     public boolean isBarEmpty(Player activePlayer) {
         return _barMap.get(activePlayer.getColour()).isEmpty();
     }

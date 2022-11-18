@@ -51,6 +51,10 @@ public class Player{
         return !_availableMoves.isEmpty();
     }
 
+    public void clearAvailableMoves() {
+        _availableMoves = new ArrayList<>();
+    }
+
     public void updateAvailableMoves(List<Integer> moveSequence) {
         int diceValueUsed = 0;
         int sourcePoint;
