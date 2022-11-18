@@ -5,6 +5,7 @@ public enum CommandType {
     PIP ("PIP"),
     FIRST ("FIRST"),
     DOUBLE("DOUBLE"),
+    DICE ("DICE[ \t]+[1-6][ \t]+[1-6]"),
     INVALID ("");
 	
 	private String _regex;

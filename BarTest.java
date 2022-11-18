@@ -3,15 +3,27 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class BarTest {
+    private Bar _barWhite;
+    private Bar _barRed;
+
+    @BeforeEach
+    void setUp() {
+        Checker _barColour=Checker.WHITE;
+        _barWhite = new Bar(_barColour);
+        _barColour=Checker.RED;
+        _barRed = new Bar(_barColour);
+    }
 
     @Test
     void testGetResidentColour(){
-        Checker _barColour=Checker.WHITE;
-        Bar bar=new Bar(_barColour);
-        assertTrue(bar.getResidentColour().equals(_barColour));
+        assertTrue(_barWhite.getResidentColour().equals(Checker.WHITE));
+        assertTrue(_barRed.getResidentColour().equals(Checker.RED));
+    }
 
-        _barColour=Checker.RED;
-        bar=new Bar(_barColour);
-        assertTrue(bar.getResidentColour().equals(_barColour));
+    @Test
+    void testAddCheckers() {
+        _barWhite.addCheckers();
+        assertEquals(_barWhite.isEmpty(), false);
+        assertEquals(_barWhite.getCheckerCount(), 1);
     }
 }

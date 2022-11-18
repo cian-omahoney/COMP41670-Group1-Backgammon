@@ -328,7 +328,7 @@ public class UI{
 			winnerName = playerA.getName();
 		}
 		else if(board.getPipCount(playerB) == 0) {
-			winnerName = playerA.getName();
+			winnerName = playerB.getName();
 		}
 
 		if(!winnerName.equals("")) {

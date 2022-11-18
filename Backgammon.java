@@ -26,9 +26,12 @@ public class Backgammon {
 			else if(currentCommand.isDouble()) {
 
 			}
-			else if(currentCommand.isRoll() || currentCommand.isFirst()) {
+			else if(currentCommand.isRoll() || currentCommand.isFirst() || currentCommand.isDice()) {
 				if(currentCommand.isRoll()) {
 					activePlayer.rollBothDice();
+				}
+				else if(currentCommand.isDice()) {
+					activePlayer.addAvailableMovesMultiple(currentCommand.getForcedDiceValues());
 				}
 
 				while(activePlayer.availableMovesRemaining()) {

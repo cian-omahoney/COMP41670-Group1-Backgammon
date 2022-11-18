@@ -45,64 +45,6 @@ public class Board {
     	_points[16].addCheckers(Checker.RED, 3);
     	_points[11].addCheckers(Checker.RED, 5);
     	_points[0].addCheckers(Checker.RED, 2);
-
-    //BAR UI TESTING
-    //_barMap.get(Checker.WHITE).addCheckers(Checker.WHITE, 1);
-    //_barMap.get(Checker.RED).addCheckers(Checker.RED, 1);
-
-
-        // THIS SET UP IS ONLY FOR TESTING:
-        // Endgame test.
-    //    _points[11].addCheckers(Checker.WHITE, 1);
-    //    _points[10].addCheckers(Checker.WHITE, 1);
-    //    _points[6].addCheckers(Checker.RED, 2);
-
-    //    _points[4].addCheckers(Checker.RED, 2);
-    //    _points[3].addCheckers(Checker.RED, 2);
-    //    _points[2].addCheckers(Checker.RED, 2);
-    //    _points[1].addCheckers(Checker.RED, 2);
-
-        // TEST 1:  FROM SPEC, FINAL EXAMPLE
-//        _points[5].addCheckers(Checker.WHITE, 1);
-//        _points[4].addCheckers(Checker.WHITE, 1);
-//        _points[0].addCheckers(Checker.RED, 2);
-
-//        // TEST 2: What if I can only play one number? example from website
-//        _points[23].addCheckers(Checker.WHITE, 1);
-//        _points[20].addCheckers(Checker.RED, 2);
-//        _points[19].addCheckers(Checker.RED, 1);
-//        _points[18].addCheckers(Checker.RED, 2);
-//        _points[14].addCheckers(Checker.WHITE, 4);
-//        _points[13].addCheckers(Checker.RED, 2);
-//        _points[12].addCheckers(Checker.WHITE, 5);
-//        _points[10].addCheckers(Checker.RED, 2);
-//        _points[8].addCheckers(Checker.RED, 2);
-//        _points[6].addCheckers(Checker.RED, 2);
-//        _points[5].addCheckers(Checker.WHITE, 5);
-//        _points[1].addCheckers(Checker.RED, 2);
-
-        // TEST 3: Can I play one number in such a way as to avoid playing the other? example 1 from website
-//        _points[23].addCheckers(Checker.WHITE, 2);
-//        _points[22].addCheckers(Checker.RED, 2);
-//        _points[21].addCheckers(Checker.RED, 2);
-//        _points[19].addCheckers(Checker.RED, 2);
-//        _points[18].addCheckers(Checker.RED, 3);
-//        _points[12].addCheckers(Checker.WHITE, 5);
-//        _points[8].addCheckers(Checker.RED, 2);
-//        _points[6].addCheckers(Checker.WHITE, 3);
-//        _points[5].addCheckers(Checker.WHITE, 5);
-//        _points[2].addCheckers(Checker.RED, 2);
-//        _points[1].addCheckers(Checker.RED, 2);
-
-        // TEST 4: Can I play one number in such a way as to avoid playing the other? example 2 from website
-//        _points[5].addCheckers(Checker.WHITE, 1);
-//        _points[4].addCheckers(Checker.WHITE, 2);
-//        _points[2].addCheckers(Checker.WHITE, 2);
-//        _points[0].addCheckers(Checker.RED, 2);
-
-        // TEST 5: Test winner
-//        _points[0].addCheckers(Checker.WHITE, 1);
-//        _points[23].addCheckers(Checker.RED, 1);
     }
 
     public int getDoublingCube() {
@@ -118,7 +60,7 @@ public class Board {
 
     public boolean isBearOff(Player activePlayer) {
         boolean isBearOff = true;
-        if(!_barMap.get(activePlayer.getColour()).isEmpty()) {
+        if(!isBarEmpty(activePlayer)) {
             isBearOff = false;
         }
         for (Point currentPoint : _points) {
@@ -142,16 +84,20 @@ public class Board {
         return pipCount;
     }
 
-    private int isMoveValid(int sourcePoint, int rollValue, Checker playerColour) {
-        int destinationPoint = sourcePoint - rollValue;
-
-        int destinationIndex = destinationPoint - 1;
-        if(playerColour == Checker.RED) {
-            destinationIndex = Point.MAXIMUM_PIP_NUMBER - destinationPoint;
+    private int convertPointNumberToIndex(int pointNumber, Player activePlayer) {
+        int pointIndex = pointNumber - 1;
+        if(activePlayer.getColour() == Checker.RED) {
+            pointIndex = Point.MAXIMUM_PIP_NUMBER - pointNumber;
         }
+        return pointIndex;
+    }
+
+    private int isMoveValid(int sourcePoint, int rollValue, Player activePlayer) {
+        int destinationPoint = sourcePoint - rollValue;
+        int destinationIndex = convertPointNumberToIndex(destinationPoint, activePlayer);
 
         if(destinationPoint > 0) {
-            if (   _points[destinationIndex].getResidentColour() != playerColour
+            if (   _points[destinationIndex].getResidentColour() != activePlayer.getColour()
                     && _points[destinationIndex].getResidentColour() != Checker.EMPTY
                     && _points[destinationIndex].getCheckerCount()   != 1) {
                 destinationPoint = -1;
@@ -176,7 +122,7 @@ public class Board {
             validMovePoints = new ArrayList<>();
             validMovePoints.add(sourcePoint);
             if(nextDiceValue != previousDiceValue) {
-                destinationPoint = isMoveValid(sourcePoint, nextDiceValue, activePlayer.getColour());
+                destinationPoint = isMoveValid(sourcePoint, nextDiceValue, activePlayer);
 
                 if (destinationPoint > 0) {
                     validMovePoints.add(destinationPoint);
@@ -209,7 +155,7 @@ public class Board {
         List<ArrayList<Integer>> validMoveList = new ArrayList<>();
         List<Integer> validMovePoints;
 
-        // ALL NONE BEAR OFF VALID MOVES ===============================================
+        boolean isDoubleMove = !(activePlayer.getAvailableMoves().size() == 2 && !activePlayer.getAvailableMoves().get(0).equals(activePlayer.getAvailableMoves().get(1)));
 
         for(Point currentPoint : _points) {
             // If the current point has at least one checker belonging to the active player:
@@ -221,7 +167,7 @@ public class Board {
                 validMovePoints = new ArrayList<>();
                 validMovePoints.add(sourcePoint);
                 for(int nextDiceValue : activePlayer.getAvailableMoves()) {
-                    destinationPoint = isMoveValid(destinationPoint, nextDiceValue, activePlayer.getColour());
+                    destinationPoint = isMoveValid(destinationPoint, nextDiceValue, activePlayer);
 
                     if(destinationPoint > 0) {
                         validMovePoints.add(destinationPoint);
@@ -239,10 +185,10 @@ public class Board {
                 // Smaller Dice First:
                 validMovePoints = new ArrayList<>();
                 validMovePoints.add(sourcePoint);
-                if(activePlayer.getAvailableMoves().size() == 2 && !activePlayer.getAvailableMoves().get(0).equals(activePlayer.getAvailableMoves().get(1))) {
+                if(!isDoubleMove) {
                     destinationPoint = sourcePoint;
                     for(int i = 1; i>=0; i--) {
-                        destinationPoint = isMoveValid(destinationPoint, activePlayer.getAvailableMoves().get(i), activePlayer.getColour());
+                        destinationPoint = isMoveValid(destinationPoint, activePlayer.getAvailableMoves().get(i), activePlayer);
 
                         if(destinationPoint > 0) {
                             validMovePoints.add(destinationPoint);
@@ -259,20 +205,12 @@ public class Board {
                 }
             }
         }
-        // END OF ALL NONE BEAR OFF VALID MOVES ===============================================
 
         // BEAR OFF BEGINS =================================================
-        if (isBarEmpty(activePlayer)) {
-            for (Point currentPoint : _points) {
-                if (currentPoint.getPointNumber(activePlayer) <= Point.MAXIMUM_BEAROFF_PIP_NUMBER) {
-                    // Find maximum value checker point:
-                    if (currentPoint.getResidentColour() == activePlayer.getColour()) {
-                        maximumCheckerLocation = Math.max(currentPoint.getPointNumber(activePlayer), maximumCheckerLocation);
-                    }
-                }
-            }
+        if(isBearOff(activePlayer)) {
+            maximumCheckerLocation = maximumCheckerPoint(activePlayer);
 
-            if (maximumCheckerLocation < Collections.max(activePlayer.getAvailableMoves())) {
+            if (maximumCheckerLocation <= Collections.max(activePlayer.getAvailableMoves())) {
                 if (maximumCheckerLocation > 0) {
                     validMovePoints = new ArrayList<>();
                     validMovePoints.add(maximumCheckerLocation);
@@ -286,8 +224,10 @@ public class Board {
             for (int nextDiceValue : activePlayer.getAvailableMoves()) {
                 if (nextDiceValue != previousDiceValue) {
                     if (nextDiceValue != maximumCheckerLocation) {
+                        int checkerIndex = convertPointNumberToIndex(nextDiceValue, activePlayer);
+
                         // If there is a checker belonging to activePlayer at the dice value point:
-                        if (_points[nextDiceValue - 1].getResidentColour() == activePlayer.getColour()) {
+                        if (_points[checkerIndex].getResidentColour() == activePlayer.getColour()) {
                             validMovePoints = new ArrayList<>();
                             validMovePoints.add(nextDiceValue);
                             validMovePoints.add(BEAR_OFF_PIP_NUMBER);
@@ -312,7 +252,7 @@ public class Board {
         // Decide which of all possible moves is valid.
         // This depends on their order as we must use both dices if it is possible:
 
-        if(validMovesUsingLargerDice == 1 && validMovesUsingSmallerDice > 1) {
+        if(validMovesUsingLargerDice == 1 && validMovesUsingSmallerDice > 1 && !isDoubleMove) {
             if(validMoveList_LargerDiceFirst.size() == 1) {
                 validMoveList.addAll(validMoveList_LargerDiceFirst);
             }
@@ -323,7 +263,7 @@ public class Board {
                 validMoveList.add(validMoveList_SmallerDiceFirst.get(indexOfOnlyValidMoveUsingLargerDice));
             }
         }
-        else if(validMovesUsingSmallerDice == 1 && validMovesUsingLargerDice > 1) {
+        else if(validMovesUsingSmallerDice == 1 && validMovesUsingLargerDice > 1 && !isDoubleMove) {
             if(validMoveList_SmallerDiceFirst.size() == 1) {
                 validMoveList.addAll(validMoveList_SmallerDiceFirst);
             }
@@ -334,7 +274,7 @@ public class Board {
                 validMoveList.add(validMoveList_LargerDiceFirst.get(indexOfOnlyValidMoveUsingSmallerDice));
             }
         }
-        else if (validMovesUsingSmallerDice == 1 && validMovesUsingLargerDice == 1) {
+        else if (validMovesUsingSmallerDice == 1 && validMovesUsingLargerDice == 1 && !isDoubleMove) {
             if(validMoveList_LargerDiceFirst.size() == 1) {
                 validMoveList.addAll(validMoveList_LargerDiceFirst);
             }
@@ -360,13 +300,8 @@ public class Board {
         List <Integer> moveIndex = new ArrayList<>();
 
         if(moveSequence.size() > 0) {
-            for(Integer movePosition : moveSequence) {
-                if(activePlayer.getColour() == Checker.RED) {
-                    moveIndex.add(Point.MAXIMUM_PIP_NUMBER - movePosition);
-                }
-                else {
-                    moveIndex.add(movePosition - 1);
-                }
+            for(Integer movePoint : moveSequence) {
+                moveIndex.add(convertPointNumberToIndex(movePoint, activePlayer));
             }
             if(moveSequence.get(0) == BAR_PIP_NUMBER) {
                 _barMap.get(activePlayer.getColour()).removeChecker();
@@ -389,6 +324,18 @@ public class Board {
             }
 
         }
+    }
+
+    private int maximumCheckerPoint(Player activePlayer) {
+        int maximumCheckerLocation = 0;
+        for (Point currentPoint : _points) {
+            if (currentPoint.getPointNumber(activePlayer) <= Point.MAXIMUM_BEAROFF_PIP_NUMBER) {
+                if (currentPoint.getResidentColour() == activePlayer.getColour()) {
+                    maximumCheckerLocation = Math.max(currentPoint.getPointNumber(activePlayer), maximumCheckerLocation);
+                }
+            }
+        }
+        return maximumCheckerLocation;
     }
 
 

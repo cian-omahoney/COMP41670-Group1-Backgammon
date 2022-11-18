@@ -13,10 +13,13 @@ class CommandTest {
 	void testIsValid_CheckValidAndInvalidCommandStrings() {
 		assertFalse(Command.isValid("NotValid"), 			"Fail message: Command.isValid() not false for 'NotValid' string.");
 		assertFalse(Command.isValid("234hfe  wte0 0q3r"), 	"Fail message: Command.isValid() not false for '234hfe  wet0 0q3r' string.");
-		assertTrue(Command.isValid("Quit"), 				"Fail message: Command.isValid() not false for 'Quit' string.");
-		assertTrue(Command.isValid("help"), 				"Fail message: Command.isValid() not false for 'help' string.");
-		assertTrue(Command.isValid("roll"), 				"Fail message: Command.isValid() not false for 'roll' string.");
-		assertTrue(Command.isValid("ROLL"), 				"Fail message: Command.isValid() not false for 'ROLL' string.");
+		assertTrue(Command.isValid("Quit"), 				"Fail message: Command.isValid() not true for 'Quit' string.");
+		assertTrue(Command.isValid("hint"), 				"Fail message: Command.isValid() not true for 'hint' string.");
+		assertTrue(Command.isValid("roll"), 				"Fail message: Command.isValid() not true for 'roll' string.");
+		assertTrue(Command.isValid("ROLL"), 				"Fail message: Command.isValid() not true for 'ROLL' string.");
+		assertTrue(Command.isValid("pip"), 					"Fail message: Command.isValid() not true for 'pip' string.");
+		assertTrue(Command.isValid("first"), 				"Fail message: Command.isValid() not true for 'first' string.");
+		assertTrue(Command.isValid("double"), 				"Fail message: Command.isValid() not true for 'double' string.");
 	}
 
 	@Test
@@ -31,10 +34,35 @@ class CommandTest {
 		assertTrue(command.isRoll());
 	}
 
-	/*@Test
-	void testIsHelp_ValidHelpCommand() {
-		command = new Command("Help");
-		assertTrue(command.isHelp());
-	}*/
+	@Test
+	void testIsHint_ValidHintCommand() {
+		command = new Command("Hint");
+		assertTrue(command.isHint());
+	}
+
+	@Test
+	void testIsPip_ValidPipCommand() {
+		command = new Command("pip");
+		assertTrue(command.isPip());
+	}
+
+	@Test
+	void testIsFirst_ValidFirstCommand() {
+		command = new Command("first");
+		assertTrue(command.isFirst());
+	}
+
+	@Test
+	void testIsDouble_ValidDoubleCommand() {
+		command = new Command("Double");
+		assertTrue(command.isDouble());
+	}
+
+	@Test
+	void testIsInvalid_InvalidCommand() {
+		command = new Command("this is not valid");
+		assertTrue(command.isInvalid());
+	}
+
 
 }

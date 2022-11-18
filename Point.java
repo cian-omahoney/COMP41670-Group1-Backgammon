@@ -32,9 +32,6 @@ public class Point {
 				_checkers.push(checkerColour);
 			}
 		}
-		else {
-			System.out.println("ERROR: Unable to place checker here!");
-		}
 	}
 
 	public void removeChecker() {
@@ -54,7 +51,7 @@ public class Point {
 		};
 	}
 
-	public int getPointNumber(int player){	//TODO This makes getWhitePointNumber redundant? 
+	public int getPointNumber(int player){	//TODO This makes getWhitePointNumber redundant?
 		if (player==0){	//FIXME Player Number Constants
 			return _whitePointNumber;
 		}

@@ -29,8 +29,17 @@ public class Player{
         Collections.sort(_availableMoves, Collections.reverseOrder());
     }
 
-    public void addAvailableMove(int diceValue){
+    public void addAvailableMove(Integer diceValue){
         _availableMoves.add(diceValue);
+        Collections.sort(_availableMoves, Collections.reverseOrder());
+    }
+
+    public void addAvailableMovesMultiple(List<Integer> diceValues) {
+        _availableMoves.addAll(diceValues);
+        // If double:
+        if(diceValues.get(0) == diceValues.get(1)) {
+            _availableMoves.addAll(diceValues);
+        }
         Collections.sort(_availableMoves, Collections.reverseOrder());
     }
 
