@@ -68,6 +68,15 @@ public class Board {
         return isDoublingCubeOwner;
     }
 
+    public void doubleStakes() {
+        _doublingCubeOwner = switch (_doublingCubeOwner) {
+            case RED -> Checker.WHITE;
+            case WHITE -> Checker.RED;
+            default -> Checker.EMPTY;
+        };
+        _doublingCube = _doublingCube*2;
+    }
+
     public String doublingCubeToString(Player player) {
         String doublingCubeString = "[" + _doublingCube + "]";;
         if(player.getColour() != _doublingCubeOwner) {
@@ -397,6 +406,4 @@ public class Board {
 
         return board;
     }
-
-
 }

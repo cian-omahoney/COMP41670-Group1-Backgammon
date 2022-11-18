@@ -22,7 +22,9 @@ public class UI{
 	private static final int ALPHABET_SIZE = 26;
 	private static final int MAX_NAME_LENGTH = 7;
 	private static final String MOVE_REGEX = "[A-Z]*";
-	private static final String GAME_LENGTH_REGEX = "[13579]";
+	private static final String GAME_LENGTH_REGEX = "[0-9]{1,3}";
+	private static final String YES_REGEX = "YES";
+	private static final String NO_REGEX = "NO";
 
 	private static Scanner _userInputScan;
 	private static Scanner _textFileScan;
@@ -81,13 +83,13 @@ public class UI{
 		do {
 			System.out.print(">> Enter Game Length:\t\t\t");
 			userInput = getLine();
-			if(userInput.matches(GAME_LENGTH_REGEX)) {
+			if(userInput.matches(GAME_LENGTH_REGEX) && Integer.parseInt(userInput) % 2 == 1) {
 				gameLength = Integer.parseInt(userInput);
 				validGameLength = true;
 			}
 			else {
 				System.out.print(CYAN_TEXT_COLOUR);
-				System.out.println("\tGame length must be an odd number between 1 and 9.\n");
+				System.out.println("\tGame length must be an odd integer number.\n");
 				validGameLength = false;
 				System.out.print(CLEAR_COLOURS);
 			}
@@ -131,7 +133,6 @@ public class UI{
     	return userInputLine;
     }
 
-    
     public void printQuit() {
     	System.out.println(DASH_LINE);
     	System.out.println("\t\tYou quit. Game Over.");
@@ -147,6 +148,76 @@ public class UI{
 		System.out.println();
     	System.out.print(CLEAR_COLOURS);
     }
+
+	public void printNotDoublingCubeOwner() {
+		System.out.print(CYAN_TEXT_COLOUR);
+		System.out.println("\tYou cannot offer a double!");
+		System.out.println("\tYou are not the owner of the doubling cube.");
+		System.out.print("\t>> Press ENTER to try another command...");
+		getLine();
+		System.out.print(CLEAR_COLOURS);
+	}
+
+	public boolean offerDouble(Player activePlayer, Player playerRed, Player playerWhite) {
+		String nonActivePlayerName;
+		boolean validInput = false;
+		boolean isOfferAccepted = false;
+		String userInput = "";
+		if(activePlayer == playerRed) {
+			nonActivePlayerName = playerWhite.getName();
+		}
+		else {
+			nonActivePlayerName = playerRed.getName();
+		}
+
+		System.out.print(MAGENTA_TEXT_COLOUR);
+		System.out.println(UNDERLINE_TEXT);
+		System.out.printf("\tPass Control to %s:\n", nonActivePlayerName);
+		System.out.print(CLEAR_COLOURS);
+
+		System.out.print(CYAN_TEXT_COLOUR);
+		System.out.printf("\t%s would like to offer a double.\n", activePlayer.getName());
+		System.out.print(CLEAR_COLOURS);
+		do{
+			System.out.print("\t>> Enter 'YES' to accept or 'NO' to refuse:\t");
+			userInput = getLine().toUpperCase();
+			if(userInput.matches(YES_REGEX)){
+				validInput = true;
+				isOfferAccepted = true;
+
+				System.out.print(MAGENTA_TEXT_COLOUR);
+				System.out.println(UNDERLINE_TEXT);
+				System.out.printf("\tPass Control Back to %s:\n", activePlayer.getName());
+				System.out.print(CLEAR_COLOURS);
+				System.out.print(CYAN_TEXT_COLOUR);
+				System.out.printf("\t%s accepted the offer to double.\n", nonActivePlayerName);
+				System.out.print("\t>> Press ENTER to continue your turn...");
+				getLine();
+				System.out.print(CLEAR_COLOURS);
+			}
+			else if(userInput.matches(NO_REGEX)){
+				validInput = true;
+				isOfferAccepted = false;
+				System.out.print(MAGENTA_TEXT_COLOUR);
+				System.out.println(UNDERLINE_TEXT);
+				System.out.printf("\tPass Control Back to %s:\n", activePlayer.getName());
+				System.out.print(CLEAR_COLOURS);
+				System.out.print(CYAN_TEXT_COLOUR);
+				System.out.printf("\t%s refused the offer to double.\n", nonActivePlayerName);
+				System.out.print("\t>> Press ENTER to continue your turn...");
+				getLine();
+				System.out.print(CLEAR_COLOURS);
+			}
+			else {
+				validInput = false;
+				System.out.print(CYAN_TEXT_COLOUR);
+				System.out.println("\tThis command is invalid! Try 'YES' or 'NO'...");
+				System.out.print(CLEAR_COLOURS);
+			}
+		}while(!validInput);
+
+		return isOfferAccepted;
+	}
 
 	public List<Integer> selectValidMove(List<ArrayList<Integer>> validMoveList){
 		boolean validMove = false;
@@ -295,7 +366,7 @@ public class UI{
         System.out.println(DASH_LINE);
 		System.out.printf("Player Red: %s%-7s%s   |                                     |   Player White: %s%-7s%s\n",MAGENTA_TEXT_COLOUR,redPlayer.getName(), CLEAR_COLOURS, MAGENTA_TEXT_COLOUR, whitePlayer.getName(), CLEAR_COLOURS);
         System.out.printf("Pip Count:  %s%3d%s       |   * * * %sB A C K G A M M O N%s * * *   |   Pip Count:    %s%3d%s\n", MAGENTA_TEXT_COLOUR, board.getPipCount(redPlayer), CLEAR_COLOURS,UNDERLINE_TEXT, CLEAR_COLOURS,  MAGENTA_TEXT_COLOUR, board.getPipCount(whitePlayer), CLEAR_COLOURS);
-		System.out.printf("Score:      %s%3d%s       |              Match: %d/%d             |   Score:        %s%3d%s\n", MAGENTA_TEXT_COLOUR, redPlayer.getScore(), CLEAR_COLOURS, matchNumber, gameLength,MAGENTA_TEXT_COLOUR, whitePlayer.getScore(), CLEAR_COLOURS);
+		System.out.printf("Score:      %s%3d%s       |            Match: %3d/%-3d           |   Score:        %s%3d%s\n", MAGENTA_TEXT_COLOUR, redPlayer.getScore(), CLEAR_COLOURS, matchNumber, gameLength,MAGENTA_TEXT_COLOUR, whitePlayer.getScore(), CLEAR_COLOURS);
 		System.out.printf("Double:     %s%3s%s       |                 %3s                 |   Double:       %s%3s%s\n", MAGENTA_TEXT_COLOUR, board.doublingCubeToString(redPlayer), CLEAR_COLOURS, board.doublingCubeToString(), MAGENTA_TEXT_COLOUR, board.doublingCubeToString(whitePlayer), CLEAR_COLOURS);
 		System.out.println(DASH_LINE);
 		System.out.println();

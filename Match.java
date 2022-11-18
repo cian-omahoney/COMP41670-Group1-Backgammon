@@ -34,10 +34,15 @@ public class Match {
             }
             else if(currentCommand.isDouble()) {
                 if(board.isDoublingCubeOwner(activePlayer)) {
+                    if(_userInterface.offerDouble(activePlayer, _playerRed, _playerWhite)) {
+                        board.doubleStakes();
+                    }
+                    else {
 
+                    }
                 }
                 else {
-                    //_userInterface.printNotDoublingCubeOwner(activePlayer);
+                    _userInterface.printNotDoublingCubeOwner();
                 }
             }
             else if(currentCommand.isRoll() || currentCommand.isFirst() || currentCommand.isDice()) {
