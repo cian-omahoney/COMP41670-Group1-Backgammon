@@ -3,6 +3,7 @@ import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
 
+
 class PlayerTest {
 	private Player player;
 	
@@ -30,9 +31,9 @@ class PlayerTest {
             assertTrue(player.getAvailableMoves().get(0) > player.getAvailableMoves().get(1));
         }
         else if(player.getAvailableMoves().size() == 4) {
-            assertTrue(player.getAvailableMoves().get(0) == player.getAvailableMoves().get(1));
-            assertTrue(player.getAvailableMoves().get(1) == player.getAvailableMoves().get(2));
-            assertTrue(player.getAvailableMoves().get(2) == player.getAvailableMoves().get(3));
+            assertEquals(player.getAvailableMoves().get(0), player.getAvailableMoves().get(1));
+            assertEquals(player.getAvailableMoves().get(1), player.getAvailableMoves().get(2));
+            assertEquals(player.getAvailableMoves().get(2), player.getAvailableMoves().get(3));
         }
     }
 
@@ -41,9 +42,9 @@ class PlayerTest {
         player.addAvailableMove(1);
         player.addAvailableMove(2);
         player.addAvailableMove(3);
-        assertTrue(player.getAvailableMoves().size() == 3);
-        assertTrue(player.getAvailableMoves().get(0) == 3);
-        assertTrue(player.getAvailableMoves().get(2) == 1);
+        assertEquals(3, player.getAvailableMoves().size());
+        assertEquals(3, (int) player.getAvailableMoves().get(0));
+        assertEquals(1, (int) player.getAvailableMoves().get(2));
     }
 
     @Test
@@ -51,9 +52,9 @@ class PlayerTest {
         player.addAvailableMove(1);
         player.addAvailableMove(2);
         player.addAvailableMove(3);
-        assertTrue(player.getAvailableMoves().size() == 3);
-        assertTrue(player.getAvailableMoves().get(0) == 3);
-        assertTrue(player.getAvailableMoves().get(2) == 1);
+        assertEquals(3, player.getAvailableMoves().size());
+        assertEquals(3, (int) player.getAvailableMoves().get(0));
+        assertEquals(1, (int) player.getAvailableMoves().get(2));
     }
 
     @Test
@@ -66,7 +67,7 @@ class PlayerTest {
 
     @Test
     void testUpdateAvailableMoves() {
-        ArrayList<Integer> testMoves = new ArrayList<Integer>(3);
+        ArrayList<Integer> testMoves = new ArrayList<>(3);
         player.updateAvailableMoves(testMoves);
         assertEquals(player.getAvailableMoves().size(), 0);
 

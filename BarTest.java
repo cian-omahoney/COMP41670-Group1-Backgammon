@@ -16,14 +16,14 @@ public class BarTest {
 
     @Test
     void testGetResidentColour(){
-        assertTrue(_barWhite.getResidentColour().equals(Checker.WHITE));
-        assertTrue(_barRed.getResidentColour().equals(Checker.RED));
+        assertEquals(_barWhite.getResidentColour(), Checker.WHITE);
+        assertEquals(_barRed.getResidentColour(), Checker.RED);
     }
 
     @Test
     void testAddCheckers() {
         _barWhite.addCheckers();
-        assertEquals(_barWhite.isEmpty(), false);
+        assertFalse(_barWhite.isEmpty());
         assertEquals(_barWhite.getCheckerCount(), 1);
     }
 }

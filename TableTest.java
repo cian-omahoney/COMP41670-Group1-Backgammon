@@ -2,8 +2,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-
 class TableTest {
     private Table _table;
     private Point[] _points;
@@ -26,13 +24,12 @@ class TableTest {
 
     @Test
     void testGetPointsRow(){
-        String X = Checker.RED.getSymbol();
         String O = Checker.WHITE.getSymbol();
         String[][] testSetup={{" ",O,O,O,O,O},{" "," ",O,O,O,O},{" "," "," ",O,O,O},{" "," "," "," ",O,O},{" "," "," "," "," ",O},{" "," "," "," "," "," "}};
 
         for (int i=0;i<6;i++) {
             String[] tableRow = _table.getPointsRow(i);
-            assertTrue(Arrays.equals(testSetup[i], tableRow));
+            assertArrayEquals(testSetup[i], tableRow);
         }
     }
 }

@@ -1,6 +1,3 @@
-import org.w3c.dom.html.HTMLImageElement;
-
-import javax.swing.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
@@ -28,10 +25,8 @@ public class UI{
 	private static final String REFUSE_REGEX = "REFUSE";
 
 	private static Scanner _userInputScan;
-	private static Scanner _textFileScan;
-	private Command _command;
 
-    public UI(){
+	public UI(){
     	_userInputScan = new Scanner(System.in);
     }
 
@@ -46,7 +41,7 @@ public class UI{
 	}
     
     public void getPlayerNames(Player redPlayer, Player whitePlayer) {
-		Boolean validNames = false;
+		boolean validNames;
 		do {
 			System.out.print(">> Enter Red Checker Player Name:\t");
 			redPlayer.setName(getLine());
@@ -59,7 +54,7 @@ public class UI{
 				validNames = false;
 				System.out.print(CLEAR_COLOURS);
 			}
-			else if(redPlayer.getName().toLowerCase().equals(whitePlayer.getName().toLowerCase())) {
+			else if(redPlayer.getName().equalsIgnoreCase(whitePlayer.getName())) {
 				System.out.print(CYAN_TEXT_COLOUR);
 				System.out.println("\tPlayer names must be different!\n");
 				validNames = false;
@@ -69,14 +64,14 @@ public class UI{
 				System.out.print(CYAN_TEXT_COLOUR);
 				System.out.printf("\tPlayer names must be less than %d characters long!\n", MAX_NAME_LENGTH);
 				validNames = false;
-				System.out.print(CLEAR_COLOURS);
+				System.out.println(CLEAR_COLOURS);
 			}
 		}while(!validNames);
 		System.out.println();
     }
 
 	public int getGameLength() {
-		Boolean validGameLength = false;
+		boolean validGameLength;
 		int gameLength = 1;
 		String userInput;
 
@@ -105,7 +100,7 @@ public class UI{
 		System.out.println("\n\tThe game is ready to begin!");
 		System.out.printf("\n\t* %s controls the red checkers (%s%s).\n", redPlayer.getName(), Checker.RED.getSymbol(), CYAN_TEXT_COLOUR);
 		System.out.printf("\t* %s controls the white checkers (%s%s).\n", whitePlayer.getName(), Checker.WHITE.getSymbol(), CYAN_TEXT_COLOUR);
-		System.out.printf("\t* Type command 'HINT' for help.\n");
+		System.out.print("\t* Type command 'HINT' for help.\n");
 		System.out.println(CLEAR_COLOURS);
 		System.out.print(">> Press ENTER to begin game...");
 		getLine();
@@ -114,7 +109,7 @@ public class UI{
     public Command getCommand(Player player) {
 		System.out.printf(">> Enter command %s:  ", player.getName());
 		String input = getLine();
-		_command = new Command(input);
+		Command _command = new Command(input);
 		if (_command.isInvalid()) {
 			System.out.print(CYAN_TEXT_COLOUR);
 			System.out.println("\tThis command is invalid! Try \"HINT\".");
@@ -160,9 +155,9 @@ public class UI{
 
 	public boolean offerDouble(Player activePlayer, Player playerRed, Player playerWhite) {
 		String nonActivePlayerName;
-		boolean validInput = false;
+		boolean validInput;
 		boolean isOfferAccepted = false;
-		String userInput = "";
+		String userInput;
 		if(activePlayer == playerRed) {
 			nonActivePlayerName = playerWhite.getName();
 		}
@@ -197,7 +192,6 @@ public class UI{
 			}
 			else if(userInput.matches(REFUSE_REGEX)){
 				validInput = true;
-				isOfferAccepted = false;
 				System.out.print(MAGENTA_TEXT_COLOUR);
 				System.out.println(UNDERLINE_TEXT);
 				System.out.printf("\tPass Control Back to %s:\n", activePlayer.getName());
@@ -241,7 +235,7 @@ public class UI{
 
 				for(int destinationPoint : moveSequence.subList(1, moveSequence.size())) {
 					if(destinationPoint == Board.BEAR_OFF_PIP_NUMBER) {
-						System.out.printf("--> OFF ");
+						System.out.print("--> OFF ");
 					}
 					else {
 						System.out.printf("--> Point %2d ", destinationPoint);
@@ -252,7 +246,7 @@ public class UI{
 
 			System.out.println(CLEAR_COLOURS);
 			do {
-				System.out.printf(">> Enter letter code for desired move: ");
+				System.out.print(">> Enter letter code for desired move: ");
 				input = getLine();
 				if(input.toUpperCase().matches(MOVE_REGEX)) {
 					moveIndex = convertLabelToIndex(input.toUpperCase());
@@ -261,25 +255,25 @@ public class UI{
 					}
 				}
 
-				if(validMove == false) {
+				if(!validMove) {
 					System.out.print(CYAN_TEXT_COLOUR);
 					System.out.println("\tThis is not a valid letter code!.");
 					System.out.print("\t>> Press ENTER to try another letter code...");
 					getLine();
 					System.out.print(CLEAR_COLOURS);
 				}
-			}while(validMove == false);
+			}while(!validMove);
 			chosenValidMove = validMoveList.get(moveIndex);
 		}
 		else if(validMoveList.size() == 1) {
 			System.out.println(CYAN_TEXT_COLOUR);
-			System.out.printf("\tThere was only 1 valid move possible.", UNDERLINE_TEXT, validMoveList.size());
+			System.out.print("\tThere was only 1 valid move possible.");
 			System.out.print(CLEAR_COLOURS);
 			chosenValidMove = validMoveList.get(0);
 		}
 		else {
 			System.out.println(CYAN_TEXT_COLOUR);
-			System.out.printf("\tThere was no valid move possible!\n", UNDERLINE_TEXT);
+			System.out.print("\tThere was no valid move possible!\n");
 			System.out.print(CLEAR_COLOURS);
 			chosenValidMove = new ArrayList<>();
 		}
@@ -288,13 +282,10 @@ public class UI{
 
 	private String convertIndexToLabel(int index) {
 		String label = "";
-		if(index < ALPHABET_SIZE) {
-			label += (char) ('A' + index % ALPHABET_SIZE);
+		if (index >= ALPHABET_SIZE) {
+			label += (char) ('A' + ((index / ALPHABET_SIZE) - 1) % ALPHABET_SIZE);
 		}
-		else {
-			label += (char) ('A' + ((int)(index/ALPHABET_SIZE)-1) % ALPHABET_SIZE);
-			label += (char) ('A' + index % ALPHABET_SIZE);
-		}
+		label += (char) ('A' + index % ALPHABET_SIZE);
 		return label;
 	}
 
@@ -302,7 +293,7 @@ public class UI{
 		int index = 0;
 
 		for(int i = label.length()-1; i>=0; i--) {
-			index += (int)(label.charAt(i)-'A'+1)*Math.pow(ALPHABET_SIZE, (label.length() - 1 - i));
+			index += (label.charAt(i)-'A'+1) *Math.pow(ALPHABET_SIZE, (label.length() - 1 - i));
 		}
 		index--;
 		return index;
@@ -312,14 +303,14 @@ public class UI{
 		if(moveSequence.size() > 0) {
 			System.out.println(CYAN_TEXT_COLOUR);
 			if(moveSequence.get(0) == Board.BAR_PIP_NUMBER) {
-				System.out.printf("\tOne checker moved from Bar", moveSequence.get(0));
+				System.out.print("\tOne checker moved from Bar");
 			}
 			else {
 				System.out.printf("\tOne checker moved from Point %2d", moveSequence.get(0));
 			}
 			for(int destinationPoint : moveSequence.subList(1, moveSequence.size())) {
 				if(destinationPoint == Board.BEAR_OFF_PIP_NUMBER) {
-					System.out.printf(" --> OFF");
+					System.out.print(" --> OFF");
 				}
 				else {
 					System.out.printf(" --> Point %2d", destinationPoint);
@@ -405,14 +396,14 @@ public class UI{
 		System.out.print(CLEAR_COLOURS);
 		System.out.println(DASH_LINE);
 		do {
-			System.out.printf("\n>> Press ENTER to Roll Your First Dice %s...", playerRed.getName());
+			System.out.printf("\n>> Press ENTER to roll your first dice %s...", playerRed.getName());
 			getLine();
 			redDiceRoll = singleDice.roll();
 			System.out.print(CYAN_TEXT_COLOUR);
 			System.out.printf("\tYou Rolled: [%d]\n", redDiceRoll);
 			System.out.print(CLEAR_COLOURS);
 
-			System.out.printf("\n>> Press ENTER to Roll Your First Dice %s...", playerWhite.getName());
+			System.out.printf("\n>> Press ENTER to roll your first dice %s...", playerWhite.getName());
 			getLine();
 			whiteDiceRoll = singleDice.roll();
 			System.out.print(CYAN_TEXT_COLOUR);
@@ -421,7 +412,7 @@ public class UI{
 
 			if(redDiceRoll == whiteDiceRoll) {
 				System.out.print(CYAN_TEXT_COLOUR);
-				System.out.printf("\tYou Rolled the Same Value! Roll Again...\n");
+				System.out.print("\tYou Rolled the Same Value! Roll Again...\n");
 				System.out.print(CLEAR_COLOURS);
 			}
 		}while(redDiceRoll == whiteDiceRoll);
@@ -442,31 +433,29 @@ public class UI{
 		System.out.printf("\n\t\t\t--> %s%s Won Match %d!%s\n", UNDERLINE_TEXT,winner.getName(), matchNumber, CLEAR_COLOURS);
 
 		if(board.isBackgammoned(playerA, playerB)) {
-			System.out.printf("\t\t\t--> Game Ended in Backgammon\n", winner.getName(), winner.getScore());
+			System.out.print("\t\t\t--> Game Ended in Backgammon\n");
 		}
-		else if (board.isGammoned(playerA, playerB)){
-			System.out.printf("\t\t\t--> Game Ended in Gammon\n", winner.getName(), winner.getScore());
+		else if (board.isGammoned()){
+			System.out.print("\t\t\t--> Game Ended in Gammon\n");
 		}
 		else {
-			System.out.printf("\t\t\t--> Game Ended in Single\n", winner.getName(), winner.getScore());
+			System.out.print("\t\t\t--> Game Ended in Single\n");
 		}
 		System.out.printf("\t\t\t--> %s's score:%3d\n", winner.getName(), winner.getScore());
 		if(winner.getScore() < gameLength) {
 			System.out.print("\n>> Press ENTER to begin next match...");
-			getLine();
-			System.out.println(DASH_LINE);
 		}
 		else {
 			System.out.printf("\n\t\t\t--> %s%s is the Overall Game Winner!%s\n", UNDERLINE_TEXT,winner.getName(), CLEAR_COLOURS);
-			System.out.printf("\t\t\tThe final scores were:\n");
+			System.out.print("\t\t\tThe final scores were:\n");
 			System.out.printf("\t\t\t--> %s scored %d/%d.\n", playerA.getName(), playerA.getScore(), gameLength);
 			System.out.printf("\t\t\t--> %s scored %d/%d.\n\n", playerB.getName(), playerB.getScore(), gameLength);
 
 			System.out.print(DASH_LINE);
 			System.out.print("\n>> Press ENTER to finish game...");
-			getLine();
-			System.out.println(DASH_LINE);
 		}
+		getLine();
+		System.out.println(DASH_LINE);
 	}
 
 	/**
@@ -477,7 +466,7 @@ public class UI{
 		File mediaFile = new File(MEDIA_ROOT + fileName);
 		if(mediaFile.exists() && mediaFile.canRead()) {
 			try {
-				_textFileScan = new Scanner(mediaFile);
+				Scanner _textFileScan = new Scanner(mediaFile);
 				while(_textFileScan.hasNextLine()) {
 					System.out.printf(BOLD_TEXT);
 					System.out.println(_textFileScan.nextLine());
@@ -498,7 +487,7 @@ public class UI{
 		boolean validInput = false;
 		String userInput;
 		do{
-			System.out.println(">> Would you like to play again?\n>> Type 'NEW' to play again or 'QUIT' to exit...");
+			System.out.print(">> Would you like to play again?\n>> Type 'NEW' to play again or 'QUIT' to exit: ");
 			userInput = getLine().toUpperCase();
 			if(userInput.matches("NEW")) {
 				validInput = true;
@@ -506,16 +495,14 @@ public class UI{
 			}
 			else if (userInput.matches("QUIT")){
 				validInput = true;
-				playAnotherGame = false;
 			}
 			else {
-				validInput = false;
 				System.out.print(CYAN_TEXT_COLOUR);
 				System.out.println("\tThis command is invalid! Try 'NEW' or 'QUIT'...");
 				System.out.print(CLEAR_COLOURS);
 			}
 		}while(!validInput);
-
+		System.out.println(DASH_LINE);
 		return playAnotherGame;
 	}
 

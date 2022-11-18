@@ -14,7 +14,7 @@ public class Player{
         this._firstDie = new Dice();
         this._secondDie = new Dice();
         this._playerColour = playerColour;
-        this._availableMoves = new ArrayList<Integer>();
+        this._availableMoves = new ArrayList<>();
         this._number = number;
         this._score = 0;
     }
@@ -26,21 +26,21 @@ public class Player{
             _availableMoves.add(_firstDie.getRollValue());
             _availableMoves.add(_firstDie.getRollValue());
         }
-        Collections.sort(_availableMoves, Collections.reverseOrder());
+        _availableMoves.sort(Collections.reverseOrder());
     }
 
     public void addAvailableMove(Integer diceValue){
         _availableMoves.add(diceValue);
-        Collections.sort(_availableMoves, Collections.reverseOrder());
+        _availableMoves.sort(Collections.reverseOrder());
     }
 
     public void addAvailableMovesMultiple(List<Integer> diceValues) {
         _availableMoves.addAll(diceValues);
         // If double:
-        if(diceValues.get(0) == diceValues.get(1)) {
+        if(Objects.equals(diceValues.get(0), diceValues.get(1))) {
             _availableMoves.addAll(diceValues);
         }
-        Collections.sort(_availableMoves, Collections.reverseOrder());
+        _availableMoves.sort(Collections.reverseOrder());
     }
 
     public List<Integer> getAvailableMoves() {
@@ -56,7 +56,7 @@ public class Player{
     }
 
     public void updateAvailableMoves(List<Integer> moveSequence) {
-        int diceValueUsed = 0;
+        int diceValueUsed;
         int sourcePoint;
 
         if(moveSequence.size() > 0) {
@@ -70,7 +70,7 @@ public class Player{
                             _availableMoves.remove(Integer.valueOf(diceValueUsed));
                         }
                         else{
-                            _availableMoves.remove(Integer.valueOf(Collections.max(_availableMoves)));
+                            _availableMoves.remove(Collections.max(_availableMoves));
                         }
                     }
                 }

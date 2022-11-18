@@ -39,23 +39,16 @@ public class Board {
         setupCheckersInitial();
     }
 
-
     private void setupCheckersInitial() {
-        // THIS IS THE CORRECT INITIAL SET UP
-//        _points[5].addCheckers(Checker.WHITE, 5);
-//    	_points[7].addCheckers(Checker.WHITE, 3);
-//    	_points[12].addCheckers(Checker.WHITE, 5);
-//    	_points[23].addCheckers(Checker.WHITE, 2);
-//
-//        _points[18].addCheckers(Checker.RED, 5);
-//    	_points[16].addCheckers(Checker.RED, 3);
-//    	_points[11].addCheckers(Checker.RED, 5);
-//    	_points[0].addCheckers(Checker.RED, 2);
+        _points[5].addCheckers(Checker.WHITE, 5);
+    	_points[7].addCheckers(Checker.WHITE, 3);
+    	_points[12].addCheckers(Checker.WHITE, 5);
+    	_points[23].addCheckers(Checker.WHITE, 2);
 
-        _points[0].addCheckers(Checker.WHITE, 1);
-        _points[23].addCheckers(Checker.RED, 2);
-        _points[3].addCheckers(Checker.WHITE, 1);
-        _points[20].addCheckers(Checker.RED, 2);
+        _points[18].addCheckers(Checker.RED, 5);
+    	_points[16].addCheckers(Checker.RED, 3);
+    	_points[11].addCheckers(Checker.RED, 5);
+        _points[0].addCheckers(Checker.RED, 2);
     }
 
     public boolean isDoublingCubeOwner(Player activePlayer) {
@@ -84,7 +77,7 @@ public class Board {
     }
 
     public String doublingCubeToString(Player player) {
-        String doublingCubeString = "[" + _doublingCube + "]";;
+        String doublingCubeString = "[" + _doublingCube + "]";
         if(player.getColour() != _doublingCubeOwner) {
             doublingCubeString = "---";
         }
@@ -92,7 +85,7 @@ public class Board {
     }
 
     public String doublingCubeToString() {
-        String doublingCubeString = "[" + _doublingCube + "]";;
+        String doublingCubeString = "[" + _doublingCube + "]";
         if(_doublingCubeOwner != Checker.EMPTY) {
             doublingCubeString = "   ";
         }
@@ -104,24 +97,20 @@ public class Board {
         if(isBackgammoned(playerA, playerB)) {
             matchScore *= BACKGAMMONED_MULTIPLIER;
         }
-        else if(isGammoned(playerA, playerB)) {
+        else if(isGammoned()) {
             matchScore *= GAMMONED_MULTIPLIER;
         }
         return matchScore;
     }
 
-    public boolean isGammoned(Player playerA, Player playerB) {
-        boolean isGammoned = true;
-        if(_bearOff[0] != 0 && _bearOff[1] != 0) {
-            isGammoned = false;
-        }
-        return isGammoned;
+    public boolean isGammoned() {
+        return _bearOff[0] == 0 || _bearOff[1] == 0;
     }
 
     public boolean isBackgammoned(Player playerA, Player playerB) {
         boolean isBackgammoned = false;
         Player losingPlayer = getPipCount(playerA) == 0 ? playerB: playerA;
-        if(isGammoned(playerA, playerB)) {
+        if(isGammoned()) {
             if(!isBarEmpty(losingPlayer)) {
                 isBackgammoned = true;
             }
@@ -206,7 +195,7 @@ public class Board {
         int sourcePoint;
         int destinationPoint;
         int previousDiceValue = 0;
-        List<ArrayList<Integer>> validMoveList = new ArrayList<ArrayList<Integer>>();
+        List<ArrayList<Integer>> validMoveList = new ArrayList<>();
         List<Integer> validMovePoints;
 
         sourcePoint = BAR_PIP_NUMBER;
@@ -237,7 +226,7 @@ public class Board {
         int indexOfOnlyValidMoveUsingLargerDice = 0;
         int indexOfOnlyValidMoveUsingSmallerDice = 0;
         int previousDiceValue = 0;
-        int maximumCheckerLocation = 0;
+        int maximumCheckerLocation;
 
         List<ArrayList<Integer>> validMoveList_SmallerDiceFirst = new ArrayList<>();
         List<ArrayList<Integer>> validMoveList_LargerDiceFirst = new ArrayList<>();
@@ -388,7 +377,6 @@ public class Board {
         return validMoveList;
     }
 
-    // TODO: SHould make source index a constant.
     public void moveChecker(List<Integer> moveSequence, Player activePlayer) {
         List <Integer> moveIndex = new ArrayList<>();
 

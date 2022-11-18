@@ -1,5 +1,3 @@
-import java.nio.file.attribute.UserPrincipal;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Match {
@@ -16,14 +14,13 @@ public class Match {
     public int playMatch(int matchNumber, int gameLength){
         Board board=new Board();
 
-        List<Integer> moveSequence = new ArrayList<>();
+        List<Integer> moveSequence;
         Player activePlayer;
         Player winningPlayer;
         Command currentCommand;
         int finalScore = 1;
 
         activePlayer = _userInterface.getFirstRoll(_playerRed, _playerWhite, matchNumber);
-        winningPlayer = activePlayer;
         _userInterface.printBoard(board, _playerRed, _playerWhite, activePlayer.getNumber(), matchNumber, gameLength);
         _userInterface.printDashboard(activePlayer);
 

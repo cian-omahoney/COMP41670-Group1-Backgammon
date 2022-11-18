@@ -13,7 +13,7 @@ public class Point {
 		this._whitePointNumber = whitePointIndex + 1;
 		this._redPointNumber = (MAXIMUM_PIP_NUMBER - whitePointIndex);
 		_residentColour = Checker.EMPTY;
-		_checkers = new Stack<Checker>();
+		_checkers = new Stack<>();
 	}
 
 

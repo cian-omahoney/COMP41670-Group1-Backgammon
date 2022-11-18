@@ -18,8 +18,7 @@ public class BoardString {
     public int getPointMaxLength(int table1){
         int table1Length=_tables[table1].getPointMaxLength();
         int table2Length=_tables[table1+1].getPointMaxLength();
-        int max=Math.max(table1Length,table2Length);
-        return max;
+        return Math.max(table1Length,table2Length);
     }
 
     public String getPoints(int length,boolean top){
@@ -48,12 +47,12 @@ public class BoardString {
                 barLayer=standAloneBar+ARROW_LAYERS+i+1;
             }
             String[]checkersOnTableRow=_tables[leftTable].getPointsRow(row);
-            points+=getTableRow(checkersOnTableRow,Table.NUMBER_LANES);
+            points+=getTableRow(checkersOnTableRow);
 
             points+="|"+getBarRow(barLayer,barColour);
 
             checkersOnTableRow=_tables[rightTable].getPointsRow(row);
-            points+=getTableRow(checkersOnTableRow,Table.NUMBER_LANES);
+            points+=getTableRow(checkersOnTableRow);
             points+="|\n";
         }
         return points;
@@ -166,7 +165,7 @@ public class BoardString {
         String tableNums="";
         for (int point=Table.NUMBER_LANES-1;point>=0;point--){ //TODO Make function
             int num=_tables[table].getPointNumber(point,player);
-            String numString=Integer.toString(num)+"  ";
+            String numString = num +"  ";
             if (num<10)
             {
                 numString="0"+numString;
@@ -176,9 +175,9 @@ public class BoardString {
         return tableNums;
     }
 
-    private String getTableRow(String[] checkers, int size){
+    private String getTableRow(String[] checkers){
         String rowString="";
-        for(int i=size-1;i>=0;i--){
+        for(int i = Table.NUMBER_LANES -1; i>=0; i--){
             rowString+="| "+checkers[i]+" ";
         }
         return rowString;
@@ -187,7 +186,7 @@ public class BoardString {
     private String getArrow(int layer,int leftSide,boolean pointDown){
         String left="\\";
         String right="/";
-        String arrow="";
+        String arrow;
 
         if (!pointDown)
         {

@@ -8,7 +8,7 @@ public enum CommandType {
     DICE ("DICE[ \t]+[1-6][ \t]+[1-6]"),
     INVALID ("");
 	
-	private String _regex;
+	private final String _regex;
 	
 	CommandType(String regex) {
         this._regex = regex;

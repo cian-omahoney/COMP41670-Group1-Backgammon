@@ -3,9 +3,9 @@ public enum Checker {
 	RED		(UI.RED_CHECKER_COLOUR +   "X" + UI.CLEAR_COLOURS),
 	EMPTY	("-");
 	
-	private String _symbol;
+	private final String _symbol;
 	
-	private Checker(String symbol) {
+	Checker(String symbol) {
 		this._symbol = symbol;
 	}
 	
