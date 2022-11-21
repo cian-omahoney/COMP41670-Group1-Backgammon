@@ -35,7 +35,7 @@ public class Table {
         return currMax;
     }
 
-    public int getPointNumber(int point,int player){    //FIXME - Return the requested point number
+    public int getPointNumber(int point,int player){
         return _points[point].getPointNumber(player);
     }
 }

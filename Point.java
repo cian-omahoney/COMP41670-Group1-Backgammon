@@ -52,7 +52,7 @@ public class Point {
 		};
 	}
 
-	public int getPointNumber(int player){	//TODO This makes getWhitePointNumber redundant?
+	public int getPointNumber(int player){
 		if (player==0){	//FIXME Player Number Constants
 			return _whitePointNumber;
 		}

@@ -25,6 +25,8 @@ public class UI{
 	private static final String REFUSE_REGEX = "REFUSE";
 
 	private static Scanner _userInputScan;
+	private static Scanner movesFile;
+	private boolean _fileMode=false;
 
 	public UI(){
     	_userInputScan = new Scanner(System.in);
@@ -38,6 +40,39 @@ public class UI{
 		System.out.println();
 		System.out.println(DASH_LINE);
 		System.out.printf("\n\t\t\t* * * %sWelcome to Backgammon!%s * * *\n\n", UNDERLINE_TEXT, CLEAR_COLOURS);
+		getMode();
+	}
+
+	private void getMode(){
+		boolean result=false;
+		do{
+			System.out.println(">> Choose an input method, either F_ile or K_eyboard:\t");
+			String modeInput=getLine().toUpperCase();
+			if (modeInput.equals("K")){
+				_fileMode=false;
+				result=true;
+			}
+			else if(modeInput.equals("F")){
+				result=true;
+				getFile();
+			}
+		}while(result==false);
+
+	}
+
+	private void getFile(){
+		System.out.println(">> Enter the name of the file containing the moves:\t");
+		String filePath=getLine();
+		try {
+			File file = new File(filePath);
+			movesFile = new Scanner(file);
+			_fileMode=true;
+			
+		} 
+		catch (FileNotFoundException e) {
+			System.out.println("Could not open the specified file");	//TODO try again
+			e.printStackTrace();
+		}
 	}
     
     public void getPlayerNames(Player redPlayer, Player whitePlayer) {
@@ -121,10 +156,21 @@ public class UI{
     }
     
     public String getLine() {
-		String userInputLine;
-		System.out.printf(GREEN_TEXT_COLOUR);
-		userInputLine = _userInputScan.nextLine().trim();
-		System.out.printf(CLEAR_COLOURS);
+		String userInputLine="";
+		if (_fileMode)
+		{
+			if (movesFile.hasNextLine()) {
+				userInputLine = movesFile.nextLine().trim();
+			}
+			else{
+				System.out.println("There are no more moves in the input file");	//TODO End gracefully
+			}
+		}
+		else{
+			System.out.printf(GREEN_TEXT_COLOUR);
+			userInputLine = _userInputScan.nextLine().trim();
+			System.out.printf(CLEAR_COLOURS);
+		}
     	return userInputLine;
     }
 
@@ -132,6 +178,9 @@ public class UI{
     	System.out.println(DASH_LINE);
     	System.out.printf("\t\t\t\t%s Quit. Game Over.\n", activePlayer.getName());
     	System.out.println(DASH_LINE);
+		if (_fileMode){
+			movesFile.close();	//ToDo put at all game ends
+		}
     }
 
     public void printDice(Player player){
@@ -329,7 +378,7 @@ public class UI{
 		}
 	}
 
-    public void printHint(){   //TODO write help
+    public void printHint(){
     	System.out.print(CYAN_TEXT_COLOUR);
         System.out.println("\t* Enter 'QUIT' to quit game.");
         System.out.println("\t* Enter 'ROLL' to roll dice.");
@@ -388,6 +437,7 @@ public class UI{
 		Dice singleDice = new Dice();
 		int redDiceRoll;
 		int whiteDiceRoll;
+		String dice;
 
 		System.out.println(CLEAR_SCREEN);
 		System.out.println(DASH_LINE);
@@ -397,15 +447,25 @@ public class UI{
 		System.out.println(DASH_LINE);
 		do {
 			System.out.printf("\n>> Press ENTER to roll your first dice %s...", playerRed.getName());
-			getLine();
-			redDiceRoll = singleDice.roll();
+			dice=getLine();
+			if(_fileMode){
+				redDiceRoll=getInitialDiceRoll(dice);
+			}
+			else{
+				redDiceRoll = singleDice.roll();
+			}
 			System.out.print(CYAN_TEXT_COLOUR);
 			System.out.printf("\tYou Rolled: [%d]\n", redDiceRoll);
 			System.out.print(CLEAR_COLOURS);
 
 			System.out.printf("\n>> Press ENTER to roll your first dice %s...", playerWhite.getName());
-			getLine();
-			whiteDiceRoll = singleDice.roll();
+			dice=getLine();
+			if(_fileMode){
+				whiteDiceRoll=getInitialDiceRoll(dice);
+			}
+			else{
+				whiteDiceRoll = singleDice.roll();
+			}
 			System.out.print(CYAN_TEXT_COLOUR);
 			System.out.printf("\tYou Rolled: [%d]\n", whiteDiceRoll);
 			System.out.print(CLEAR_COLOURS);
@@ -426,6 +486,20 @@ public class UI{
 		getLine();
 		System.out.println(DASH_LINE);
 		return selectedPlayer;
+	}
+
+	public int getInitialDiceRoll(String dice){
+		int diceRoll=-1;
+		try{
+			diceRoll=Integer.parseInt(dice);
+			if (diceRoll>6||diceRoll<1){
+				//TODO fail gracefully
+			}
+		}
+		catch (NumberFormatException e){
+			System.out.println("Initial dice roll not found in file");	//TODO Fail Gracefully
+		}
+		return diceRoll;
 	}
 
 	public void printWinner(Player winner, Player playerA, Player playerB, int matchNumber, int gameLength, Board board) {
