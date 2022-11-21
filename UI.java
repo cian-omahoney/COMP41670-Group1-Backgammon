@@ -6,7 +6,7 @@ public class UI{
 	private static final String MEDIA_ROOT      	= "./media/";
 	private static final String TITLE_TEXT_FILE 	= "backgammonTitle.txt";
 	private static final String CONGRATULATIONS_TEXT_FILE   	= "congratulations.txt";
-	private static final String CLEAR_SCREEN 		= "\033[H\033[2J";
+	private static final String CLEAR_SCREEN 		= "\033[H\033[2J";	//TODO Remove Clear Screen????
 	public static final String  CLEAR_COLOURS 		= "\033[0m";
 	private static final String YELLOW_TEXT_COLOUR 	= "\033[1;33m";
 	private static final String GREEN_TEXT_COLOUR 	= "\033[1;32m";
@@ -27,13 +27,14 @@ public class UI{
 	private static Scanner _userInputScan;
 	private static Scanner movesFile;
 	private boolean _fileMode=false;
+	private boolean _fileEnd=false;
 
 	public UI(){
     	_userInputScan = new Scanner(System.in);
     }
 
 	public void printBackgammonIntro(){
-		System.out.print(CLEAR_SCREEN);
+		System.out.print(CLEAR_SCREEN);		//TODO Remove Clear Screen?
 		System.out.flush();
 		System.out.println(DASH_LINE);
 		printTextFile(TITLE_TEXT_FILE);
@@ -61,17 +62,18 @@ public class UI{
 	}
 
 	private void getFile(){
-		System.out.println(">> Enter the name of the file containing the moves:\t");
-		String filePath=getLine();
-		try {
-			File file = new File(filePath);
-			movesFile = new Scanner(file);
-			_fileMode=true;
-			
-		} 
-		catch (FileNotFoundException e) {
-			System.out.println("Could not open the specified file");	//TODO try again
-			e.printStackTrace();
+		while (!_fileMode){
+			System.out.println(">> Enter the name of the file containing the moves:\t");
+			String filePath=getLine();
+			try {
+				File file = new File(filePath);
+				movesFile = new Scanner(file);
+				_fileMode=true;
+				
+			} 
+			catch (FileNotFoundException e) {
+				System.out.println("Could not open the specified file.\n Please check this name and try again\n");
+			}
 		}
 	}
     
@@ -142,15 +144,21 @@ public class UI{
 	}
     
     public Command getCommand(Player player) {
-		System.out.printf(">> Enter command %s:  ", player.getName());
-		String input = getLine();
-		Command _command = new Command(input);
-		if (_command.isInvalid()) {
-			System.out.print(CYAN_TEXT_COLOUR);
-			System.out.println("\tThis command is invalid! Try \"HINT\".");
-			System.out.print("\t>> Press ENTER to try another command...");
-			getLine();
-			System.out.print(CLEAR_COLOURS);
+		Command _command;
+		if (_fileEnd){
+			_command=new Command("QUIT");
+		}
+		else{
+			System.out.printf(">> Enter command %s:  ", player.getName());
+			String input = getLine();
+			_command = new Command(input);
+			if (_command.isInvalid()) {
+				System.out.print(CYAN_TEXT_COLOUR);
+				System.out.println("\tThis command is invalid! Try \"HINT\".");
+				System.out.print("\t>> Press ENTER to try another command...");
+				getLine();
+				System.out.print(CLEAR_COLOURS);
+			}
 		}
 		return _command;
     }
@@ -160,10 +168,12 @@ public class UI{
 		if (_fileMode)
 		{
 			if (movesFile.hasNextLine()) {
-				userInputLine = movesFile.nextLine().trim();
+				userInputLine = movesFile.nextLine().trim();	//TODO add file comment ability
 			}
 			else{
-				System.out.println("There are no more moves in the input file");	//TODO End gracefully
+				System.out.println("There are no more moves in the input file");
+				_fileEnd=true;
+				return "";
 			}
 		}
 		else{
@@ -401,7 +411,7 @@ public class UI{
 
 
     public void printBoard(Board board, Player redPlayer, Player whitePlayer,int player, int matchNumber, int gameLength){
-		System.out.print(CLEAR_SCREEN);
+		System.out.print(CLEAR_SCREEN);	//TODO Remove clear screen?
         System.out.flush();
         System.out.println(DASH_LINE);
 		System.out.printf("Player Red: %s%-7s%s   |                                     |   Player White: %s%-7s%s\n",MAGENTA_TEXT_COLOUR,redPlayer.getName(), CLEAR_COLOURS, MAGENTA_TEXT_COLOUR, whitePlayer.getName(), CLEAR_COLOURS);
@@ -439,7 +449,7 @@ public class UI{
 		int whiteDiceRoll;
 		String dice;
 
-		System.out.println(CLEAR_SCREEN);
+		System.out.println(CLEAR_SCREEN);	//TODO Remove clear screen?
 		System.out.println(DASH_LINE);
 		System.out.print(MAGENTA_TEXT_COLOUR);
 		System.out.printf("\t\t\t\t* * * MATCH %d * * *\n", matchNumber);
@@ -449,7 +459,10 @@ public class UI{
 			System.out.printf("\n>> Press ENTER to roll your first dice %s...", playerRed.getName());
 			dice=getLine();
 			if(_fileMode){
-				redDiceRoll=getInitialDiceRoll(dice);
+				redDiceRoll=getInitialDiceRollFromFile(dice);
+				if (redDiceRoll==-1){	//The dice roll was not found
+					return playerWhite;	//Return any player - the program will be exited on the next command
+				}
 			}
 			else{
 				redDiceRoll = singleDice.roll();
@@ -461,7 +474,10 @@ public class UI{
 			System.out.printf("\n>> Press ENTER to roll your first dice %s...", playerWhite.getName());
 			dice=getLine();
 			if(_fileMode){
-				whiteDiceRoll=getInitialDiceRoll(dice);
+				whiteDiceRoll=getInitialDiceRollFromFile(dice);
+				if (whiteDiceRoll==-1){	//The dice roll was not found
+					return playerWhite;	//Return any player - the program will be exited on the next command
+				}
 			}
 			else{
 				whiteDiceRoll = singleDice.roll();
@@ -488,16 +504,18 @@ public class UI{
 		return selectedPlayer;
 	}
 
-	public int getInitialDiceRoll(String dice){
+	public int getInitialDiceRollFromFile(String dice){
 		int diceRoll=-1;
 		try{
 			diceRoll=Integer.parseInt(dice);
 			if (diceRoll>6||diceRoll<1){
-				//TODO fail gracefully
-			}
+				System.out.println("Dice roll: " +diceRoll+" is invalid must be between 1 and 6");
+				_fileEnd=true;	//The program will quit when the next command is asked for. 
+			}	//This will alert the user of the incorrect dice value and allow then to change it before re-running the program
 		}
 		catch (NumberFormatException e){
-			System.out.println("Initial dice roll not found in file");	//TODO Fail Gracefully
+			System.out.println("Initial dice roll not found in file");
+			_fileEnd=true;
 		}
 		return diceRoll;
 	}
@@ -569,6 +587,9 @@ public class UI{
 			}
 			else if (userInput.matches("QUIT")){
 				validInput = true;
+				if (_fileMode){
+					movesFile.close();
+				}
 			}
 			else {
 				System.out.print(CYAN_TEXT_COLOUR);
