@@ -2,6 +2,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+import java.util.List;
+
 class CommandTest {
 	private Command command;
 	
@@ -62,6 +65,13 @@ class CommandTest {
 	void testIsInvalid_InvalidCommand() {
 		command = new Command("this is not valid");
 		assertTrue(command.isInvalid());
+	}
+
+	@Test
+	void getForcedDiceValues(){
+		command = new Command("Dice 5 6");
+		List<Integer> Dice= Arrays.asList(5,6);
+		assertEquals(Dice,command.getForcedDiceValues());
 	}
 
 
