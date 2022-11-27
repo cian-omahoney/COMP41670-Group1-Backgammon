@@ -1,10 +1,17 @@
+# Comments are added to testfile using '#' at the very start of each comment line
+# This a an example testfile for Backgammon
+#
+# Enter the player names
 Ciaran
 Cian
+#
+# Enter match length
 1
 
+# First dice rolls - The program will quit if invalid dice rolls are entered so the tester can fix this issue in the testfile
 4
-7
-2
+6
+
 
 B
 

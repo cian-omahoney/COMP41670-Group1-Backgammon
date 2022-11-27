@@ -171,7 +171,9 @@ public class UI{
 		if (_fileMode)
 		{
 			if (movesFile.hasNextLine()) {
-				userInputLine = movesFile.nextLine().trim();	//TODO add file comment ability
+				do{
+					userInputLine = movesFile.nextLine().trim();	//TODO add file comment ability
+				} while (userInputLine.length()>0 && userInputLine.charAt(0)=='#');
 			}
 			else{
 				System.out.println("There are no more moves in the input file");
