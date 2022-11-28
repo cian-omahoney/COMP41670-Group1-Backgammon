@@ -1,0 +1,327 @@
+# Comments are added to testfile using '#' at the very start of each comment line
+# This a an example testfile for Backgammon
+#
+# Enter the player names
+Ciaran
+Cian
+#
+# Enter match length
+1
+
+# First dice rolls - The program will quit if invalid dice rolls are entered so the tester can fix this issue in the testfile
+4
+6
+
+# It is Cian's Turn
+# Choose a move
+C
+
+
+# Player 1 Turn
+# Roll Dice & Choose Move
+Dice 3 1
+L
+
+
+# Player 2 Turn
+Dice 6 4
+D
+
+D
+
+
+Dice 6 4
+C
+
+B
+
+
+Hint
+
+# By entering two of the same dice values these will automatically be doubled
+Dice 1 1
+M
+
+D
+
+
+Pip
+
+Dice 6 4
+
+B
+
+
+Dice 6 4
+D
+
+C
+
+
+Dice 6 3
+C
+
+B
+
+
+Dice 4 3
+B
+
+C
+
+
+Dice 2 2
+B
+
+B
+
+
+Dice 4 1
+A
+
+
+
+Dice 5 3
+J
+
+F
+
+
+Dice 6 3
+
+
+
+Dice 6 5
+
+F
+
+
+Dice 6 1
+
+
+Dice 4 2
+I
+
+F
+
+
+Dice 6 3
+
+
+
+Dice 3 2
+A
+
+E
+
+
+Dice 6 2
+
+A
+
+
+Dice 6 6
+F
+
+F
+
+A
+
+A
+
+
+Dice 4 2
+A
+
+B
+
+
+Dice 2 1
+B
+
+
+Dice 5 3
+B
+
+B
+
+
+Dice 6 2
+
+
+Dice 2 1
+M
+
+B
+
+
+Dice 2 1
+
+A
+
+
+Pip
+
+Dice 6 3
+B
+
+
+Dice 5 1
+J
+
+
+Dice 5 3
+B
+
+B
+
+
+double
+accept
+
+Dice 6 6
+D
+
+D
+
+
+Dice 3 1
+M
+
+
+Dice 4 4
+
+
+C
+
+B
+
+
+Dice 6 4
+A
+
+B
+
+
+Dice 5 3
+A
+
+A
+
+
+Dice 4 2
+D
+
+
+double
+
+Dice 5 1
+A
+
+A
+
+
+Dice 5 4
+D
+
+E
+
+
+Dice 6 1
+B
+
+
+Dice 3 2
+
+
+
+Dice 6 1
+A
+
+A
+
+
+Dice 6 1
+
+
+Dice 4 3
+A
+
+C
+
+
+Dice 6 5
+
+
+Dice 6 4
+
+A
+
+
+Dice 5 4
+
+
+Dice 3 1
+E
+
+B
+
+
+Dice 4 2
+
+
+Dice 6 1
+
+D
+
+
+Dice 2 1
+
+
+Dice 6 1
+
+C
+
+
+Dice 6 2
+
+
+
+Dice 5 5
+
+
+
+
+
+Dice 2 2
+
+
+Dice 4 2
+
+
+
+Dice 4 2
+
+E
+
+
+Dice 4 2
+
+
+
+Dice 5 1
+P
+
+
+Dice 6 5
+
+
+
+Dice 6 4
+R
+
+
+Dice 5 4
+
+
+Quit
