@@ -1,0 +1,261 @@
+@startuml
+
+!theme plain
+top to bottom direction
+skinparam linetype ortho
+
+class Backgammon {
+  + Backgammon(): 
+  + main(String[]): void
+}
+class Bar {
+  + Bar(Checker): 
+  - _barColour: Checker
+  + getResidentColour(): Checker
+  + addCheckers(): void
+}
+class Board {
+  + Board(): 
+  + GAMMONED_MULTIPLIER: int
+  - _tables: Table[]
+  - _points: Point[]
+  + BACKGAMMONED_MULTIPLIER: int
+  - _bearOff: int[]
+  - _doublingCube: int
+  - _isDoubleRefused: boolean
+  + BEAR_OFF_PIP_NUMBER: int
+  + BAR_PIP_NUMBER: int
+  - _doublingCubeOwner: Checker
+  - _barMap: HashMap<Checker, Bar>
+  + getPipCount(Player): int
+  - convertPointNumberToIndex(int, Player): int
+  - maximumCheckerPoint(Player): int
+  + isBackgammoned(Player, Player): boolean
+  + moveChecker(List<Integer>, Player): void
+  + doublingCubeToString(): String
+  + isGammoned(): boolean
+  + getMatchScore(Player, Player): int
+  + isBarEmpty(Player): boolean
+  + isMatchOver(Player, Player): boolean
+  + getValidMoves(Player): List<ArrayList<Integer>>
+  + toString(int): String
+  - setupCheckersInitial(): void
+  + getWinner(Player, Player, Player): Player
+  - isMoveValid(int, int, Player): int
+  + getValidBarMoves(Player): List<ArrayList<Integer>>
+  + doubleStakes(): void
+  + doublingCubeToString(Player): String
+  + isDoublingCubeOwner(Player): boolean
+  + doubleRefused(): void
+  + isBearOff(Player): boolean
+}
+class BoardString {
+  + BoardString(Table[], HashMap<Checker, Bar>, int[]): 
+  - _bearOff: int[]
+  + ARROW_LAYERS: int
+  - _tables: Table[]
+  + POINT_WIDTH: int
+  - _barMap: HashMap<Checker, Bar>
+  - getTableNums(int, int): String
+  + getPoints(int, boolean): String
+  + getPointMaxLength(int): int
+  + centreBar(int, int): String
+  + getBorder(): String
+  - getTableRow(String[]): String
+  - getBarRow(int, Checker): String
+  + getPointNumbers(boolean, int): String
+  - getArrow(int, int, boolean): String
+  + getArrows(int, boolean): String
+}
+enum Checker << enumeration >> {
+  - Checker(String): 
+  + WHITE: 
+  - _symbol: String
+  + RED: 
+  + EMPTY: 
+  + values(): Checker[]
+  + getSymbol(): String
+  + valueOf(String): Checker
+}
+class Command {
+  + Command(String): 
+  - _forcedDiceValues: List<Integer>
+  - _commandType: CommandType
+  + isFirst(): boolean
+  + isRoll(): boolean
+  + isPip(): boolean
+  + isHint(): boolean
+  + getForcedDiceValues(): List<Integer>
+  + isDice(): boolean
+  + isValid(String): boolean
+  + isQuit(): boolean
+  + isDouble(): boolean
+  + isInvalid(): boolean
+}
+enum CommandType << enumeration >> {
+  - CommandType(String): 
+  + DICE: 
+  + QUIT: 
+  + INVALID: 
+  + DOUBLE: 
+  + PIP: 
+  + FIRST: 
+  + ROLL: 
+  - _regex: String
+  + HINT: 
+  + getRegex(): String
+  + values(): CommandType[]
+  + valueOf(String): CommandType
+}
+class Dice {
+  + Dice(): 
+  - _rollValue: int
+  - MIN_VALUE: int
+  - MAX_VALUE: int
+  - rand: Random
+  + roll(): int
+  + getRollValue(): int
+}
+class Game {
+  + Game(UI): 
+  - _playerWhite: Player
+  - _currentMatchNumber: int
+  - _currentMatch: Match
+  - _userInterface: UI
+  - _playerRed: Player
+  - _gameLength: int
+  + play(): boolean
+}
+class Match {
+  + Match(Player, Player, UI): 
+  ~ _userInterface: UI
+  ~ _playerRed: Player
+  ~ _playerWhite: Player
+  + playMatch(int, int): int
+}
+class Player {
+  + Player(Checker, int): 
+  - _number: int
+  - _firstDie: Dice
+  - _playerColour: Checker
+  - _secondDie: Dice
+  - _availableMoves: List<Integer>
+  - _score: int
+  - _name: String
+  + rollBothDice(): void
+  + setName(String): void
+  + addScore(int): void
+  + addAvailableMovesMultiple(List<Integer>): void
+  + availableMovesRemaining(): boolean
+  + getAvailableMoves(): List<Integer>
+  + getNumber(): int
+  + updateAvailableMoves(List<Integer>): void
+  + getColour(): Checker
+  + addAvailableMove(Integer): void
+  + getScore(): int
+  + getName(): String
+  + clearAvailableMoves(): void
+}
+class Point {
+  + Point(int): 
+  + MAXIMUM_BEAROFF_PIP_NUMBER: int
+  - _residentColour: Checker
+  + MAXIMUM_PIP_NUMBER: int
+  + BACKGAMMONED_POINT_CUTOFF: int
+  - _whitePointNumber: int
+  - _redPointNumber: int
+  - _checkers: Stack<Checker>
+  + removeChecker(): void
+  + addCheckers(Checker, int): void
+  + getCheckerCount(): int
+  + getPointNumber(int): int
+  + getPointNumber(Player): int
+  + getResidentColour(): Checker
+  + addCheckers(Checker): void
+  + isEmpty(): boolean
+}
+class Table {
+  + Table(int, Point[]): 
+  - _points: Point[]
+  - tableNumber: int
+  + NUMBER_LANES: int
+  + getPointsRow(int): String[]
+  + getPointMaxLength(): int
+  + getPointNumber(int, int): int
+}
+class UI {
+  + UI(): 
+  - MAGENTA_TEXT_COLOUR: String
+  - TITLE_TEXT_FILE: String
+  - MAX_NAME_LENGTH: int
+  - _userInputScan: Scanner
+  - ACCEPT_REGEX: String
+  - CLEAR_SCREEN: String
+  - REFUSE_REGEX: String
+  - _fileMode: boolean
+  - BOLD_TEXT: String
+  + CLEAR_COLOURS: String
+  - _fileEnd: boolean
+  - DASH_LINE: String
+  - UNDERLINE_TEXT: String
+  - movesFile: Scanner
+  - GREEN_TEXT_COLOUR: String
+  - CYAN_TEXT_COLOUR: String
+  - ALPHABET_SIZE: int
+  - GAME_LENGTH_REGEX: String
+  - YELLOW_TEXT_COLOUR: String
+  - clearScreen: String
+  - MEDIA_ROOT: String
+  - CONGRATULATIONS_TEXT_FILE: String
+  + WHITE_CHECKER_COLOUR: String
+  + RED_CHECKER_COLOUR: String
+  - MOVE_REGEX: String
+  + printDice(Player): void
+  + selectValidMove(List<ArrayList<Integer>>): List<Integer>
+  + getPlayerNames(Player, Player): void
+  + printDashboard(Player): void
+  + getFirstRoll(Player, Player, int): Player
+  + closeUserInput(): void
+  + printPipCount(Player, Player, Board): void
+  - convertIndexToLabel(int): String
+  + getGameLength(): int
+  + printBoard(Board, Player, Player, int, int, int): void
+  + getInitialDiceRollFromFile(String): int
+  + printNotDoublingCubeOwner(): void
+  + printQuit(Player): void
+  + printMoves(List<Integer>): void
+  + finishTurn(): void
+  + printWinner(Player, Player, Player, int, int, Board): void
+  + printHint(): void
+  + offerDouble(Player, Player, Player): boolean
+  - convertLabelToIndex(String): int
+  + printBackgammonIntro(): void
+  + getCommand(Player): Command
+  - printTextFile(String): void
+  + playAnotherGame(): boolean
+  + printGameIntro(Player, Player): void
+  - getFile(): void
+  + getLine(): String
+  - getMode(): void
+}
+
+Bar         "1" *-[#595959,plain]-> "_barColour\n1" Checker     
+Bar          -[#000082,plain]-^  Point       
+Board       "1" *-[#595959,plain]-> "_barMap\n*" Bar         
+Board       "1" *-[#595959,plain]-> "_barMap\n*" Checker     
+Board       "1" *-[#595959,plain]-> "_points\n*" Point       
+Board       "1" *-[#595959,plain]-> "_tables\n*" Table       
+BoardString "1" *-[#595959,plain]-> "_barMap\n*" Bar         
+BoardString "1" *-[#595959,plain]-> "_barMap\n*" Checker     
+BoardString "1" *-[#595959,plain]-> "_tables\n*" Table       
+Command     "1" *-[#595959,plain]-> "_commandType\n1" CommandType 
+Game        "1" *-[#595959,plain]-> "_currentMatch\n1" Match       
+Game        "1" *-[#595959,plain]-> "_playerWhite\n1" Player      
+Game        "1" *-[#595959,plain]-> "_userInterface\n1" UI          
+Match       "1" *-[#595959,plain]-> "_playerRed\n1" Player      
+Match       "1" *-[#595959,plain]-> "_userInterface\n1" UI          
+Player      "1" *-[#595959,plain]-> "_playerColour\n1" Checker     
+Player      "1" *-[#595959,plain]-> "_firstDie\n1" Dice        
+Point       "1" *-[#595959,plain]-> "_residentColour\n1" Checker     
+Table       "1" *-[#595959,plain]-> "_points\n*" Point       
+@enduml
