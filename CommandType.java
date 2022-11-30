@@ -1,3 +1,10 @@
+// Team 1 Backgammon Project
+// By 
+/***@author Cian O'Mahoney Github:cian-omahoney 
+ *  @author Ciarán Cullen  Github:TangentSplash
+*/
+
+// Class containing all valid command types
 public enum CommandType {
 	QUIT ("QUIT"),
 	ROLL ("ROLL"),

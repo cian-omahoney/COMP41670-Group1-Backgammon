@@ -1,3 +1,9 @@
+// Team 1 Backgammon Project
+// By 
+/***@author Cian O'Mahoney Github:cian-omahoney 
+ *  @author Ciarán Cullen  Github:TangentSplash
+*/
+
 public class Backgammon {
 	public static void main(String[] args) {
 		UI userInterface = new UI();

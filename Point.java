@@ -1,5 +1,12 @@
+// Team 1 Backgammon Project
+// By 
+/***@author Cian O'Mahoney Github:cian-omahoney 
+ *  @author Ciarán Cullen  Github:TangentSplash
+*/
+
 import java.util.*;
 
+// Class that represents an individual point that will make up the board
 public class Point {
 	public static final int MAXIMUM_PIP_NUMBER = 24;
 	public static final int MAXIMUM_BEAROFF_PIP_NUMBER = 6;
@@ -21,6 +28,11 @@ public class Point {
 		addCheckers(checkerColour, 1);
 	}
 	
+	/**
+	 * Add checkers to this point if valid
+	 * @param checkerColour	the colour of checker to add
+	 * @param quantity	the number of these checkers to add
+	 */
 	public void addCheckers(Checker checkerColour, int quantity) {
 		if(_checkers.isEmpty() && _residentColour == Checker.EMPTY) {
 			for(int i=0; i<quantity; i++) {
@@ -53,7 +65,7 @@ public class Point {
 	}
 
 	public int getPointNumber(int player){
-		if (player==0){	//FIXME Player Number Constants
+		if (player==0){
 			return _whitePointNumber;
 		}
 		else if(player==1){

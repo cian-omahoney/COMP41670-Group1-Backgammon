@@ -1,3 +1,10 @@
+// Team 1 Backgammon Project
+// By 
+/***@author Cian O'Mahoney Github:cian-omahoney 
+ *  @author Ciarán Cullen  Github:TangentSplash
+*/
+
+// A class that stores a particular players checkers when they are sent to the Bar
 public class Bar extends Point {
     private Checker _barColour;
 
@@ -7,6 +14,7 @@ public class Bar extends Point {
         this._barColour = barColour;
     }
 
+    //Overide addCheckers to add the relevant colour each time
     public void addCheckers() {
         super.addCheckers(_barColour);
     }

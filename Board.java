@@ -1,5 +1,14 @@
+// Team 1 Backgammon Project
+// By 
+/***@author Cian O'Mahoney Github:cian-omahoney 
+ *  @author Ciarán Cullen  Github:TangentSplash
+*/
+
 import java.util.*;
 
+/* Class representing the board. This class deals with the valid moves that can be made given a set of dice rolls
+* It also holds each of the points and tables that make up the Board.
+*/ 
 public class Board {
     public static final int BEAR_OFF_PIP_NUMBER = 0;
     public static final int BAR_PIP_NUMBER = 25;
@@ -420,6 +429,7 @@ public class Board {
     }
 
 
+    // Convert the board to a string so that it can be printed out by the UI
     public String toString(int player){
         BoardString boardToString= new BoardString(_tables,_barMap,_bearOff);
         String board="";

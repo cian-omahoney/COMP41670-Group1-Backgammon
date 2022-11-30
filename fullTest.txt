@@ -1,6 +1,11 @@
 # Comments are added to testfile using '#' at the very start of each comment line
 # This a an example testfile for Backgammon
 #
+#Team 1 Backgammon Project
+#By 
+#@author Cian O'Mahoney Github:cian-omahoney 
+#@author Ciarán Cullen  Github:TangentSplash
+#
 # Enter the player names
 Ciaran
 Cian

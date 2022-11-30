@@ -1,7 +1,15 @@
+// Team 1 Backgammon Project
+// By 
+/***@author Cian O'Mahoney Github:cian-omahoney 
+ *  @author Ciarán Cullen  Github:TangentSplash
+*/
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
 
+// This project implements the Model View Controller architectural pattern by separating the UI & interaction from the data.
+// This class gets user input and prints results out to the command terminal
 public class UI{
 	private static final String MEDIA_ROOT      	= "./media/";
 	private static final String TITLE_TEXT_FILE 	= "backgammonTitle.txt";
@@ -46,6 +54,7 @@ public class UI{
 		getMode();
 	}
 
+	// Determine whether to get input from a text file or the keyboard
 	private void getMode(){
 		boolean result=false;
 		do{
@@ -63,6 +72,7 @@ public class UI{
 
 	}
 
+	// Attempt to open the given file
 	private void getFile(){
 		while (!_fileMode){
 			System.out.println(">> Enter the name of the file containing the moves:\t");
@@ -166,6 +176,7 @@ public class UI{
 		return _command;
     }
     
+	//Get input either from the next line of the given file or from the keyboard
     public String getLine() {
 		String userInputLine="";
 		if (_fileMode)
@@ -427,7 +438,7 @@ public class UI{
 		System.out.printf("Double:     %s%-5s%s     |                 %3s                 |   Double:       %s%-5s%s\n", MAGENTA_TEXT_COLOUR, board.doublingCubeToString(redPlayer), CLEAR_COLOURS, board.doublingCubeToString(), MAGENTA_TEXT_COLOUR, board.doublingCubeToString(whitePlayer), CLEAR_COLOURS);
 		System.out.println(DASH_LINE);
 		System.out.println();
-        String boardString = board.toString(player);
+        String boardString = board.toString(player);	//Get the current board layout as a string
         System.out.println(boardString);
 		System.out.println(DASH_LINE);
     }

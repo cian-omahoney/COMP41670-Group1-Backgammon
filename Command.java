@@ -1,6 +1,13 @@
+// Team 1 Backgammon Project
+// By 
+/***@author Cian O'Mahoney Github:cian-omahoney 
+ *  @author Ciarán Cullen  Github:TangentSplash
+*/
+
 import java.util.ArrayList;
 import java.util.List;
 
+// Class to interpret input commands
 public class Command {
 	private CommandType _commandType;
 	private List<Integer> _forcedDiceValues;

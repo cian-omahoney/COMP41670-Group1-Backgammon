@@ -1,5 +1,13 @@
+// Team 1 Backgammon Project
+// By 
+/***@author Cian O'Mahoney Github:cian-omahoney 
+ *  @author Ciarán Cullen  Github:TangentSplash
+*/
+
+
 import java.util.Random;
 
+//Class representing a single die
 public class Dice {
     private static final int MAX_VALUE = 6;
     private static final int MIN_VALUE = 1;
