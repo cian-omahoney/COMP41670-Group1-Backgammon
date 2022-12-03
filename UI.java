@@ -58,7 +58,6 @@ public class UI{
 				getFile();
 			}
 		}while(result==false);
-
 	}
 
 	private void getFile(){
