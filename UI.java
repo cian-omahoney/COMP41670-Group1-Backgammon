@@ -210,7 +210,7 @@ public class UI{
     	System.out.printf("\t\t\t\t%s Quit. Game Over.\n", activePlayer.getName());
     	System.out.println(DASH_LINE);
 		if (_fileMode){
-			movesFile.close();	//ToDo put at all game ends
+			movesFile.close();
 		}
     }
 
@@ -429,7 +429,6 @@ public class UI{
 		getLine();
 		System.out.print(CLEAR_COLOURS);
 	}
-
 
     public void printBoard(Board board, Player redPlayer, Player whitePlayer,int player, int matchNumber, int gameLength, DoublingCube doublingCube){
 		System.out.print(clearScreen);

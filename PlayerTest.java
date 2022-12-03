@@ -3,6 +3,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Junit test for Player class.
@@ -102,5 +103,37 @@ class PlayerTest {
     void setName() {
         player.setName("Testname");
         assertEquals(player.getName(), "Testname");
+    }
+
+    @Test
+    void testAddAvailableMovesMultiple() {
+        List<Integer> moves = new ArrayList<>();
+        moves.add(2);
+        moves.add(1);
+        player.addAvailableMovesMultiple(moves);
+        assertTrue(player.getAvailableMoves().get(0).equals(moves.get(0)));
+        assertTrue(player.getAvailableMoves().get(1).equals(moves.get(1)));
+    }
+
+    @Test
+    void clearAvailableMoves() {
+        List<Integer> moves = new ArrayList<>();
+        moves.add(2);
+        moves.add(1);
+        player.addAvailableMovesMultiple(moves);
+        player.clearAvailableMoves();
+        assertFalse(player.availableMovesRemaining());
+    }
+
+    @Test
+    void testGetScore() {
+        player.addScore(5);
+        assertEquals(player.getScore(), 5);
+    }
+
+    @Test
+    void testAddScore() {
+        player.addScore(5);
+        assertEquals(player.getScore(), 5);
     }
 }
