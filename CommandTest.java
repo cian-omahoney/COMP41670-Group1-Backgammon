@@ -1,9 +1,4 @@
 // Team 1 Backgammon Project
-// By 
-/***@author Cian O'Mahoney Github:cian-omahoney 
- *  @author Ciarán Cullen  Github:TangentSplash
-*/
-
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,12 +6,14 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Junit test for Command class.
+ * @author Cian O'Mahoney  GitHub:cian-omahoney  SN:19351611
+ * @author Ciarán Cullen   GitHub:TangentSplash  SN:19302896
+ * @version 1 2022-12-03
+ */
 class CommandTest {
 	private Command command;
-	
-	@BeforeEach
-	void setUp() {
-	}
 
 	@Test
 	void testIsValid_CheckValidAndInvalidCommandStrings() {
@@ -79,6 +76,4 @@ class CommandTest {
 		List<Integer> Dice= Arrays.asList(5,6);
 		assertEquals(Dice,command.getForcedDiceValues());
 	}
-
-
 }

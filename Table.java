@@ -1,14 +1,13 @@
 // Team 1 Backgammon Project
-// By 
-/***@author Cian O'Mahoney Github:cian-omahoney 
- *  @author Ciarán Cullen  Github:TangentSplash
-*/
-
-/* This class is a representation of the tables that make up the full board. This representation is only used for
-* printing the UI as it is helpful to breakup the board into these sections, however the gameplay behind these
-* uses just the points as it is more helpful to consider the points as continuous 1-24, rather than having them broken
-* up into tables.
-*/
+/**
+ * This class is a representation of the tables that make up the full board. This representation is only used for
+ * printing the UI as it is helpful to breakup the board into these sections, however the gameplay behind these
+ * uses just the points as it is more helpful to consider the points as continuous 1-24, rather than having them broken
+ * up into tables.
+ * @author Cian O'Mahoney  GitHub:cian-omahoney  SN:19351611
+ * @author Ciarán Cullen   GitHub:TangentSplash  SN:19302896
+ * @version 1 2022-12-03
+ */
 public class Table {
     public static final int NUMBER_LANES=6;
 

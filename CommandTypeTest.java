@@ -1,14 +1,15 @@
 // Team 1 Backgammon Project
-// By 
-/***@author Cian O'Mahoney Github:cian-omahoney 
- *  @author Ciarán Cullen  Github:TangentSplash
-*/
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Junit test for CommandType class.
+ * @author Cian O'Mahoney  GitHub:cian-omahoney  SN:19351611
+ * @author Ciarán Cullen   GitHub:TangentSplash  SN:19302896
+ * @version 1 2022-12-03
+ */
 class CommandTypeTest {
     private CommandType _testCommandType;
 

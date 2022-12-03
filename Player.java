@@ -1,12 +1,12 @@
 // Team 1 Backgammon Project
-// By 
-/***@author Cian O'Mahoney Github:cian-omahoney 
- *  @author Ciarán Cullen  Github:TangentSplash
-*/
-
 import java.util.*;
 
-//Class representation of a Player - holds the name, colour checker used, score and rolls dice
+/**
+ * Class representation of a Player - holds the name, colour checker used, score and rolls dice.
+ * @author Cian O'Mahoney  GitHub:cian-omahoney  SN:19351611
+ * @author Ciarán Cullen   GitHub:TangentSplash  SN:19302896
+ * @version 1 2022-12-03
+ */
 public class Player{
     private String _name;
     private final Checker _playerColour;
@@ -62,6 +62,7 @@ public class Player{
         _availableMoves = new ArrayList<>();
     }
 
+    // Update the available dice moves after using dice to complete moveSequence.
     public void updateAvailableMoves(List<Integer> moveSequence) {
         int diceValueUsed;
         int sourcePoint;
@@ -96,7 +97,8 @@ public class Player{
     	return _playerColour;
     }
 
-    /** Set the players name
+    /**
+     * Set the players name
 	 * @param name the name of the player  
 	 * */
     public void setName(String name) {

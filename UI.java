@@ -1,15 +1,19 @@
 // Team 1 Backgammon Project
-// By 
-/***@author Cian O'Mahoney Github:cian-omahoney 
- *  @author Ciarán Cullen  Github:TangentSplash
-*/
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
+/**
+ * This class gets user input and prints results out to the command terminal
+ *
+ * Design Pattern: This class is implemented similar to an observer deign pattern.
+ *                 The UI class observes the board and updates the user interface when
+ *                 a change occurs.
+ *
+ * @author Cian O'Mahoney  GitHub:cian-omahoney  SN:19351611
+ * @author Ciarán Cullen   GitHub:TangentSplash  SN:19302896
+ * @version 1 2022-12-03
+*/
 
-// This project implements the Model View Controller architectural pattern by separating the UI & interaction from the data.
-// This class gets user input and prints results out to the command terminal
 public class UI{
 	private static final String MEDIA_ROOT      	= "./media/";
 	private static final String TITLE_TEXT_FILE 	= "backgammonTitle.txt";
@@ -427,14 +431,14 @@ public class UI{
 	}
 
 
-    public void printBoard(Board board, Player redPlayer, Player whitePlayer,int player, int matchNumber, int gameLength){
+    public void printBoard(Board board, Player redPlayer, Player whitePlayer,int player, int matchNumber, int gameLength, DoublingCube doublingCube){
 		System.out.print(clearScreen);
         System.out.flush();
         System.out.println(DASH_LINE);
 		System.out.printf("Player Red: %s%-7s%s   |                                     |   Player White: %s%-7s%s\n",MAGENTA_TEXT_COLOUR,redPlayer.getName(), CLEAR_COLOURS, MAGENTA_TEXT_COLOUR, whitePlayer.getName(), CLEAR_COLOURS);
         System.out.printf("Pip Count:  %s%3d%s       |   * * * %sB A C K G A M M O N%s * * *   |   Pip Count:    %s%3d%s\n", MAGENTA_TEXT_COLOUR, board.getPipCount(redPlayer), CLEAR_COLOURS,UNDERLINE_TEXT, CLEAR_COLOURS,  MAGENTA_TEXT_COLOUR, board.getPipCount(whitePlayer), CLEAR_COLOURS);
 		System.out.printf("Score:      %s%3d%s       |            Match: %3d/%-3d           |   Score:        %s%3d%s\n", MAGENTA_TEXT_COLOUR, redPlayer.getScore(), CLEAR_COLOURS, matchNumber, gameLength,MAGENTA_TEXT_COLOUR, whitePlayer.getScore(), CLEAR_COLOURS);
-		System.out.printf("Double:     %s%-5s%s     |                 %3s                 |   Double:       %s%-5s%s\n", MAGENTA_TEXT_COLOUR, board.doublingCubeToString(redPlayer), CLEAR_COLOURS, board.doublingCubeToString(), MAGENTA_TEXT_COLOUR, board.doublingCubeToString(whitePlayer), CLEAR_COLOURS);
+		System.out.printf("Double:     %s%-5s%s     |                 %3s                 |   Double:       %s%-5s%s\n", MAGENTA_TEXT_COLOUR, doublingCube.doublingCubeToString(redPlayer), CLEAR_COLOURS, doublingCube.doublingCubeToString(), MAGENTA_TEXT_COLOUR, doublingCube.doublingCubeToString(whitePlayer), CLEAR_COLOURS);
 		System.out.println(DASH_LINE);
 		System.out.println();
         String boardString = board.toString(player);	//Get the current board layout as a string

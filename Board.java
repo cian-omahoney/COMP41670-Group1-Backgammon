@@ -1,36 +1,38 @@
 // Team 1 Backgammon Project
-// By 
-/***@author Cian O'Mahoney Github:cian-omahoney 
- *  @author Ciarán Cullen  Github:TangentSplash
-*/
-
 import java.util.*;
 
-/* Class representing the board. This class deals with the valid moves that can be made given a set of dice rolls
-* It also holds each of the points and tables that make up the Board.
-*/ 
+/**
+ * Class representing the board. This class deals with the valid moves that can be made given a set of dice rolls
+ * It also holds each of the points and tables that make up the Board.
+ * @author Cian O'Mahoney  GitHub:cian-omahoney  SN:19351611
+ * @author Ciarán Cullen   GitHub:TangentSplash  SN:19302896
+ * @version 1 2022-12-03
+*/
 public class Board {
+    // Pip number assigned to bear off area.
     public static final int BEAR_OFF_PIP_NUMBER = 0;
+    // Pip number assigned to bar.
     public static final int BAR_PIP_NUMBER = 25;
     public static final int BACKGAMMONED_MULTIPLIER = 3;
     public static final int GAMMONED_MULTIPLIER = 2;
 
+    // Each board is made up of points, tables, bars and bear-off areas.
     private Point[] _points;
     private Table[] _tables;
-    private boolean _isDoubleRefused;
     private HashMap<Checker, Bar> _barMap;
-    private int _doublingCube;
-    private Checker _doublingCubeOwner;
     private int[] _bearOff;
 
     public Board() {
         this._points = new Point[Point.MAXIMUM_PIP_NUMBER];
         this._tables = new Table[4];
         this._barMap = new HashMap<>();
-        this._doublingCube = 1;
-        this._isDoubleRefused = false;
-        this._doublingCubeOwner = Checker.EMPTY;
         this._bearOff = new int[2];
+
+        _bearOff[0]=0;
+        _bearOff[1]=0;
+
+        _barMap.put(Checker.RED, new Bar(Checker.RED));
+        _barMap.put(Checker.WHITE, new Bar(Checker.WHITE));
 
         for(int i=0; i<Point.MAXIMUM_PIP_NUMBER; i++) {
             _points[i] = new Point(i);
@@ -40,14 +42,12 @@ public class Board {
             _tables[i] = new Table(i, this._points);
         }
 
-        _bearOff[0]=0;
-        _bearOff[1]=0;
-
-        _barMap.put(Checker.RED, new Bar(Checker.RED));
-        _barMap.put(Checker.WHITE, new Bar(Checker.WHITE));
         setupCheckersInitial();
     }
 
+    /**
+     * Setup checkers on board in their initial configuration.
+     */
     private void setupCheckersInitial() {
         _points[5].addCheckers(Checker.WHITE, 5);
     	_points[7].addCheckers(Checker.WHITE, 3);
@@ -60,49 +60,9 @@ public class Board {
         _points[0].addCheckers(Checker.RED, 2);
     }
 
-    public boolean isDoublingCubeOwner(Player activePlayer) {
-        boolean isDoublingCubeOwner = false;
-        if(_doublingCubeOwner == activePlayer.getColour()){
-            isDoublingCubeOwner = true;
-        }
-        else if(_doublingCubeOwner == Checker.EMPTY) {
-            isDoublingCubeOwner = true;
-            _doublingCubeOwner = activePlayer.getColour();
-        }
-        return isDoublingCubeOwner;
-    }
-
-    public void doubleStakes() {
-        _doublingCubeOwner = switch (_doublingCubeOwner) {
-            case RED -> Checker.WHITE;
-            case WHITE -> Checker.RED;
-            default -> Checker.EMPTY;
-        };
-        _doublingCube = _doublingCube*2;
-    }
-
-    public void doubleRefused() {
-        _isDoubleRefused = true;
-    }
-
-    public String doublingCubeToString(Player player) {
-        String doublingCubeString = "[" + _doublingCube + "]";
-        if(player.getColour() != _doublingCubeOwner) {
-            doublingCubeString = "---";
-        }
-        return doublingCubeString;
-    }
-
-    public String doublingCubeToString() {
-        String doublingCubeString = "[" + _doublingCube + "]";
-        if(_doublingCubeOwner != Checker.EMPTY) {
-            doublingCubeString = "   ";
-        }
-        return doublingCubeString;
-    }
-
-    public int getMatchScore(Player playerA, Player playerB) {
-        int matchScore = _doublingCube;
+    // Calculate match score, implementing doubling, gammon and backgammon rules.
+    public int getMatchScore(Player playerA, Player playerB, DoublingCube doublingCube) {
+        int matchScore = doublingCube.getDoublingCubeValue();
         if(isBackgammoned(playerA, playerB)) {
             matchScore *= BACKGAMMONED_MULTIPLIER;
         }
@@ -112,10 +72,12 @@ public class Board {
         return matchScore;
     }
 
+    // Determine if game ends in gammon:
     public boolean isGammoned() {
         return _bearOff[0] == 0 || _bearOff[1] == 0;
     }
 
+    // Determine if game ends in backgammon:
     public boolean isBackgammoned(Player playerA, Player playerB) {
         boolean isBackgammoned = false;
         Player losingPlayer = getPipCount(playerA) == 0 ? playerB: playerA;
@@ -130,8 +92,8 @@ public class Board {
         return isBackgammoned;
     }
 
-    public boolean isMatchOver(Player playerA, Player playerB) {
-        return (getPipCount(playerA) == 0 || getPipCount(playerB) == 0 || _isDoubleRefused);
+    public boolean isMatchOver(Player playerA, Player playerB, DoublingCube doublingCube) {
+        return (getPipCount(playerA) == 0 || getPipCount(playerB) == 0 || doublingCube.isDoublingRefused());
     }
 
     public Player getWinner(Player playerA, Player playerB, Player activePlayer) {
@@ -149,6 +111,9 @@ public class Board {
         return _barMap.get(activePlayer.getColour()).isEmpty();
     }
 
+    // Determine if active player is allowed to bear off checkers.
+    // This is only possible if all that players pip are in the home
+    // table.
     public boolean isBearOff(Player activePlayer) {
         boolean isBearOff = true;
         if(!isBarEmpty(activePlayer)) {
@@ -175,6 +140,8 @@ public class Board {
         return pipCount;
     }
 
+    // Convert point number to an index in the _points array.
+    // This conversion depends on the active player colour.
     private int convertPointNumberToIndex(int pointNumber, Player activePlayer) {
         int pointIndex = pointNumber - 1;
         if(activePlayer.getColour() == Checker.RED) {
@@ -183,11 +150,23 @@ public class Board {
         return pointIndex;
     }
 
+    /**
+     * Determine if there is a valid move possible for the active player from the sourcePoint given a
+     * dive value of rollValue.
+     * @param sourcePoint
+     * @param rollValue
+     * @param activePlayer
+     * @return The destination point if a move is valid. -1 if a valid move is not possible.
+     */
     private int isMoveValid(int sourcePoint, int rollValue, Player activePlayer) {
         int destinationPoint = sourcePoint - rollValue;
         int destinationIndex = convertPointNumberToIndex(destinationPoint, activePlayer);
 
         if(destinationPoint > 0) {
+            // If the destination point contains active player checkers, or
+            // if the destination point is empty, or
+            // if the destination point contains only one of the other players checkers,
+            // then a valid move is possible.  Otherwise a valid move is not possible:
             if (   _points[destinationIndex].getResidentColour() != activePlayer.getColour()
                     && _points[destinationIndex].getResidentColour() != Checker.EMPTY
                     && _points[destinationIndex].getCheckerCount()   != 1) {
@@ -200,6 +179,8 @@ public class Board {
         return destinationPoint;
     }
 
+    // Get all valid moves from the bar, if such moves exist.
+    // Return a list of array lists containing the move sequences which are possible.
     public List<ArrayList<Integer>> getValidBarMoves(Player activePlayer) {
         int sourcePoint;
         int destinationPoint;
@@ -225,7 +206,8 @@ public class Board {
         return validMoveList;
     }
 
-
+    // Determine all valid move sequences possible for the active player.
+    // Return all possible move sequences as a list of array lists.
     public List<ArrayList<Integer>> getValidMoves(Player activePlayer) {
         int sourcePoint;
         int destinationPoint;
@@ -246,15 +228,17 @@ public class Board {
         List<ArrayList<Integer>> validMoveList = new ArrayList<>();
         List<Integer> validMovePoints;
 
+        // Determine if a double move has been rolled:
         boolean isDoubleMove = !(activePlayer.getAvailableMoves().size() == 2 && !activePlayer.getAvailableMoves().get(0).equals(activePlayer.getAvailableMoves().get(1)));
 
+        // Determine all possible valid move sequences, excluding those this end with the checker being beared-off:
         for(Point currentPoint : _points) {
             // If the current point has at least one checker belonging to the active player:
             if(currentPoint.getResidentColour() == activePlayer.getColour()) {
                 sourcePoint = currentPoint.getPointNumber(activePlayer);
                 destinationPoint = sourcePoint;
 
-                // Larger Dice First:
+                // Check moves with larger dice or double dice value first:
                 validMovePoints = new ArrayList<>();
                 validMovePoints.add(sourcePoint);
                 for(int nextDiceValue : activePlayer.getAvailableMoves()) {
@@ -273,7 +257,7 @@ public class Board {
                     }
                 }
 
-                // Smaller Dice First:
+                // Check moves smaller Dice First:
                 validMovePoints = new ArrayList<>();
                 validMovePoints.add(sourcePoint);
                 if(!isDoubleMove) {
@@ -297,7 +281,7 @@ public class Board {
             }
         }
 
-        // BEAR OFF BEGINS =================================================
+        // Get all valid move sequences which end with the checker being beared-off
         if(isBearOff(activePlayer)) {
             maximumCheckerLocation = maximumCheckerPoint(activePlayer);
 
@@ -337,12 +321,9 @@ public class Board {
                 }
             }
         }
-        // BEAR OFF END =================================================
-
 
         // Decide which of all possible moves is valid.
         // This depends on their order as we must use both dices if it is possible:
-
         if(validMovesUsingLargerDice == 1 && validMovesUsingSmallerDice > 1 && !isDoubleMove) {
             if(validMoveList_LargerDiceFirst.size() == 1) {
                 validMoveList.addAll(validMoveList_LargerDiceFirst);
@@ -382,17 +363,20 @@ public class Board {
             validMoveList.addAll(validBearOffMoveList_LargerDiceFirst);
             validMoveList.addAll(validBearOffMoveList_SmallerDiceFirst);
         }
-
         return validMoveList;
     }
 
+    // Move a checker according to the sequence of moves in moveSequence.
     public void moveChecker(List<Integer> moveSequence, Player activePlayer) {
         List <Integer> moveIndex = new ArrayList<>();
 
         if(moveSequence.size() > 0) {
+            // Convert the moveSequence to a sequence of indexes for _points().
             for(Integer movePoint : moveSequence) {
                 moveIndex.add(convertPointNumberToIndex(movePoint, activePlayer));
             }
+
+            // If the first step in the sequence begins at the bar:
             if(moveSequence.get(0) == BAR_PIP_NUMBER) {
                 _barMap.get(activePlayer.getColour()).removeChecker();
             }
@@ -400,6 +384,7 @@ public class Board {
                 _points[moveIndex.get(0)].removeChecker();
             }
 
+            // If the final step in the move sequence ends in the bear off area:
             if(moveSequence.get(moveSequence.size()-1) == BEAR_OFF_PIP_NUMBER) {
                 _bearOff[activePlayer.getNumber()]++;
             }
@@ -412,10 +397,10 @@ public class Board {
                 }
                 _points[moveIndex.get(moveIndex.size() - 1)].addCheckers(activePlayer.getColour());
             }
-
         }
     }
 
+    // Determine the checker with the maximum pip number.
     private int maximumCheckerPoint(Player activePlayer) {
         int maximumCheckerLocation = 0;
         for (Point currentPoint : _points) {

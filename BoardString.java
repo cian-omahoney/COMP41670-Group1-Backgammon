@@ -1,17 +1,16 @@
 // Team 1 Backgammon Project
-// By 
-/***@author Cian O'Mahoney Github:cian-omahoney 
- *  @author Ciarán Cullen  Github:TangentSplash
-*/
-
 import java.util.*;
 
-// Class that converts the data stored in classes into a string representation of the 
-// current state of the board, that can be printed by the UI.
+/**
+ * Class that converts the data stored in classes into a string representation of the
+ * current state of the board, that can be printed by the UI.
+ * @author Cian O'Mahoney  GitHub:cian-omahoney  SN:19351611
+ * @author Ciarán Cullen   GitHub:TangentSplash  SN:19302896
+ * @version 1 2022-12-03
+ */
 public class BoardString {
     public static final int POINT_WIDTH = 3;    //How many character spaces each point will take up
     public static final int ARROW_LAYERS =(POINT_WIDTH+1)/2;
-
 
     private Table[] _tables;
     private HashMap<Checker, Bar> _barMap;
