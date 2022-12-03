@@ -1,12 +1,19 @@
+// Team 1 Backgammon Project
+// By 
+/***@author Cian O'Mahoney Github:cian-omahoney 
+ *  @author Ciarán Cullen  Github:TangentSplash
+*/
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
 
+// This project implements the Model View Controller architectural pattern by separating the UI & interaction from the data.
+// This class gets user input and prints results out to the command terminal
 public class UI{
 	private static final String MEDIA_ROOT      	= "./media/";
 	private static final String TITLE_TEXT_FILE 	= "backgammonTitle.txt";
 	private static final String CONGRATULATIONS_TEXT_FILE   	= "congratulations.txt";
-	private static final String CLEAR_SCREEN 		= "\033[H\033[2J";	//TODO Remove Clear Screen????
 	public static final String  CLEAR_COLOURS 		= "\033[0m";
 	private static final String YELLOW_TEXT_COLOUR 	= "\033[1;33m";
 	private static final String GREEN_TEXT_COLOUR 	= "\033[1;32m";
@@ -23,7 +30,10 @@ public class UI{
 	private static final String GAME_LENGTH_REGEX = "[0-9]{1,3}";
 	private static final String ACCEPT_REGEX = "ACCEPT";
 	private static final String REFUSE_REGEX = "REFUSE";
-
+	
+	private static final String CLEAR_SCREEN = "\033[H\033[2J";
+	private static String clearScreen=CLEAR_SCREEN;
+	
 	private static Scanner _userInputScan;
 	private static Scanner movesFile;
 	private boolean _fileMode=false;
@@ -34,7 +44,7 @@ public class UI{
     }
 
 	public void printBackgammonIntro(){
-		System.out.print(CLEAR_SCREEN);		//TODO Remove Clear Screen?
+		System.out.print(clearScreen);
 		System.out.flush();
 		System.out.println(DASH_LINE);
 		printTextFile(TITLE_TEXT_FILE);
@@ -44,6 +54,7 @@ public class UI{
 		getMode();
 	}
 
+	// Determine whether to get input from a text file or the keyboard
 	private void getMode(){
 		boolean result=false;
 		do{
@@ -60,6 +71,7 @@ public class UI{
 		}while(result==false);
 	}
 
+	// Attempt to open the given file
 	private void getFile(){
 		while (!_fileMode){
 			System.out.println(">> Enter the name of the file containing the moves:\t");
@@ -68,6 +80,7 @@ public class UI{
 				File file = new File(filePath);
 				movesFile = new Scanner(file);
 				_fileMode=true;
+				clearScreen="";
 				
 			} 
 			catch (FileNotFoundException e) {
@@ -162,16 +175,21 @@ public class UI{
 		return _command;
     }
     
+	//Get input either from the next line of the given file or from the keyboard
     public String getLine() {
 		String userInputLine="";
 		if (_fileMode)
 		{
 			if (movesFile.hasNextLine()) {
-				userInputLine = movesFile.nextLine().trim();	//TODO add file comment ability
+				do{
+					userInputLine = movesFile.nextLine().trim();
+				} while (userInputLine.length()>0 && userInputLine.charAt(0)=='#');
+				System.out.println(userInputLine);
 			}
 			else{
 				System.out.println("There are no more moves in the input file");
-				_fileEnd=true;
+				clearScreen=CLEAR_SCREEN;
+				_fileMode=false;
 				return "";
 			}
 		}
@@ -410,7 +428,7 @@ public class UI{
 
 
     public void printBoard(Board board, Player redPlayer, Player whitePlayer,int player, int matchNumber, int gameLength){
-		System.out.print(CLEAR_SCREEN);	//TODO Remove clear screen?
+		System.out.print(clearScreen);
         System.out.flush();
         System.out.println(DASH_LINE);
 		System.out.printf("Player Red: %s%-7s%s   |                                     |   Player White: %s%-7s%s\n",MAGENTA_TEXT_COLOUR,redPlayer.getName(), CLEAR_COLOURS, MAGENTA_TEXT_COLOUR, whitePlayer.getName(), CLEAR_COLOURS);
@@ -419,7 +437,7 @@ public class UI{
 		System.out.printf("Double:     %s%-5s%s     |                 %3s                 |   Double:       %s%-5s%s\n", MAGENTA_TEXT_COLOUR, board.doublingCubeToString(redPlayer), CLEAR_COLOURS, board.doublingCubeToString(), MAGENTA_TEXT_COLOUR, board.doublingCubeToString(whitePlayer), CLEAR_COLOURS);
 		System.out.println(DASH_LINE);
 		System.out.println();
-        String boardString = board.toString(player);
+        String boardString = board.toString(player);	//Get the current board layout as a string
         System.out.println(boardString);
 		System.out.println(DASH_LINE);
     }
@@ -448,7 +466,7 @@ public class UI{
 		int whiteDiceRoll;
 		String dice;
 
-		System.out.println(CLEAR_SCREEN);	//TODO Remove clear screen?
+		System.out.println(clearScreen);
 		System.out.println(DASH_LINE);
 		System.out.print(MAGENTA_TEXT_COLOUR);
 		System.out.printf("\t\t\t\t* * * MATCH %d * * *\n", matchNumber);
@@ -510,6 +528,7 @@ public class UI{
 			if (diceRoll>6||diceRoll<1){
 				System.out.println("Dice roll: " +diceRoll+" is invalid must be between 1 and 6");
 				_fileEnd=true;	//The program will quit when the next command is asked for. 
+				diceRoll=-1;
 			}	//This will alert the user of the incorrect dice value and allow then to change it before re-running the program
 		}
 		catch (NumberFormatException e){

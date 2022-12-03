@@ -1,3 +1,10 @@
+// Team 1 Backgammon Project
+// By 
+/***@author Cian O'Mahoney Github:cian-omahoney 
+ *  @author Ciarán Cullen  Github:TangentSplash
+*/
+
+//Class representing a game (Which can include multiple matches)
 public class Game {
     private UI _userInterface;
     private Player _playerWhite;

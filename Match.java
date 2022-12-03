@@ -1,5 +1,13 @@
+// Team 1 Backgammon Project
+// By 
+/***@author Cian O'Mahoney Github:cian-omahoney 
+ *  @author Ciarán Cullen  Github:TangentSplash
+*/
+
 import java.util.List;
 
+// Class representing a match which ends with one player bearing all checkers off the board
+// (Multiple matches can make up a game)
 public class Match {
     UI _userInterface;
     Player _playerRed;
