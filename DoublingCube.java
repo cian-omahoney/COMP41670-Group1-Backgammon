@@ -11,7 +11,7 @@ public class DoublingCube {
     private Checker _doublingCubeOwner;
 
     /**
-     * DoublingCube constructor. Inital value is 1.
+     * DoublingCube constructor. Initial value is 1.
      */
     public DoublingCube() {
         this._doublingCubeValue = 1;
