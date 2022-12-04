@@ -126,13 +126,13 @@ public class BoardString {
         int redLength=_barMap.get(Checker.RED).getCheckerCount();
         String blankSpace=" ".repeat(4*Table.NUMBER_LANES);
     
-        bar+=getCentreBarSection(blankSpace,Checker.WHITE,Checker.RED,ARROW_LAYERS+topLength,whiteLength);
+        bar+=getCentreBarSection(blankSpace,Checker.WHITE,Checker.RED,ARROW_LAYERS+topLength,whiteLength,1);
         bar+=blankSpace+"|"+" ".repeat(5)+"|"+blankSpace+"     |"+" ".repeat(17)+"|\n";
-        bar+=getCentreBarSection(blankSpace, Checker.RED, Checker.WHITE, 0, redLength-(bottomLength+ARROW_LAYERS));
+        bar+=getCentreBarSection(blankSpace, Checker.RED, Checker.WHITE, 0, redLength-(bottomLength+ARROW_LAYERS),0);
         return bar;
     }
 
-    private String getCentreBarSection(String blankSpace, Checker thisChecker,Checker otherChecker,int offset,int size){
+    private String getCentreBarSection(String blankSpace, Checker thisChecker,Checker otherChecker,int offset,int size,int playerNumber){
         String bar="";
         int i=1;
         do{
@@ -140,7 +140,7 @@ public class BoardString {
             bar+=getBarRow(i,thisChecker)+"|";
 
             if (i==1){
-                bar+=blankSpace+"     | "+otherChecker.getSymbol().repeat(_bearOff[1])+" ".repeat(15-_bearOff[1])+" |";
+                bar+=blankSpace+"     | "+otherChecker.getSymbol().repeat(_bearOff[playerNumber])+" ".repeat(15-_bearOff[playerNumber])+" |";
             }
             bar+="\n";
             i++;
